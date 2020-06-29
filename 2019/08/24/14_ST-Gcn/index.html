@@ -1,0 +1,939 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="DL,Pytorch,Python,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="导言：暑假老师叫我们做动作识别，在查阅了一些做Action Recognition的paper后发现18年AAAI上一篇St-gcn[Spatial Temporal Graph Convolutional Networks for Skeleton-Based Action Recognition]的性能和表现都不错而且是利用了我之前接触过的openPose的，加之采用的是之前没有学过的gcn来">
+<meta name="keywords" content="DL,Pytorch,Python">
+<meta property="og:type" content="article">
+<meta property="og:title" content="St-gcn 动作识别 理论+源码分析(Pytorch)">
+<meta property="og:url" content="http://zhoef.com/2019/08/24/14_ST-Gcn/index.html">
+<meta property="og:site_name" content="JoeyF&#39;s Home">
+<meta property="og:description" content="导言：暑假老师叫我们做动作识别，在查阅了一些做Action Recognition的paper后发现18年AAAI上一篇St-gcn[Spatial Temporal Graph Convolutional Networks for Skeleton-Based Action Recognition]的性能和表现都不错而且是利用了我之前接触过的openPose的，加之采用的是之前没有学过的gcn来">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="http://zhoef.com/2019/08/24/14_ST-Gcn/stgcn1.png">
+<meta property="og:image" content="http://zhoef.com/2019/08/24/14_ST-Gcn/stgcn2.png">
+<meta property="og:image" content="http://zhoef.com/2019/08/24/14_ST-Gcn/stgcn1.png">
+<meta property="og:image" content="http://zhoef.com/2019/08/24/14_ST-Gcn/stgcn3.png">
+<meta property="og:image" content="http://zhoef.com/2019/08/24/14_ST-Gcn/stgcn4.png">
+<meta property="og:image" content="http://zhoef.com/2019/08/24/14_ST-Gcn/stgcn2_10.png">
+<meta property="og:image" content="http://zhoef.com/2019/08/24/14_ST-Gcn/stgcn2_3.png">
+<meta property="og:image" content="http://zhoef.com/2019/08/24/14_ST-Gcn/stgcn2_11.png">
+<meta property="og:image" content="http://zhoef.com/2019/08/24/14_ST-Gcn/stgcn2_9.png">
+<meta property="og:image" content="http://zhoef.com/2019/08/24/14_ST-Gcn/stgcn1_1.png">
+<meta property="og:image" content="http://zhoef.com/2019/08/24/14_ST-Gcn/stgcn2_1.png">
+<meta property="og:image" content="http://zhoef.com/2019/08/24/14_ST-Gcn/stgcn2_2.png">
+<meta property="og:image" content="http://zhoef.com/2019/08/24/14_ST-Gcn/stgcn2_3.png">
+<meta property="og:image" content="http://zhoef.com/2019/08/24/14_ST-Gcn/stgcn2_4.png">
+<meta property="og:image" content="http://zhoef.com/2019/08/24/14_ST-Gcn/stgcn2_5.png">
+<meta property="og:image" content="http://zhoef.com/2019/08/24/14_ST-Gcn/stgcn2_6.png">
+<meta property="og:image" content="http://zhoef.com/2019/08/24/14_ST-Gcn/stgcn2_7.png">
+<meta property="og:image" content="http://zhoef.com/2019/08/24/14_ST-Gcn/st_gcn3_1.png">
+<meta property="og:image" content="http://zhoef.com/2019/08/24/14_ST-Gcn/stgcn3_2.png">
+<meta property="og:updated_time" content="2019-08-25T01:42:43.625Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="St-gcn 动作识别 理论+源码分析(Pytorch)">
+<meta name="twitter:description" content="导言：暑假老师叫我们做动作识别，在查阅了一些做Action Recognition的paper后发现18年AAAI上一篇St-gcn[Spatial Temporal Graph Convolutional Networks for Skeleton-Based Action Recognition]的性能和表现都不错而且是利用了我之前接触过的openPose的，加之采用的是之前没有学过的gcn来">
+<meta name="twitter:image" content="http://zhoef.com/2019/08/24/14_ST-Gcn/stgcn1.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://zhoef.com/2019/08/24/14_ST-Gcn/">
+
+
+
+
+
+  <title>St-gcn 动作识别 理论+源码分析(Pytorch) | JoeyF's Home</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="default">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">JoeyF's Home</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            About
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://zhoef.com/2019/08/24/14_ST-Gcn/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="JoeyF">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="JoeyF's Home">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">St-gcn 动作识别 理论+源码分析(Pytorch)</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-08-24T16:52:55+08:00">
+                2019-08-24
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>导言：暑假老师叫我们做动作识别，在查阅了一些做Action Recognition的paper后发现18年AAAI上一篇St-gcn[Spatial Temporal Graph Convolutional Networks for Skeleton-Based Action Recognition]的性能和表现都不错而且是利用了我之前接触过的openPose的，加之采用的是之前没有学过的gcn来进行建模的，所以准备花一些时间对其进行学习。</p>
+<p>这篇博客就是关于如何使用st-gcn来进行动作识别的。</p>
+<p><strong>OpenPose基础参考我<a href="https://zhoef.com/2019/08/13/7_Caffe_OpenPose%E6%95%99%E7%A8%8B(c++%E5%AE%9E%E7%8E%B0)/#more">这篇文章</a></strong></p>
+<h1 id="1-论文framework"><a href="#1-论文framework" class="headerlink" title="1 论文framework"></a>1 论文framework</h1><ol>
+<li>使用openPose对数据进行pose节点的预测</li>
+<li>将pose节点构造成Graph</li>
+<li>分别在时域、空间上进行GCN</li>
+</ol>
+<h1 id="2-论文特点"><a href="#2-论文特点" class="headerlink" title="2 论文特点"></a>2 论文特点</h1><ol>
+<li>图卷积的应用</li>
+<li>只使用人体节点来进行动作预测，使得模型范化能力、容错能力大大增加。但是我在学习这篇产生了一个疑问：<ol>
+<li>先对视频进行skeleton的提取，然后只对节点数据进行train或者预测，这样虽说是有其优点，但是否会丢失色彩、环境、细节表达的信息呢？</li>
+<li>该流程并不符合端到端的性质，还需要借助一些pose的estimation才能进行，显得实用性不大。</li>
+</ol>
+</li>
+<li>基于视频的训练预测</li>
+</ol>
+<h1 id="3-GCN"><a href="#3-GCN" class="headerlink" title="3 GCN"></a>3 GCN</h1><p>一句话说就是input是一个图(Graph数据结构)的卷积</p>
+<h1 id="4-论文解读"><a href="#4-论文解读" class="headerlink" title="4 论文解读"></a>4 论文解读</h1><h1 id="5-Introduction"><a href="#5-Introduction" class="headerlink" title="5. Introduction"></a>5. Introduction</h1><blockquote>
+<p>Among these modalities, dynamic human skeletons usually convey significant information that is complementary to others. However, the modeling of dynamic skeletons has received relatively less attention than that of appearance and optical flows. </p>
+</blockquote>
+<p>其实在原文中作者就已经提出了我的疑问，但是他并没有说清楚两种方式到底谁更好一点，就我而言觉得使用appearance的flows更好一点，这里存疑。再学习了更多只是后我会继续审视这个问题。</p>
+<h2 id="5-1-早期的利用skeleton的动作识别"><a href="#5-1-早期的利用skeleton的动作识别" class="headerlink" title="5.1 早期的利用skeleton的动作识别"></a>5.1 早期的利用skeleton的动作识别</h2><p>将每一帧的joint信息stack起来然后做成一个特征向量然后使用时域理论去的分析这些特征来分类视频。显然这样的预测没有显示地考虑到joint与joint之间的空间联系，这种联系在动作识别中是很重要的。</p>
+<blockquote>
+<p>Earlier methods of using skeletons for action recognition simply employ the joint coordinates at individual time steps to form feature vectors, and apply temporal analysis thereon </p>
+</blockquote>
+<p>所以作者提出了一种针对与两个维度的卷积来处理这种即在时间上有在空间上有关联性的数据。</p>
+<h1 id="6-Method"><a href="#6-Method" class="headerlink" title="6 Method"></a>6 Method</h1><p><img src="/2019/08/24/14_ST-Gcn/stgcn1.png" alt="网络流程图"><center>网络流程图</center></p>
+<p>上面这张图很重要，整个paper的思路差不多都在这张图里面了。作者是如何联系上空间与时间的呢？<strong>在文章中时间空间维度主要是只卷积核的维度</strong></p>
+<p>在中CNN的卷积是针对图像的，其卷积核的两个维度(h,w)分别是卷积核的长、宽，只是像素值层面的意义，但是在stgcn中就不一样了，卷积核(G,K)一维是在空间维度，一维是在时间维度。paper中T取的9,K取的3。具体意义在之后会详细说。</p>
+<h2 id="6-1-时间维度"><a href="#6-1-时间维度" class="headerlink" title="6.1 时间维度"></a>6.1 时间维度</h2><p>在时间的维度上作者参考以往的做法，将一个时间段的所有帧stack在一起，构成了input在时间维度上通道的宽度</p>
+<h2 id="6-2-空间维度"><a href="#6-2-空间维度" class="headerlink" title="6.2 空间维度"></a>6.2 空间维度</h2><p>在同一个视频中，相邻帧的同一个joint是可以相互连通的，这样就构成了在空间维度上的桥梁。</p>
+<p>其实上面两个老是说空间、时间维度会整得人头晕，实际上就是构建了一个图，这个图是由T个frames的skeleton组成的，而每一帧的相同的joint是连通的。</p>
+<h2 id="6-3-什么是时空域的图卷积"><a href="#6-3-什么是时空域的图卷积" class="headerlink" title="6.3 什么是时空域的图卷积"></a>6.3 什么是时空域的图卷积</h2><p>作者将这个问题与CNN做了一系列的对比，内容十分精彩。先是对CNN卷积公式的抽象：<br><img src="/2019/08/24/14_ST-Gcn/stgcn2.png" alt="CNN卷积公式"><center>CNN卷积公式</center></p>
+<p>其中p是抽样函数，而CNN中抽样就是将以卷积核大小的原始数据按行列顺序依次拿出。</p>
+<blockquote>
+<p>where the sampling function emerates the neighbors of location x. </p>
+</blockquote>
+<p><code>f(p(x,h,w))</code>的意思就是取出<code>p(x,h,w)</code>这个位置的数据,w是每一个通道的权重</p>
+<p>有了CNN的抽象公式，我们可以类比一下，确定一个CNN、GCN过程中其实只需确定两点：</p>
+<ol>
+<li>怎么抽样？</li>
+<li>权值怎么确定？</li>
+</ol>
+<p>在CNN中这两个问题很明确：</p>
+<ol>
+<li>按照卷积核大小依行、列顺序依次抽样</li>
+<li>每一个抽样得到的数据有不同的权值，其值就是卷积和这个位置的值</li>
+</ol>
+<p>那么这下类比到GCN中理解就很好理解了，我们只需要定义好我们的抽样函数，以及定义好对于每一类位置抽样出来的数据分配权值函数即可。</p>
+<p>抽样函数的定义就体现了stgcn是如何做到空间、时间上的卷积的，作者拓展了卷积核2个维度的概念，一个维度作为时间上的长度，一个维度作为空间上的长度。那读者肯定会问什么是时间上的长度、什么是空间上的长度呢？它们数值又是多大呢？继续把这张图贴出来：</p>
+<p><img src="/2019/08/24/14_ST-Gcn/stgcn1.png" alt="网络流程图"><center>网络流程图</center></p>
+<p>那个红色的区域就是一个stgcn的卷积核，它在时间维度中就是以目标中心点(红色点)为中心，左右相邻的T/2帧作为卷积核的一个维度，paper中取的9(注意要是奇数)，而蓝色、绿色、黄色对应了三个不同的权值，<strong>注意是3个不同的权值，不是9个，因为蓝色是一组，绿色是一组，黄色是一组</strong>这里会读者会感到与CNN矛盾的地方，其实不矛盾，在CNN中每一个抽样点单独为一个组，以3x3为例，9个点依次是一个独立的组，每个组的权值就是核上的该位置值的权值。</p>
+<p>知道了stgcn的卷积核是什么，那怎么取值呢？在时域中我们简单地就可以将相邻帧取出来然后进行卷积，那权值函数我们怎么确定呢？具体来说，我们怎么将抽样的joints进行分组呢？</p>
+<p>paper中提供了3个partion strategies.依次对应分1,2,3组。paper使用的是最后一种策略即分3组的策略。</p>
+<ol>
+<li><p><code>Uni-labeling</code>，全部<code>B(vti)</code>分为一个<code>subset</code>，但是这样会失去局部的特点属性。只需要将<code>K = 1</code>，且<code>lti(vtj) = 0</code>即可，这就表明了只有1个类，且所有<code>vti</code>的<code>subset</code>序号为0。</p>
+</li>
+<li><p><code>Distance partitioning</code> 安装距离来分子集，分为root点和其他点。只需要将<code>K = 2</code>，且<code>lti(vtj) = d(vtj,vti)</code>即可，因为D=1,所以d()只能为0-1之间的两个值。</p>
+</li>
+<li><p><code>Spatial configuration partitioning</code> 根据空间的分区。</p>
+</li>
+</ol>
+<p>作者基于body motion 可以被大致的分为近重心运动以及偏重心运动。所以将远离中心的节点分为一类，将近心的分为一类，根分为一类，一共三类。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">l_ti(v_tj) = 0 if rj = ri </span><br><span class="line">		   = 1 if rj &lt; ri # 近心点</span><br><span class="line">		   = 2 if rj &gt; ri # 远心点</span><br></pre></td></tr></table></figure></p>
+<p><strong><code>r_i</code></strong> is the <strong>average distance</strong> from gravity center to joint i over <strong>all frames</strong> in the training set.</p>
+<p>注意是该点所有帧的距离重心平均距离。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> layout == <span class="string">'openpose'</span>:</span><br><span class="line">    self.num_node = <span class="number">18</span></span><br><span class="line">    self_link = [(i, i) <span class="keyword">for</span> i <span class="keyword">in</span> range(self.num_node)]</span><br><span class="line">    neighbor_link = [(<span class="number">4</span>, <span class="number">3</span>), (<span class="number">3</span>, <span class="number">2</span>), (<span class="number">7</span>, <span class="number">6</span>), (<span class="number">6</span>, <span class="number">5</span>), (<span class="number">13</span>, <span class="number">12</span>), (<span class="number">12</span>,</span><br><span class="line">                                                                <span class="number">11</span>),</span><br><span class="line">                     (<span class="number">10</span>, <span class="number">9</span>), (<span class="number">9</span>, <span class="number">8</span>), (<span class="number">11</span>, <span class="number">5</span>), (<span class="number">8</span>, <span class="number">2</span>), (<span class="number">5</span>, <span class="number">1</span>), (<span class="number">2</span>, <span class="number">1</span>),</span><br><span class="line">                     (<span class="number">0</span>, <span class="number">1</span>), (<span class="number">15</span>, <span class="number">0</span>), (<span class="number">14</span>, <span class="number">0</span>), (<span class="number">17</span>, <span class="number">15</span>), (<span class="number">16</span>, <span class="number">14</span>)]</span><br><span class="line">    self.edge = self_link + neighbor_link</span><br><span class="line">    self.center = <span class="number">1</span></span><br></pre></td></tr></table></figure></p>
+<p>从源码可以看出来center点是neck点。<strong>注意如果两点都邻接不可到中心点即距离都是inf，那么算作远心点</strong></p>
+<p>paper中使用的是<strong>邻接矩阵</strong>来表示距离。<br><img src="/2019/08/24/14_ST-Gcn/stgcn3.png" alt="coco示意图"><center>coco示意图</center></p>
+<h1 id="7-Graph的建立"><a href="#7-Graph的建立" class="headerlink" title="7 Graph的建立"></a>7 Graph的建立</h1><p>该模块的代码主要在graph.py文件中，在这个模块主要分了3类：</p>
+<ol>
+<li>邻接矩阵的建立</li>
+<li>归一化以及快速图卷积的与处理</li>
+<li>权值的分组</li>
+</ol>
+<h2 id="7-1-邻接矩阵的建立"><a href="#7-1-邻接矩阵的建立" class="headerlink" title="7.1 邻接矩阵的建立"></a>7.1 邻接矩阵的建立</h2><p>这里采用的是OpenPose的节点进行举例，需要指出的是作者的节点连接顺序与本来OP中提供的输出格式的连接顺序是不同的，具体的体现在(2,8)(5,11)点的连接，这样的连接对结果没有影响，但是也不能简单地认为将OP中的节点pair改为st-gcn中的顺序就匹配了，因为不能忘记OP中的PAF的训练是按照(1,8)(1,11)进行训练的。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">...</span><br><span class="line">self.edge = self_link + neighbor_link</span><br><span class="line">...</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_hop_distance</span><span class="params">(num_node, edge, max_hop=<span class="number">1</span>)</span>:</span></span><br><span class="line">    A = np.zeros((num_node, num_node))</span><br><span class="line">    <span class="keyword">for</span> i, j <span class="keyword">in</span> edge: <span class="comment">#构建邻接矩阵</span></span><br><span class="line">        A[j, i] = <span class="number">1</span></span><br><span class="line">        A[i, j] = <span class="number">1</span></span><br><span class="line">    <span class="comment"># print(A)</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># compute hop steps</span></span><br><span class="line">    hop_dis = np.zeros((num_node, num_node)) + np.inf</span><br><span class="line">    transfer_mat = [np.linalg.matrix_power(A, d) <span class="keyword">for</span> d <span class="keyword">in</span> range(max_hop + <span class="number">1</span>)]</span><br><span class="line"></span><br><span class="line">    <span class="comment"># range -&gt; [0,n)</span></span><br><span class="line"></span><br><span class="line">    arrive_mat = (np.stack(transfer_mat) &gt; <span class="number">0</span>) <span class="comment"># transfer_mat是list类型，需要将list堆叠成一个数组才能进行&gt;操作</span></span><br><span class="line">    <span class="keyword">for</span> d <span class="keyword">in</span> range(max_hop, <span class="number">-1</span>, <span class="number">-1</span>):</span><br><span class="line">        <span class="comment"># print(arrive_mat[d])</span></span><br><span class="line">        hop_dis[arrive_mat[d]] = d</span><br><span class="line">    <span class="keyword">return</span> hop_dis</span><br></pre></td></tr></table></figure>
+<h3 id="7-1-1-np-linalg-matrix-power-matrix-expo"><a href="#7-1-1-np-linalg-matrix-power-matrix-expo" class="headerlink" title="7.1.1 np.linalg.matrix_power(matrix, expo)"></a>7.1.1 np.linalg.matrix_power(matrix, expo)</h3><p>方矩阵乘法.</p>
+<ol>
+<li>expo &gt; 0 进行matrix的连成。</li>
+<li>exp0 = 0 对角矩阵</li>
+<li>expo =-1 逆矩阵，</li>
+<li>expo &lt; 0 matrix(-expo),即 matrix × matrix × np.linalg.matrix_power(matrix, 2) = eyes()</li>
+</ol>
+<p>上一段代码中获得了带自环的邻接矩阵，非连接处是inf。</p>
+<h2 id="7-2-归一化以及快速图卷积的与处理"><a href="#7-2-归一化以及快速图卷积的与处理" class="headerlink" title="7.2 归一化以及快速图卷积的与处理"></a>7.2 归一化以及快速图卷积的与处理</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_adjacency</span><span class="params">(self, strategy)</span>:</span></span><br><span class="line">    valid_hop = range(<span class="number">0</span>, self.max_hop + <span class="number">1</span>, self.dilation) <span class="comment"># 合法的距离值：0或1</span></span><br><span class="line">            adjacency = np.zeros((self.num_node, self.num_node))</span><br><span class="line">            <span class="keyword">for</span> hop <span class="keyword">in</span> valid_hop:</span><br><span class="line">                adjacency[self.hop_dis == hop] = <span class="number">1</span> <span class="comment"># 将0|1的位置置1,inf抛弃</span></span><br><span class="line">            normalize_adjacency = normalize_digraph(adjacency)<span class="comment">#图卷积的预处理</span></span><br><span class="line">    ...</span><br><span class="line"><span class="comment"># 图卷积的预处理           </span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">normalize_digraph</span><span class="params">(A)</span>:</span></span><br><span class="line">    Dl = np.sum(A, <span class="number">0</span>)  <span class="comment">#计算邻接矩阵的度</span></span><br><span class="line">    num_node = A.shape[<span class="number">0</span>]</span><br><span class="line">    Dn = np.zeros((num_node, num_node))</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(num_node):</span><br><span class="line">        <span class="keyword">if</span> Dl[i] &gt; <span class="number">0</span>:</span><br><span class="line">            Dn[i, i] = Dl[i]**(<span class="number">-1</span>) <span class="comment">#由每个点的度组成的对角矩阵</span></span><br><span class="line">    AD = np.dot(A, Dn)</span><br><span class="line">    <span class="keyword">return</span> AD</span><br></pre></td></tr></table></figure>
+<ul>
+<li>D矩阵，在paper中是没有提到D矩阵的，只是提出了一种图卷积的公式，在后面会详细讲解。在这里只需要知道D是有i节点的度所组成的对角矩阵。然后使用的图卷积公式是$D^{-1}AX$</li>
+</ul>
+<p>在预处理完成后，我们就需要对18个节点进行分组了，安装paper中的第3中分组方式分为3组：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">elif</span> strategy == <span class="string">'spatial'</span>:</span><br><span class="line">    A = []</span><br><span class="line">    <span class="keyword">for</span> hop <span class="keyword">in</span> valid_hop:</span><br><span class="line">        a_root = np.zeros((self.num_node, self.num_node))</span><br><span class="line">        a_close = np.zeros((self.num_node, self.num_node))</span><br><span class="line">        a_further = np.zeros((self.num_node, self.num_node))</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range(self.num_node):</span><br><span class="line">            <span class="keyword">for</span> j <span class="keyword">in</span> range(self.num_node):</span><br><span class="line">                <span class="keyword">if</span> self.hop_dis[j, i] == hop:</span><br><span class="line">                    <span class="keyword">if</span> self.hop_dis[j, self.center] == self.hop_dis[</span><br><span class="line">                            i, self.center]:</span><br><span class="line">                        a_root[j, i] = normalize_adjacency[j, i]</span><br><span class="line">                    <span class="keyword">elif</span> self.hop_dis[j, self.</span><br><span class="line">                                      center] &gt; self.hop_dis[i, self.</span><br><span class="line">                                                             center]:</span><br><span class="line">                        a_close[j, i] = normalize_adjacency[j, i]</span><br><span class="line">                    <span class="keyword">else</span>:</span><br><span class="line">                        a_further[j, i] = normalize_adjacency[j, i]</span><br><span class="line">        <span class="keyword">if</span> hop == <span class="number">0</span>:</span><br><span class="line">            A.append(a_root)</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            A.append(a_root + a_close)</span><br><span class="line">            A.append(a_further)</span><br><span class="line">    A = np.stack(A)</span><br><span class="line">    self.A = A</span><br><span class="line"></span><br><span class="line"><span class="comment"># st_gcn.py:</span></span><br><span class="line"><span class="comment"># A = torch.tensor(self.graph.A, dtype=torch.float32, requires_grad=False)</span></span><br><span class="line"><span class="comment"># self.register_buffer('A', A) 将A注册成寄存器变量</span></span><br></pre></td></tr></table></figure></p>
+<p>原理与6.3节中所讲的是一样的。需要特别指出的是，这里的<code>normalize_adjacency</code>已经是$D^{-1}A$了，而且将$D^{-1}A$得到的矩阵(<code>shape = 18,18</code>)分成了$\overline{A}$(<code>shape = 3,18,18</code>)分成了3组，后面也对应了3组不同的权值。到此图的建立已经完成。</p>
+<h3 id="7-2-1-Pytorch-中-register-buffer"><a href="#7-2-1-Pytorch-中-register-buffer" class="headerlink" title="7.2.1 Pytorch 中 register_buffer"></a>7.2.1 Pytorch 中 register_buffer</h3><p>注册变量,<code>A</code>是<code>tensor</code>变量。在之后的调用只用<code>self.A_</code>即可调用，寄存器变量访问快。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">self.register_buffer(<span class="string">'A_'</span>,A)</span><br></pre></td></tr></table></figure></p>
+<p>对于其他变量：<br><code>Pytorch</code>参数其实包括2种。</p>
+<ul>
+<li>一种是模型中各种 <code>module</code>含的参数，即<code>nn.Parameter</code>，我们当然可以在网络中定义其他的<code>nn.Parameter</code>参数;</li>
+<li>另外一种是<code>buffer</code>。前者<code>nn.Parameter</code>中的参数每次<code>optim.step</code>会得到更新，而不会更新后者<code>buffer</code>。<code>buffer</code>的更新在<code>forward</code>中，<code>optim.step</code>只能更新<code>nn.Parameter</code>类型的参数。</li>
+</ul>
+<p>这里还需要注意在st_gcn.py中，A是不会改变的常量，<code>requires_grad=False</code></p>
+<h1 id="8-网络的输入"><a href="#8-网络的输入" class="headerlink" title="8 网络的输入"></a>8 网络的输入</h1><p>该模块的代码位于st_gcn,tgcn中。<br>整个网络的输入是一个(N = batch_size,C = 3,T = 300,V = 18,M = 2)的tensor所以在进行2维卷积(n,c,h,w)的时候需要将 N 与 M 合并起来形成(N * M, C, T, V)换成这样的格式就可以与2维卷积完全类比起来。CNN中核的两维对应的是(h,w)，而st-gcn的核对应的是(T,V).<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">...</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">forward</span><span class="params">(self, x)</span>:</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># data normalization</span></span><br><span class="line">    N, C, T, V, M = x.size()</span><br><span class="line">    x = x.permute(<span class="number">0</span>, <span class="number">4</span>, <span class="number">3</span>, <span class="number">1</span>, <span class="number">2</span>).contiguous()</span><br><span class="line">    x = x.view(N * M, V * C, T)</span><br><span class="line">    x = self.data_bn(x)</span><br><span class="line">    x = x.view(N, M, V, C, T)</span><br><span class="line">    x = x.permute(<span class="number">0</span>, <span class="number">1</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">2</span>).contiguous()</span><br><span class="line">    x = x.view(N * M, C, T, V)</span><br><span class="line">    ...</span><br></pre></td></tr></table></figure></p>
+<h1 id="9-Model"><a href="#9-Model" class="headerlink" title="9 Model"></a>9 Model</h1><p>Model的建立是这篇文章的主要重点，模型由3类层组成，其中层又有包含关系。注意在输入模型之前，是做了通道的变换处理的，上一节所示。(为了做成网络的输入格式:N C H W)，每一个st_gcn又包含了residual模块。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">self.data_bn = nn.BatchNorm1d(in_channels * A.size(<span class="number">1</span>))</span><br><span class="line">self.st_gcn_networks = nn.ModuleList((</span><br><span class="line">    st_gcn(in_channels, <span class="number">64</span>, kernel_size, <span class="number">1</span>, residual=<span class="literal">False</span>, **kwargs0),</span><br><span class="line">    st_gcn(<span class="number">64</span>, <span class="number">64</span>, kernel_size, <span class="number">1</span>, **kwargs),</span><br><span class="line">    st_gcn(<span class="number">64</span>, <span class="number">64</span>, kernel_size, <span class="number">1</span>, **kwargs),</span><br><span class="line">    st_gcn(<span class="number">64</span>, <span class="number">64</span>, kernel_size, <span class="number">1</span>, **kwargs),</span><br><span class="line">    st_gcn(<span class="number">64</span>, <span class="number">128</span>, kernel_size, <span class="number">2</span>, **kwargs),</span><br><span class="line">    st_gcn(<span class="number">128</span>, <span class="number">128</span>, kernel_size, <span class="number">1</span>, **kwargs),</span><br><span class="line">    st_gcn(<span class="number">128</span>, <span class="number">128</span>, kernel_size, <span class="number">1</span>, **kwargs),</span><br><span class="line">    st_gcn(<span class="number">128</span>, <span class="number">256</span>, kernel_size, <span class="number">2</span>, **kwargs),</span><br><span class="line">    st_gcn(<span class="number">256</span>, <span class="number">256</span>, kernel_size, <span class="number">1</span>, **kwargs),</span><br><span class="line">    st_gcn(<span class="number">256</span>, <span class="number">256</span>, kernel_size, <span class="number">1</span>, **kwargs),</span><br><span class="line">))</span><br><span class="line"><span class="comment"># initialize parameters for edge importance weighting</span></span><br><span class="line"><span class="keyword">if</span> edge_importance_weighting:</span><br><span class="line">    self.edge_importance = nn.ParameterList([</span><br><span class="line">        nn.Parameter(torch.ones(self.A.size()))</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> self.st_gcn_networks</span><br><span class="line">    ])</span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">    self.edge_importance = [<span class="number">1</span>] * len(self.st_gcn_networks)</span><br><span class="line"><span class="comment"># fcn for prediction</span></span><br><span class="line">self.fcn = nn.Conv2d(<span class="number">256</span>, num_class, kernel_size=<span class="number">1</span>)</span><br></pre></td></tr></table></figure></p>
+<p>可以看出模型是：</p>
+<ol>
+<li>一个输入层的batchNorm(接受的通道数是in_channels#3 * A.size(1)#18 模型的输入是一个(N,C,T,V,M)的tensor，</li>
+</ol>
+<ul>
+<li>N 视频个数</li>
+<li>C <code>= 3</code> (X,Y,S)代表一个点的信息(位置+预测的可能性)</li>
+<li>T <code>= 300</code>一个视频的帧数paper规定是300帧，不足的重头循环，多的clip</li>
+<li>V <code>18</code> 根据不同的skeleton获得的节点数而定，coco是18个节点</li>
+<li>M <code>= 2</code> 人数，paper中将人数限定在最大2个人</li>
+</ul>
+<ol>
+<li>第二部分由10层st_gcn构成</li>
+<li>最后加一层全连接层</li>
+</ol>
+<p>每一层st-gcn是这样搭建的：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">self.gcn = ConvTemporalGraphical(in_channels, out_channels,</span><br><span class="line">                                         kernel_size[<span class="number">1</span>])</span><br><span class="line"><span class="comment"># temporal</span></span><br><span class="line">self.tcn = nn.Sequential(</span><br><span class="line">    nn.BatchNorm2d(out_channels),</span><br><span class="line">    nn.ReLU(inplace=<span class="literal">True</span>),</span><br><span class="line">    nn.Conv2d(</span><br><span class="line">        out_channels,</span><br><span class="line">        out_channels,</span><br><span class="line">        (kernel_size[<span class="number">0</span>], <span class="number">1</span>),</span><br><span class="line">        (stride, <span class="number">1</span>),</span><br><span class="line">        padding,</span><br><span class="line">    ),</span><br><span class="line">    nn.BatchNorm2d(out_channels),</span><br><span class="line">    nn.Dropout(dropout, inplace=<span class="literal">True</span>),</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> <span class="keyword">not</span> residual:</span><br><span class="line">    self.residual = <span class="keyword">lambda</span> x: <span class="number">0</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">elif</span> (in_channels == out_channels) <span class="keyword">and</span> (stride == <span class="number">1</span>):</span><br><span class="line">    self.residual = <span class="keyword">lambda</span> x: x</span><br><span class="line"></span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">    self.residual = nn.Sequential(</span><br><span class="line">        nn.Conv2d(</span><br><span class="line">            in_channels,</span><br><span class="line">            out_channels,</span><br><span class="line">            kernel_size=<span class="number">1</span>,</span><br><span class="line">            stride=(stride, <span class="number">1</span>)),</span><br><span class="line">        nn.BatchNorm2d(out_channels),</span><br><span class="line">    )</span><br><span class="line"></span><br><span class="line">self.relu = nn.ReLU(inplace=<span class="literal">True</span>)</span><br></pre></td></tr></table></figure></p>
+<p><img src="/2019/08/24/14_ST-Gcn/stgcn4.png" alt="paper中模型的阐述"><center>paper中模型的阐述</center></p>
+<p>作者貌似将第一层的<code>st_gcn(in_channels, 64, kernel_size, 1, residual=False, **kwargs0)</code>不算作stgcn模块中，所以一共有9层。每一个st-gcn层(这里不要把层和模型的名字搞混淆了)都用residual模块来改进。可以在源码中看出来当通道数要增加时，作者使用1x1conv来进行通道的翻倍，另外使用<code>stride = 2</code>来完成pool的效果使得长宽减半。这里埋个Residual Net的坑。</p>
+<p>st-gcn层其实包含了两个主要的模块</p>
+<ol>
+<li>对于spatial空间的 <code>gcn：ConvTemporalGraphical</code>模块</li>
+<li>对于temporal空间的 <code>tcn</code>模块</li>
+</ol>
+<p>前面总是将两个空间和着一块说，而且又将2维度与CNN中卷积核相类比，很容易将这里理解错误，st-gcn在卷积时其实是分开卷积的先卷spatial，再卷temporal，而这两维的合起来就是拓展意义上的卷积核，在实际操作中对于单一的一维(时间维或者空间维)是非开使用卷积核的2维的数据的。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">self.gcn = ConvTemporalGraphical(in_channels, out_channels,kernel_size[<span class="number">1</span>]) <span class="comment">#使用卷积核的第二维即 3 组</span></span><br><span class="line"></span><br><span class="line">self.tcn = nn.Sequential(</span><br><span class="line">            nn.BatchNorm2d(out_channels),</span><br><span class="line">            nn.ReLU(inplace=<span class="literal">True</span>),</span><br><span class="line">            nn.Conv2d(</span><br><span class="line">                out_channels,</span><br><span class="line">                out_channels,</span><br><span class="line">                (kernel_size[<span class="number">0</span>], <span class="number">1</span>), <span class="comment">#使用卷积核的第一维即 9 帧</span></span><br><span class="line">                (stride, <span class="number">1</span>),</span><br><span class="line">                padding,</span><br><span class="line">            ),</span><br><span class="line">            nn.BatchNorm2d(out_channels),</span><br><span class="line">            nn.Dropout(dropout, inplace=<span class="literal">True</span>),</span><br><span class="line">        )</span><br></pre></td></tr></table></figure></p>
+<h1 id="10-GCN与TCN模块"><a href="#10-GCN与TCN模块" class="headerlink" title="10 GCN与TCN模块"></a>10 GCN与TCN模块</h1><p>每一个st-gcn是由GCN、TCN构成的，那么我们需要弄明白这个最小的构成单元的运行流程以及其原理</p>
+<h2 id="10-1-GCN"><a href="#10-1-GCN" class="headerlink" title="10.1 GCN"></a>10.1 GCN</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">self.gcn = ConvTemporalGraphical(in_channels, out_channels,kernel_size[<span class="number">1</span>])</span><br></pre></td></tr></table></figure>
+<p>在st-gcn中调用是这一行，传入了输入的通道层、输出的通道层的数量，最后是空间维的卷积核大小，在paper中作者说了分成3组</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># st_gcn.py</span></span><br><span class="line"></span><br><span class="line">...</span><br><span class="line"><span class="keyword">if</span> edge_importance_weighting:</span><br><span class="line">    self.edge_importance = nn.ParameterList([</span><br><span class="line">        nn.Parameter(torch.ones(self.A.size())) <span class="comment">## initial with one</span></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> self.st_gcn_networks</span><br><span class="line">    ])</span><br><span class="line">...</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">forward</span><span class="params">()</span>:</span></span><br><span class="line">    ...</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> gcn, importance <span class="keyword">in</span> zip(self.st_gcn_networks, self.edge_importance):</span><br><span class="line">    x, _ = gcn(x, self.A * importance)</span><br><span class="line"></span><br><span class="line">    ...</span><br><span class="line"></span><br><span class="line"><span class="comment">#tgcn.py</span></span><br><span class="line"><span class="comment"># forwad</span></span><br><span class="line"><span class="comment"># for gcn, importance in zip(self.st_gcn_networks, self.edge_importance):</span></span><br><span class="line"><span class="comment">#     x, _ = gcn(x, self.A * importance)</span></span><br><span class="line"><span class="comment"># 注意在forward传入的A并不是单纯的self.A,而是self.A * importance</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ConvTemporalGraphical</span><span class="params">(nn.Module)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self,</span></span></span><br><span class="line"><span class="function"><span class="params">                 in_channels,</span></span></span><br><span class="line"><span class="function"><span class="params">                 out_channels,</span></span></span><br><span class="line"><span class="function"><span class="params">                 kernel_size,</span></span></span><br><span class="line"><span class="function"><span class="params">                 t_kernel_size=<span class="number">1</span>,</span></span></span><br><span class="line"><span class="function"><span class="params">                 t_stride=<span class="number">1</span>,</span></span></span><br><span class="line"><span class="function"><span class="params">                 t_padding=<span class="number">0</span>,</span></span></span><br><span class="line"><span class="function"><span class="params">                 t_dilation=<span class="number">1</span>,</span></span></span><br><span class="line"><span class="function"><span class="params">                 bias=True)</span>:</span></span><br><span class="line">        super().__init__()</span><br><span class="line"></span><br><span class="line">        self.kernel_size = kernel_size</span><br><span class="line">        self.conv = nn.Conv2d(</span><br><span class="line">            in_channels,</span><br><span class="line">            out_channels * kernel_size,</span><br><span class="line">            kernel_size=(t_kernel_size, <span class="number">1</span>),</span><br><span class="line">            padding=(t_padding, <span class="number">0</span>),</span><br><span class="line">            stride=(t_stride, <span class="number">1</span>),</span><br><span class="line">            dilation=(t_dilation, <span class="number">1</span>),</span><br><span class="line">            bias=bias)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">forward</span><span class="params">(self, x, A)</span>:</span></span><br><span class="line">        <span class="keyword">assert</span> A.size(<span class="number">0</span>) == self.kernel_size</span><br><span class="line"></span><br><span class="line">        x = self.conv(x)</span><br><span class="line"></span><br><span class="line">        n, kc, t, v = x.size()</span><br><span class="line">        x = x.view(n, self.kernel_size, kc//self.kernel_size, t, v)</span><br><span class="line">        x = torch.einsum(<span class="string">'nkctv,kvw-&gt;nctw'</span>, (x, A))</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> x.contiguous(), A</span><br></pre></td></tr></table></figure>
+<p>上面这段代码坑其实挺多的</p>
+<ol>
+<li><p>输入是什么？ 这个问题如果前面仔细看了的话会比较明白，但是对于分开代码看得人或许会出现疑问：网络的输入不是(batch_size,c,t,v,m)吗，怎么直接进行卷积了？卷积要求不是(n,c,h,w)的格式吗？如果不明白请在前面找答案，这里就不重复了。</p>
+</li>
+<li><p>难道这个空域的<code>learning paramaters</code>就是<code>conv(x)</code>里面的参数吗？<code>conv</code>的核还是<code>1 x 1</code>的显然与paper中<code>3 x 1</code>不符合呢？</p>
+</li>
+</ol>
+<p>为解决上面的问题，需要先看观察网络中训练的参数：</p>
+<ul>
+<li><strong>Conv1_1</strong>中的参数</li>
+<li>A中<strong>importance</strong>的参数<br>A使用来进行图卷积的，所以看来gcn中卷积核的参数只能是这个<strong>Conv1_1</strong>了，但是这是怎么做到分为3组不同的权值进行计算呢？<br>下面将与<strong>CNN</strong>中做对比来讲解：<br><img src="/2019/08/24/14_ST-Gcn/stgcn2_10.png" alt="CNN GCN对比"><center>CNN GCN对比图</center><br>有了这幅图我们理解作者的意图就很容易了，X是输入的特征矩阵，为了便于说清楚原理，我们先讨论batch_size为1的情况，这样我们的输入就是(c,t,v)的特征blob，(在第一层输入c = 3)而tgcn中的<code>conv1_1</code>参数是(in_chanl,kernel_size*out_chanl)所以在内部会有kernel_size组blob，每个blob的<code>c = out_chanl</code>,每一个blob是由<code>kernel_size×out_chanl个不同的conv1_1</code>来实现卷积操作的，可以抽象地将这么多个卷积核分成3组，即上图中3行，每一行有out_chanl个Conv1_1卷积核。最终得到的卷积后的特征也分为3组。因为之前就将18个点分了各自的组的，所以后面又使用A矩阵来进行图卷积如下图所示<br><img src="/2019/08/24/14_ST-Gcn/stgcn2_3.png" alt="图卷积公式2"><center>图卷积公式2</center><br>GCN图卷积公式的介绍可以参考[这篇文章][<a href="https://www.zhihu.com/question/54504471/answer/611222866" target="_blank" rel="noopener">https://www.zhihu.com/question/54504471/answer/611222866</a>]</li>
+</ul>
+<p>可以简单地理解所谓图卷积就是用图卷积核($D^{-1}A$)来乘以每一个特征，可以看到图(CNN GCN对比图)中后半部分，对于每一组的18点的out_put个通道特征，我们需要用$D^{-1}A$去乘以每一个特征，具体地，C = 0时，表示取一维特征，取出18点的一维特征(蓝色框)然后使用卷积核第一行的每组参数去进行乘积加权运算(红色线标注)，一次迭代后w自增，使用卷积核第二行的每组参数去进行乘积加权运算(绿色线标注)<br><img src="/2019/08/24/14_ST-Gcn/stgcn2_11.png" alt="图卷积过程示意"><center>图卷积过程示意</center></p>
+<h3 id="注意力模型"><a href="#注意力模型" class="headerlink" title="注意力模型"></a>注意力模型</h3><p>A的每一层(3,18,18)都拥有一个权值层<code>(1,18,18)</code>,所以<code>edge_importance</code>是(3,18,18)对于每一A中的组，其权值都是不一样的。每一层<code>st_gcn</code>层也应拥有该层独立的图卷积核参数，这样照应了paper中作者所说的将节点分为3组，权值都是不同的。每一个<code>edge_importance</code>初始值为1,且是Parameter类型，梯度可以回流从而进行优化。<br><img src="/2019/08/24/14_ST-Gcn/stgcn2_9.png" alt="空域卷积示意图"><center>空域卷积示意图</center></p>
+<p>整个流程可以这样理解：<br><img src="/2019/08/24/14_ST-Gcn/stgcn1_1.png" alt="gcn过程示意图"><center>st-gcn过程示意图</center></p>
+<h3 id="10-1-1-爱因斯坦求和约定"><a href="#10-1-1-爱因斯坦求和约定" class="headerlink" title="10.1.1 爱因斯坦求和约定"></a>10.1.1 爱因斯坦求和约定</h3><p>在<code>ConvTemporalGraphical</code>类中代码不多，但是原理比较难以理解，特别是在forward时作者使用了<code>einsum</code>的矩阵抽象乘积表达式，这让之前没有了解过这种书写格式的我费了很大功夫。对于爱因斯坦求和约定网上的博客讲的很少。<br><code>x = torch.einsum(&#39;nkctv,kvw-&gt;nctw&#39;, (x, A))</code>这行代码的意思可以翻译为：<br><img src="/2019/08/24/14_ST-Gcn/stgcn2_1.png" alt="张量计算"><center>张量计算</center></p>
+<p><strong>疑问</strong>:paper中所说的图卷积公式是这样的：<br><img src="/2019/08/24/14_ST-Gcn/stgcn2_2.png" alt="图卷积公式1"><center>图卷积公式1</center></p>
+<p>但是在源码中却是这样的：<br><img src="/2019/08/24/14_ST-Gcn/stgcn2_3.png" alt="图卷积公式2"><center>图卷积公式2</center><br>一开始，为对这里非常不理解直到参考了<a href="https://www.zhihu.com/question/54504471/answer/611222866" target="_blank" rel="noopener">GCN图卷积公式</a><br><img src="/2019/08/24/14_ST-Gcn/stgcn2_4.png" alt="图卷积公式3"><center>图卷积公式2</center><br>发现图卷积公式是有很多种的，源码和paper中的都可以。</p>
+<p><strong>疑问</strong>:对于对于公式$D^{-1}AX$来说那应该是A在左边X在右，但是代码中<code>x = torch.einsum(&#39;nkctv,kvw-&gt;nctw&#39;, (x, A))</code>却是在反的，计算会出错吗？</p>
+<p><strong>解答</strong>爱因斯坦求和不是矩阵的运算，而是对应的元素的线性变换，在代码中是与先后无关的。这段求和可以这样理解：<br><img src="/2019/08/24/14_ST-Gcn/stgcn2_5.png" alt="eins求和"><center>eins求和</center></p>
+<p>为了更好的理解einsum在这里举一个例子：<br><img src="/2019/08/24/14_ST-Gcn/stgcn2_6.png" alt="eins求和"><center>eins例子</center><br>这里也再次<strong>强调</strong>下如果改为<code>B = torch.einsum(&quot;ikl,ijk-&gt; ijl&quot;,b,a)</code>即<strong>B在前A在后</strong>，其结果是<strong>一样</strong>的,这里不论顺序，只要维度能匹配上就会按照正确顺序进行内积，其实从<strong>代码角度</strong>也可以理解，在第二轮计算和时是没有管谁前谁后的，就是k维度的遍历，然后依次加起来。<br><img src="/2019/08/24/14_ST-Gcn/stgcn2_7.png" alt="eins代码角度分析"><center>eins代码角度分析</center><br>综上，einsum中是<strong>不用在意变量的顺序的</strong></p>
+<h2 id="10-2-TCN"><a href="#10-2-TCN" class="headerlink" title="10.2 TCN"></a>10.2 TCN</h2><p>在GCN后面紧跟着就是TCN的模块，该模块让网络在时域中进行特征的提取，类似与LSTM，GCN的输出是一个(n,c,t,w)的blob，在TCN中可以简单的理解为和CNN的输入格式一样。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">self.tcn = nn.Sequential(</span><br><span class="line">            nn.BatchNorm2d(out_channels),</span><br><span class="line">            nn.ReLU(inplace=<span class="literal">True</span>),</span><br><span class="line">            nn.Conv2d(</span><br><span class="line">                out_channels,</span><br><span class="line">                out_channels, <span class="comment"># 不改变chanl值</span></span><br><span class="line">                (kernel_size[<span class="number">0</span>], <span class="number">1</span>),</span><br><span class="line">                (stride, <span class="number">1</span>), <span class="comment"># stride可以控制t域的缩小，可当做poolling操作</span></span><br><span class="line">                padding,</span><br><span class="line">            ),</span><br><span class="line">            nn.BatchNorm2d(out_channels),</span><br><span class="line">            nn.Dropout(dropout, inplace=<span class="literal">True</span>),</span><br><span class="line">        )</span><br></pre></td></tr></table></figure></p>
+<p>一个TCN层由下面组成</p>
+<ul>
+<li>BN 模块</li>
+<li>Conv2d 模块</li>
+<li>BN 模块</li>
+<li>Dropout 模块<br>BN的用法参考我之前的BN的文章。这里主要就是Conv2d的卷积模块，卷积核大小为(9,1)，</li>
+</ul>
+<p>在10.1节中介绍了GCN，在GCN中只对每一帧的空间信息进行卷积，将18个特征分为3组置于不同的权值相当于卷积核大小为(3,1)的卷积操作(3个权值取加权平均置于目标位置)，其输出仍然是一个(n,c,t=300,v=18)的blob。</p>
+<p>在TCN的模块就是对T的卷积了，这部分比gcn容易理解，就是正常的卷积操作，对于同一个节点在不同t下的特征的卷积。</p>
+<p>至此我们就完成了st-gcn的模型框架的分析，下面是一些实验结果：</p>
+<h1 id="11-结果"><a href="#11-结果" class="headerlink" title="11 结果"></a>11 结果</h1><p>数据集：hmdb51<br>首先使用OpenPose对视频进行pose节点的预测，将输出进行格式化输出到json文件中<br><img src="/2019/08/24/14_ST-Gcn/st_gcn3_1.png" alt="节点json文件"><center>节点json文件</center>OpenPose 的运用可以参考之前一篇专门将OpenPose的文章。</p>
+<p>使用st_gcn进行数据的读入<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_data_from_json</span><span class="params">(self,output_path)</span>:</span></span><br><span class="line">    FRAME_HEIGHT = <span class="number">256</span></span><br><span class="line">    FRAME_WIDTH = <span class="number">360</span></span><br><span class="line">    <span class="keyword">with</span> open(output_path, <span class="string">'r'</span>) <span class="keyword">as</span> f:</span><br><span class="line">        video_info = json.load(f)</span><br><span class="line"></span><br><span class="line">    data_numpy = np.zeros((<span class="number">3</span>, <span class="number">300</span>, <span class="number">18</span>, <span class="number">2</span>))</span><br><span class="line">    <span class="keyword">for</span> frame_info <span class="keyword">in</span> video_info[<span class="string">'data'</span>]:</span><br><span class="line">        frame_index = frame_info[<span class="string">'frame_index'</span>]</span><br><span class="line">        <span class="keyword">if</span> frame_info[<span class="string">"skeleton"</span>] == <span class="literal">None</span>:</span><br><span class="line">            <span class="keyword">continue</span></span><br><span class="line">        <span class="keyword">for</span> m, skeleton_info <span class="keyword">in</span> enumerate(frame_info[<span class="string">"skeleton"</span>]):</span><br><span class="line">            <span class="keyword">if</span> m &gt;= <span class="number">2</span>:</span><br><span class="line">                <span class="keyword">break</span></span><br><span class="line">            pose = skeleton_info[<span class="string">'pose'</span>]</span><br><span class="line">            score = skeleton_info[<span class="string">'score'</span>]</span><br><span class="line">            data_numpy[<span class="number">0</span>, frame_index, :, m] = np.array(pose[<span class="number">0</span>::<span class="number">2</span>]) / FRAME_WIDTH</span><br><span class="line">            data_numpy[<span class="number">1</span>, frame_index, :, m] = np.array(pose[<span class="number">1</span>::<span class="number">2</span>]) / FRAME_HEIGHT</span><br><span class="line">            data_numpy[<span class="number">2</span>, frame_index, :, m] = score</span><br><span class="line">    data_numpy[<span class="number">0</span>:<span class="number">2</span>] = data_numpy[<span class="number">0</span>:<span class="number">2</span>] - <span class="number">0.5</span></span><br><span class="line">    data_numpy[<span class="number">0</span>][data_numpy[<span class="number">2</span>] == <span class="number">0</span>] = <span class="number">0</span></span><br><span class="line">    data_numpy[<span class="number">1</span>][data_numpy[<span class="number">2</span>] == <span class="number">0</span>] = <span class="number">0</span></span><br><span class="line">    <span class="keyword">return</span> data_numpy[np.newaxis,:]</span><br></pre></td></tr></table></figure></p>
+<p>使用网络对其进行预测，这里我<strong>首先测试对于一个类，st-gcn的预测精度是多少</strong>,测试的类别是pull_up类。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">predic</span><span class="params">(self,json_file_path)</span>:</span></span><br><span class="line">    filenames = os.listdir(json_file_path)</span><br><span class="line">    label_name=[]</span><br><span class="line">    <span class="keyword">with</span> open(<span class="string">'./resource/kinetics_skeleton/label_name.txt'</span>, <span class="string">'r'</span>) <span class="keyword">as</span> f:</span><br><span class="line">        <span class="keyword">for</span> line <span class="keyword">in</span> f:</span><br><span class="line">            label_name.append(line.strip(<span class="string">'\n'</span>))</span><br><span class="line">    ret = []</span><br><span class="line">    <span class="comment"># 对每一个待检测的json文件进行预测</span></span><br><span class="line">    <span class="keyword">for</span> fn <span class="keyword">in</span> filenames:</span><br><span class="line">        self.model.eval()</span><br><span class="line">        json_path = os.path.join(json_file_path,str(fn))</span><br><span class="line">        data = self.get_data_from_json(json_path)</span><br><span class="line">        data_tensor = torch.from_numpy(data)</span><br><span class="line">        data_tensor = data_tensor.float().to(self.dev)</span><br><span class="line">        <span class="keyword">del</span>(data)</span><br><span class="line">        <span class="keyword">with</span> torch.no_grad():</span><br><span class="line">            output = self.model(data_tensor)</span><br><span class="line">            output = output.data.cpu().numpy()</span><br><span class="line">            max_probablity_index = output.argmax(axis = <span class="number">1</span>)</span><br><span class="line">        <span class="comment"># label_name = np.loadtxt('./resource/kinetics_skeleton/label_name.txt',dtype=str,delimiter=None,)</span></span><br><span class="line">        <span class="comment"># print(max_probablity_index)</span></span><br><span class="line">        ret.append(label_name[int(max_probablity_index)])</span><br><span class="line">        <span class="comment"># print(label_name[int(max_probablity_index)])</span></span><br><span class="line">    cnt = <span class="number">0</span></span><br><span class="line">    <span class="keyword">for</span> it <span class="keyword">in</span> ret:</span><br><span class="line">        <span class="keyword">if</span> it == <span class="string">'pull ups'</span>:</span><br><span class="line">            cnt +=<span class="number">1</span></span><br><span class="line">    print(ret)</span><br><span class="line">    print(cnt/len(ret))</span><br></pre></td></tr></table></figure></p>
+<p>最终结果为<br><img src="/2019/08/24/14_ST-Gcn/stgcn3_2.png" alt="预测结果"><center>预测结果</center></p>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><p><a href="https://blog.csdn.net/qq_41727666/article/details/84640549" target="_blank" rel="noopener">GCN_smi</a><br><a href="https://www.zhihu.com/question/276101856/answer/638672980" target="_blank" rel="noopener">st-gcn论文解析</a><br><a href="https://blog.csdn.net/taoqick/article/details/78545493" target="_blank" rel="noopener">对角矩阵</a></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/DL/" rel="tag"># DL</a>
+          
+            <a href="/tags/Pytorch/" rel="tag"># Pytorch</a>
+          
+            <a href="/tags/Python/" rel="tag"># Python</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/08/19/1_CLion_CPP/" rel="next" title="Clion 与 C++基础">
+                <i class="fa fa-chevron-left"></i> Clion 与 C++基础
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/08/25/15_Python_Basic/" rel="prev" title="Python CV基础">
+                Python CV基础 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/avatar.gif" alt="JoeyF">
+            
+              <p class="site-author-name" itemprop="name">JoeyF</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">21</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">17</span>
+                  <span class="site-state-item-name">tags</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/ZhouYiiFeng" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:joeyf.z.y.wen@gmail.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-论文framework"><span class="nav-number">1.</span> <span class="nav-text">1 论文framework</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-论文特点"><span class="nav-number">2.</span> <span class="nav-text">2 论文特点</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-GCN"><span class="nav-number">3.</span> <span class="nav-text">3 GCN</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#4-论文解读"><span class="nav-number">4.</span> <span class="nav-text">4 论文解读</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#5-Introduction"><span class="nav-number">5.</span> <span class="nav-text">5. Introduction</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#5-1-早期的利用skeleton的动作识别"><span class="nav-number">5.1.</span> <span class="nav-text">5.1 早期的利用skeleton的动作识别</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#6-Method"><span class="nav-number">6.</span> <span class="nav-text">6 Method</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#6-1-时间维度"><span class="nav-number">6.1.</span> <span class="nav-text">6.1 时间维度</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-2-空间维度"><span class="nav-number">6.2.</span> <span class="nav-text">6.2 空间维度</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-3-什么是时空域的图卷积"><span class="nav-number">6.3.</span> <span class="nav-text">6.3 什么是时空域的图卷积</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#7-Graph的建立"><span class="nav-number">7.</span> <span class="nav-text">7 Graph的建立</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#7-1-邻接矩阵的建立"><span class="nav-number">7.1.</span> <span class="nav-text">7.1 邻接矩阵的建立</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#7-1-1-np-linalg-matrix-power-matrix-expo"><span class="nav-number">7.1.1.</span> <span class="nav-text">7.1.1 np.linalg.matrix_power(matrix, expo)</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#7-2-归一化以及快速图卷积的与处理"><span class="nav-number">7.2.</span> <span class="nav-text">7.2 归一化以及快速图卷积的与处理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#7-2-1-Pytorch-中-register-buffer"><span class="nav-number">7.2.1.</span> <span class="nav-text">7.2.1 Pytorch 中 register_buffer</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#8-网络的输入"><span class="nav-number">8.</span> <span class="nav-text">8 网络的输入</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#9-Model"><span class="nav-number">9.</span> <span class="nav-text">9 Model</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#10-GCN与TCN模块"><span class="nav-number">10.</span> <span class="nav-text">10 GCN与TCN模块</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#10-1-GCN"><span class="nav-number">10.1.</span> <span class="nav-text">10.1 GCN</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#注意力模型"><span class="nav-number">10.1.1.</span> <span class="nav-text">注意力模型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#10-1-1-爱因斯坦求和约定"><span class="nav-number">10.1.2.</span> <span class="nav-text">10.1.1 爱因斯坦求和约定</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#10-2-TCN"><span class="nav-number">10.2.</span> <span class="nav-text">10.2 TCN</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#11-结果"><span class="nav-number">11.</span> <span class="nav-text">11 结果</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考"><span class="nav-number">12.</span> <span class="nav-text">参考</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">JoeyF</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Gemini</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+
+
+  
+
+  
+
+</body>
+</html>

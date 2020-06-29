@@ -1,0 +1,986 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="DL,Python,caffe,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="learn_numpy_python dot = np.dot(x1,x2) 矩阵点积，一维是向量内积，多维是矩阵乘法运算,矩阵相乘一般采用dot,而元素对应相乘一般使用*。  12345outer = np.outer(a,b)   #矩阵点乘 a = [a0, a1, ..., aM],b = [b0, b1, ..., bN][[a0*b0  a0*b1 ... a0*bN ][a1*b0">
+<meta name="keywords" content="DL,Python,caffe">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Python+Caffe学习记录">
+<meta property="og:url" content="http://zhoef.com/2019/07/11/2_Python+Caffe学习记录/index.html">
+<meta property="og:site_name" content="JoeyF&#39;s Home">
+<meta property="og:description" content="learn_numpy_python dot = np.dot(x1,x2) 矩阵点积，一维是向量内积，多维是矩阵乘法运算,矩阵相乘一般采用dot,而元素对应相乘一般使用*。  12345outer = np.outer(a,b)   #矩阵点乘 a = [a0, a1, ..., aM],b = [b0, b1, ..., bN][[a0*b0  a0*b1 ... a0*bN ][a1*b0">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2019-08-01T15:38:26.690Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Python+Caffe学习记录">
+<meta name="twitter:description" content="learn_numpy_python dot = np.dot(x1,x2) 矩阵点积，一维是向量内积，多维是矩阵乘法运算,矩阵相乘一般采用dot,而元素对应相乘一般使用*。  12345outer = np.outer(a,b)   #矩阵点乘 a = [a0, a1, ..., aM],b = [b0, b1, ..., bN][[a0*b0  a0*b1 ... a0*bN ][a1*b0">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://zhoef.com/2019/07/11/2_Python+Caffe学习记录/">
+
+
+
+
+
+  <title>Python+Caffe学习记录 | JoeyF's Home</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="default">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">JoeyF's Home</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            About
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://zhoef.com/2019/07/11/2_Python+Caffe学习记录/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="JoeyF">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="JoeyF's Home">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Python+Caffe学习记录</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-07-11T12:39:39+08:00">
+                2019-07-11
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="learn-numpy-python"><a href="#learn-numpy-python" class="headerlink" title="learn_numpy_python"></a>learn_numpy_python</h1><ol>
+<li><p><code>dot = np.dot(x1,x2)</code> 矩阵点积，一维是向量内积，多维是矩阵乘法运算,矩阵相乘一般采用<code>dot</code>,而元素对应相乘一般使用<code>*</code>。</p>
+</li>
+<li><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">outer = np.outer(a,b)   <span class="comment">#矩阵点乘 a = [a0, a1, ..., aM],b = [b0, b1, ..., bN]</span></span><br><span class="line">[[a0*b0  a0*b1 ... a0*bN ]</span><br><span class="line">[a1*b0    .</span><br><span class="line">[ ...          .</span><br><span class="line">[aM*b0            aM*bN ]]</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><code>mul = np.multiply(x1,x2)</code>  #对应元素相乘。</p>
+</li>
+<li><ol>
+<li><p>图像的表示方法是<code>1797 × 64</code><br>  <code>picture_data = data.reshape(-1,8,8,1)</code> -1表示不知道，两个8表示8行8列，1表示一维空间（彩色是在处理的时候是三维空间RGB），整短代码就是说，把    <code>1797*64</code>这个矩阵，变换成<code>8*8</code>的不知道多少个的矩阵，</p>
+<ol>
+<li><code>arr.reshape(3,3)</code>把<code>arr</code>变成一个<code>3×3</code>的矩阵，行、列</li>
+</ol>
+</li>
+</ol>
+</li>
+</ol>
+<h2 id="T20190418"><a href="#T20190418" class="headerlink" title="T20190418:"></a>T20190418:</h2><ol>
+<li><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">np.array[:]-&gt;全部元素。</span><br><span class="line">np.array[1:]-&gt;从第一个到最后一个。</span><br><span class="line">[[1,2,3],[1,2,3]] -&gt; np.array[1:][0] = 1;</span><br></pre></td></tr></table></figure>
+</li>
+<li><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">X_flatten = X.reshape(X.shape[<span class="number">0</span>], <span class="number">-1</span>).T      <span class="comment"># X.T is the transpose of X.where each column represents a flattened image</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p><code>train_set_x_flatten = train_set_x_orig.reshape(train_set_x_orig.shape[0],-1).T</code><br><strong>与</strong><br><code>train_set_x_flatten = train_set_x_orig.reshape(train_set_x_orig.shape[1]*train_set_x_orig.shape[2]*train_set_x_orig.shape[3],-1)</code><br><strong>的区别：</strong></p>
+</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">reshape -&gt; 以行为先，计算得到每行多少个数据，然后铺满。</span><br><span class="line">故当 input data image = 64 x 64 x 3 x 209 时</span><br><span class="line">reshape(209,-1).T -&gt; 每一行存 64 x 64 x 3 个相邻元素。</span><br><span class="line">reshape(64 x 64 x 3,-1) -&gt; 每一行存 209 个相邻元素，这个209个是一张img中的像素</span><br><span class="line">[</span><br><span class="line"> [</span><br><span class="line">	[</span><br><span class="line">		[12,33,22 -&gt; channel[0]] -&gt; cols[0]</span><br><span class="line">  		[..,..,..]</span><br><span class="line">		..</span><br><span class="line">		[] -&gt; col[63]</span><br><span class="line"> 	] -&gt; rows[0]</span><br><span class="line"> 	[</span><br><span class="line"> 		[,,]</span><br><span class="line"> 	]</span><br><span class="line"> 	[]</span><br><span class="line"> 	...</span><br><span class="line">    [] -&gt;row[63]</span><br><span class="line"> ] -&gt; image[0]</span><br><span class="line"></span><br><span class="line"> [..</span><br><span class="line"> 	..] -&gt; image[Indx]</span><br><span class="line"> [..</span><br><span class="line"> 	..]</span><br><span class="line">]//209</span><br></pre></td></tr></table></figure>
+<ol>
+<li>循环语句、条件<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> ... :</span><br><span class="line">	( ~ -&gt; 非)</span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(m):</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">python 中 map 的构建：</span><br><span class="line">m&#123;&#125;;</span><br><span class="line">m&#123;<span class="string">"key1"</span> : value1,</span><br><span class="line">  <span class="string">"key2"</span> : value2</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="T20190425"><a href="#T20190425" class="headerlink" title="T20190425:"></a>T20190425:</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">PYTHON 中的<span class="string">" %S"</span>%用法:</span><br><span class="line">name= input(<span class="string">"Please input your name: "</span>)</span><br><span class="line">print(<span class="string">"Hello, %s good morning!"</span> %name)</span><br><span class="line"> <span class="string">"%s1"</span>%S2   s1放置的是一个字符串(格式化字符串)  	S2放置的是一个希望要格式化的值</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">array: [<span class="number">1</span>] * <span class="number">2</span>+[<span class="number">12</span>,<span class="number">2</span>]=[<span class="number">1</span>,<span class="number">1</span>,<span class="number">12</span>,<span class="number">2</span>]</span><br></pre></td></tr></table></figure>
+<h2 id="T20190426-安装PyCharm-配置Pycaffe"><a href="#T20190426-安装PyCharm-配置Pycaffe" class="headerlink" title="T20190426: 安装PyCharm, 配置Pycaffe"></a>T20190426: 安装PyCharm, 配置Pycaffe</h2><p><code>Python</code> 解释器为<code>C:\Development\Anaconda3\envs\py36\python3.6</code><br><code>Anaconda3</code> 已经安装好了<code>numpy matplot scipy</code> 等库<br><code>Pycaffe</code> 接口的配置步骤:<br>参考<code>happynear</code> 中 <code>readme</code> ：[blog][<a href="https://github.com/happynear/caffe-windows/blob/ms/README.md" target="_blank" rel="noopener">https://github.com/happynear/caffe-windows/blob/ms/README.md</a>]</p>
+<ol>
+<li><p>必须是<strong><code>python2.7</code></strong>版本，因为<code>third party libraries</code> 是用<code>python2.7</code>制作的，且<code>_caffe.cpp</code>中的头文件也是<code>python2.7</code>的格式。</p>
+</li>
+<li><p><code>Miniconda</code>下载时可以勾选<code>add to path</code>,将其加入环境变量中。然后使用<code>prompt</code>下载<code>python</code>的几个库。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">conda install --yes numpy scipy matplotlib scikit-image pip</span><br><span class="line">pip install protobuf</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>修改<code>caffe</code>项目<code>sln</code>中的<strong><code>CommonSettings.props</code></strong>文件</p>
+</li>
+</ol>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">1. <span class="tag">&lt;<span class="name">PythonSupport</span>&gt;</span>true<span class="tag">&lt;/<span class="name">PythonSupport</span>&gt;</span></span><br><span class="line">2. </span><br><span class="line"><span class="tag">&lt;<span class="name">PropertyGroup</span> <span class="attr">Condition</span>=<span class="string">"'$(PythonSupport)'=='true'"</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;/<span class="name">PropertyGroup</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">PythonDir</span>&gt;</span> C:\Development\Miniconda2 <span class="tag">&lt;/<span class="name">PythonDir</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">LibraryPath</span>&gt;</span>$(PythonDir)\libs;C:\Development\Miniconda2\libs;$(LibraryPath)<span class="tag">&lt;/<span class="name">LibraryPath</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">IncludePath</span>&gt;</span>$(PythonDir)\include;C:\Development\Miniconda2\include;$(IncludePath)<span class="tag">&lt;/<span class="name">IncludePath</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;/<span class="name">PropertyGroup</span>&gt;</span>	#（必须时绝对路径）可以解决cannot open python2.7, cannot find pyconfig.h等文件无法找到或打开问题</span><br></pre></td></tr></table></figure>
+<ol>
+<li>配置<code>pycaffe Property</code></li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">1.include Directoies: 设为 </span><br><span class="line">	1.C:\Development\Miniconda2\Lib\site-packages\numpy\core\include</span><br><span class="line">	2.C:\Development\Miniconda2\include</span><br><span class="line">2.library Directories 设为</span><br><span class="line">	1.C:\Development\Miniconda2\libs</span><br><span class="line">3.Treat Warnings as error = no</span><br></pre></td></tr></table></figure>
+<ol>
+<li>编译<code>Pycaffe</code>文件</li>
+<li>Set <code>PythonPath</code> environment variable refer to <code>&lt;caffe_root&gt;\Build\x64\Release\pycaffe</code>。</li>
+</ol>
+<h2 id="T20190427："><a href="#T20190427：" class="headerlink" title="T20190427："></a>T20190427：</h2><ol>
+<li>成功使用<code>Python+Pycharm</code>训练起了<code>FCN</code>，数据集为<code>onhand10K</code>的手势数据集。2分类问题。</li>
+<li>参考了Blog(FCN训练不收敛的原因分析和最详细的FCN训练与测试自己的数据程序配置)<ol>
+<li><code>Pycaffe</code>写<code>train.prototxt</code>, <code>solve.prototxt</code> , <code>deploy.prototxt</code>.<ol>
+<li><code>Pycharm</code>中导入写<code>Caffe</code>层(<code>prototxt</code>层)是没有智能提示的，因为他是用<code>python</code>外包的。直接调用即可。</li>
+<li>参考(<code>caffe Python API</code>整理)：(参考博客[blog][<a href="https://www.jianshu.com/p/1a420445deea" target="_blank" rel="noopener">https://www.jianshu.com/p/1a420445deea</a>])</li>
+</ol>
+</li>
+</ol>
+</li>
+</ol>
+<h4 id="DATA层"><a href="#DATA层" class="headerlink" title="DATA层:"></a><strong>DATA层</strong>:</h4><p>返回data和label可以在之后的层中作为输入。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">data, label = L.Data( batch_size=batch_size, </span><br><span class="line">                        backend=P.Data.LMDB, //数据库来源</span><br><span class="line">                        source=<span class="string">'mnist/mnist_test_lmdb'</span>,</span><br><span class="line">                        transform_param=dict(scale=<span class="number">1.</span>/<span class="number">255</span>), </span><br><span class="line">                        ntop=<span class="number">2</span>  <span class="comment">#指定返回两个top blob )</span></span><br></pre></td></tr></table></figure></p>
+<h4 id="卷积层"><a href="#卷积层" class="headerlink" title="卷积层:"></a><strong>卷积层</strong>:</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">conv1 = L.Convolution( data_blob, </span><br><span class="line">   						kernel_size=<span class="number">5</span>, </span><br><span class="line">   						num_output=<span class="number">20</span>, </span><br><span class="line">   						weight_filler=dict(type=<span class="string">'xavier'</span>) )</span><br></pre></td></tr></table></figure>
+<p>这些都可以写成内部的函数然后就有智能提示啦啦啦，顺便还可以将一个<code>conv+relu</code>合成一块。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">conv</span><span class="params">(..,..,..)</span></span></span><br><span class="line">	conv1 = L.Convolution;</span><br><span class="line">	relu1 = L.ReLU;</span><br><span class="line"><span class="keyword">return</span> conv1,relu1</span><br></pre></td></tr></table></figure>
+<p>需要<strong>注意</strong>的是：前一个的<strong>输出名字</strong>得作为第二个的<strong>输入时的名字</strong>，<strong>名称</strong>要匹配。</p>
+<h4 id="全连接层"><a href="#全连接层" class="headerlink" title="全连接层:"></a><strong>全连接层</strong>:</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">n.fc = L.InnerProduct(n.pool,</span><br><span class="line">					    param=</span><br><span class="line">							[</span><br><span class="line">								dict(lr_mult=<span class="number">1</span>,</span><br><span class="line">								decay_mult=<span class="number">1</span>),</span><br><span class="line">								dict(lr_mult=<span class="number">1</span>,</span><br><span class="line">								decay_mult=<span class="number">1</span>)</span><br><span class="line">							],</span><br><span class="line">						inner_product_param = </span><br><span class="line">							dict(</span><br><span class="line">									num_output = <span class="number">4096</span>, </span><br><span class="line">									weight_filler = dict(type=<span class="string">'xavier'</span>),</span><br><span class="line">									bias_filler = dict(type=<span class="string">'constant'</span>, value=<span class="number">0</span>)</span><br><span class="line">								)</span><br><span class="line">					)</span><br></pre></td></tr></table></figure>
+<h4 id="损失层："><a href="#损失层：" class="headerlink" title="损失层："></a><strong>损失层</strong>：</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">net.loss = L.SofemaxWithLoss(net.fc7_1, net.label)</span><br></pre></td></tr></table></figure>
+<p>一般论文创新点会有<strong>自己的定义的层</strong>，GitHub上会有该层的代码。FCN是一个<strong>python的数据读入层</strong>。</p>
+<h3 id="fine-tune-模型："><a href="#fine-tune-模型：" class="headerlink" title="fine-tune 模型："></a><strong>fine-tune</strong> 模型：</h3><p>[FCN_github][<a href="https://github.com/shelhamer/fcn.berkeleyvision.org" target="_blank" rel="noopener">https://github.com/shelhamer/fcn.berkeleyvision.org</a>]<br>[参考了Blog][<a href="https://blog.csdn.net/jiongnima/article/details/78549326" target="_blank" rel="noopener">https://blog.csdn.net/jiongnima/article/details/78549326</a>]</p>
+<ol>
+<li><p>在<strong><code>fine-tune</code></strong>时初始值设为其他模型中的值，只需要将名称设为与下载模型中名称一样即可。<br>使用 <code>solver.net.copy_from(weights)</code> <code>weights</code> 是下载模型的路径。</p>
+</li>
+<li><p>所以有些<strong>不需要初始化</strong>的层必须要<strong>修改其名字</strong>。并且<strong>注意层与层的输出维度</strong>的修改。(比如FCN是<strong>21类</strong>，而手只有<strong>2类</strong>)</p>
+</li>
+<li><p>数据格式：<br><code>FCN</code>的数据格式可以在<code>caffe</code>训练时的<code>error</code>猜测。不要忽略<code>batch_size</code>。<br><strong><code>label</code></strong>的类别是<strong>整数</strong>可以为<code>0,1,2,3</code>。共4类。则一张img中只能出现<code>0,1,2,3</code>四个值。不要小数。</p>
+</li>
+<li><p><code>txt</code>,数据名称列表。</p>
+<ol>
+<li>获取可使用提供的<code>python</code>模板。<code>get_txt</code>.</li>
+<li>这个<code>txt</code>产生一个<code>train</code>的和一个<code>test</code>的，里面的格式随<code>solve.py</code>里面取出img时的字符串处理有关，在<code>FCN</code>中作者是<code>&quot;{}/.../{}.jpg&quot;.format(self.*,index)</code>; 所以可以看出来<code>txt</code>中只要前缀不要后缀<code>jpg</code>，且<code>train.prototxt</code>中<code>data</code>的路径不用写完，那只是个总路径，路径中的<code>...</code>可以分为<code>train_image</code>文件夹 ,以及 <code>test_image</code>文件夹. 所以<code>txt</code>文件需要存在<code>train.prototxt</code>中<code>dataset</code>的路径中。(图像的上一层路径)。不然会有路径错的问题</li>
+</ol>
+</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">|train.txt</span><br><span class="line">|test.txt</span><br><span class="line">|dataset</span><br><span class="line">    	|train</span><br><span class="line">    		|train_image_224x224.</span><br><span class="line">    			|0.jpg....</span><br><span class="line">    			|10000.jpg</span><br><span class="line">    		|train_mask_224x224.</span><br><span class="line">    			|0.jpg...</span><br><span class="line">    			|10000.jpg</span><br><span class="line">    	|test</span><br><span class="line">    		|test_image_224x224.</span><br><span class="line">    			|0.jpg....</span><br><span class="line">    			|1702.jpg</span><br><span class="line">    		|test_mask_224x224.</span><br><span class="line">    			|0.jpg...</span><br><span class="line">    			|1702.jpg</span><br></pre></td></tr></table></figure>
+<ol>
+<li><p>solve.py<br>分为两个数据集：一个是VOC一个是SBDD，一个作为训练集，一个作为测试集。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">in_ = in_[:,:,::-1]，逆序。</span><br><span class="line">in_ -= self.mean。减去均值。</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>注意<br>几个prototxt的位置。数据集的位置，需要仔细。<br>详细的代码注释。</p>
+</li>
+</ol>
+<h2 id="T20190428："><a href="#T20190428：" class="headerlink" title="T20190428："></a>T20190428：</h2><p>终于终于能训练自己的数据集了。FCN训练成功。</p>
+<ol>
+<li><p>参考”FCN训练不收敛的原因分析和最详细的FCN训练与测试自己的数据程序配置”</p>
+</li>
+<li><p>论文<code>GitHub</code>上一般会提供作者自己<code>new</code>的层，与一些py文件，这些文件都和训练有很大的关系。</p>
+<ol>
+<li>FCN中提供了许多.py文件：<ol>
+<li><strong><code>net.py</code></strong> //用python生成ptototxt，注意：没有智能提示，可以封装写成内部函数来方便调用。其中返回值是层的名字（自定义）。<ol>
+<li>注意的是当初始化设为别人的模型来finetune时名字相同的会赋值，所以要修改自己需要训练的层名字。</li>
+<li>在<code>infer</code>时，<code>net.load()</code>也是使用的这个方法，只不过基本所有的层都是重名的，然后赋值得到训练的模型数据，做一次forward().</li>
+<li><code>infer</code>的<code>deploy</code>去掉了最后的<code>softmaxwithloss</code>，以及两个dropout层。在运行<code>solver.py</code>时可以看到<code>console</code>输出<code>ignore</code>了这些层。</li>
+</ol>
+</li>
+<li><strong><code>solver.py</code></strong> //调用caffe训练的py.在这里要先load别人的训练好的模型来finetune<ol>
+<li>设置gpu型号需要int强转。</li>
+<li>在solver中不要caffe的自我test，而是采用了自定义的测试层。seg_tests()</li>
+<li>需要有个train.txt存放数据的索引（名称）</li>
+</ol>
+</li>
+<li><strong><code>voc_layers.py</code></strong> //自定义py层，调用用<code>L.Python</code>(模块名字，类型，输出参数个数，字典)，返回值是top的两个<ol>
+<li>这是数据层，所以没有<code>bckforward</code>。</li>
+<li><code>&#39;{}/{}.txt&#39;.format</code>需要改路径。{}是上级目录，包含了train，test，</li>
+</ol>
+</li>
+<li><strong><code>vis.py</code></strong> //后面可视化数据的工具  没有读懂</li>
+<li><strong><code>score.py</code></strong> //测试时调用</li>
+<li><strong><code>surgery.py</code></strong>    //初始化数据</li>
+<li><strong><code>my_solver.py</code></strong>    //是使用opencv版本的可视化数据。没有使用论文作者提供的vis.py</li>
+</ol>
+</li>
+<li>输入时是减去了均值的</li>
+<li>数据长宽大小格式是<code>224x224</code>，label也是<code>224x224</code>，只是通道数量不同</li>
+<li><code>label</code>不是小数而是类。所以可视化mask是黑的，最大灰度值为1.</li>
+</ol>
+</li>
+</ol>
+<h2 id="T20190501：学习style-transfer-的源码记录"><a href="#T20190501：学习style-transfer-的源码记录" class="headerlink" title="T20190501：学习style transfer 的源码记录"></a>T20190501：学习style transfer 的源码记录</h2><p><code>style transfer</code> 是用<code>PyCaffe</code>实现的</p>
+<ol>
+<li><p>python 中主函数参数的parse：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span>）<span class="keyword">import</span> argparse    首先导入模块</span><br><span class="line">      <span class="number">2</span>）parser = argparse.ArgumentParser（）    创建一个解析对象</span><br><span class="line">      <span class="number">3</span>）parser.add_argument()    向该对象中添加你要关注的命令行参数和选项</span><br><span class="line">	<span class="number">1.</span>parser.add_argument(<span class="string">"-s"</span>, <span class="string">"--style-img"</span>, type=str, required=<span class="literal">True</span>, help=<span class="string">"input style (art) image"</span>)</span><br><span class="line">		-&gt; name+类型。第二个双横线之后的名字 是用来获取的。args.style_img,这里——=_.</span><br><span class="line">      <span class="number">4</span>）args = parser.parse_args()    进行解析,在args中得到数据</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><code>caffe load_image(image_path)</code> <strong><code>-&gt;go to impletation</code></strong>:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">##源码</span></span><br><span class="line">img = skimage.img_as_float(skimage.io.imread(filename, as_grey=<span class="keyword">not</span> color)).astype(np.float32)</span><br><span class="line">	<span class="keyword">if</span> img.ndim == <span class="number">2</span>:</span><br><span class="line">		img = img[:, :, np.newaxis]</span><br><span class="line">		<span class="keyword">if</span> color:</span><br><span class="line">			img = np.tile(img, (<span class="number">1</span>, <span class="number">1</span>, <span class="number">3</span>))</span><br><span class="line">	<span class="keyword">elif</span> img.shape[<span class="number">2</span>] == <span class="number">4</span>:</span><br><span class="line">		img = img[:, :, :<span class="number">3</span>]</span><br><span class="line">	<span class="keyword">return</span> img</span><br><span class="line">	<span class="comment">###</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p><code>skimage.io.imread\cv2.imread</code> 保存后的都是<code>numpy</code>格式，但cv2的存储格式是<strong><code>BGR</code></strong>，而<code>skimage</code>的存储格式是<strong><code>RGB</code></strong></p>
+</li>
+<li><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">skimage.img_as_float(image).astype(np.float32)</span><br><span class="line">	    img_as_float	Convert an image to floating point format, <span class="keyword">with</span> values <span class="keyword">in</span> [<span class="number">0</span>, <span class="number">1</span>]. Is similar to img_as_float64, but will <span class="keyword">not</span> convert lower-precision floating point arrays to float64.</span><br><span class="line">	    img_as_float32	Convert an image to single-precision (<span class="number">32</span>-bit) floating point format, <span class="keyword">with</span> values <span class="keyword">in</span> [<span class="number">0</span>, <span class="number">1</span>].</span><br><span class="line">	    img_as_float64	Convert an image to double-precision (<span class="number">64</span>-bit) floating point format, <span class="keyword">with</span> values <span class="keyword">in</span> [<span class="number">0</span>, <span class="number">1</span>].</span><br><span class="line">	    img_as_uint		Convert an image to unsigned integer format, <span class="keyword">with</span> values <span class="keyword">in</span> [<span class="number">0</span>, <span class="number">65535</span>].</span><br><span class="line">	    img_as_int		Convert an image to signed integer format, <span class="keyword">with</span> values <span class="keyword">in</span> [<span class="number">-32768</span>, <span class="number">32767</span>].</span><br><span class="line">	    img_as_ubyte	Convert an image to unsigned byte format, <span class="keyword">with</span> values <span class="keyword">in</span> [<span class="number">0</span>, <span class="number">255</span>].</span><br><span class="line">	    img_as_bool	 	Convert an image to boolean format, <span class="keyword">with</span> values either <span class="literal">True</span> <span class="keyword">or</span> <span class="literal">False</span>.</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><code>astype(np.float32)</code> 将数据转换为数组的数据<code>float32</code>格式。一张彩色图片转换为灰度图后，它的类型就由<code>unit8</code>变成了<code>float-[0-1]</code>之间。</p>
+</li>
+<li><p><code>slice</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">对于np.array对象，可以使用数组的切片来分割数组。</span><br><span class="line">	1) a=array([1,2,3]) a[:2] -&gt;只取前[0-2)项数据</span><br><span class="line">	2) 对于高维的，可以取高纬度的每一切片，img[:,:,:3],如果Img有4个通道+alpha，则只取其前三(H,W,C)</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><code>img.ndim</code>返回数组的维度。<code>rgb</code>是三维。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">img = img[:, :, np.newaxis]，如果是2维的则在第三位新建一维</span><br><span class="line">如果还设为color图，那么将前一层的数据叠2层：</span><br><span class="line">im =np.tile(img,(1,1,3))</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><code>StyleTransfer</code>：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1.</span> <span class="keyword">for</span> layer <span class="keyword">in</span> self.net.blobs:</span><br><span class="line">	只返回键值，即conv1_1层的名字。</span><br><span class="line"><span class="number">2.l</span>oad_model：</span><br><span class="line">	<span class="number">1.</span>transformer transformer.set_channel_swap(<span class="string">"data"</span>, (<span class="number">2</span>,<span class="number">1</span>,<span class="number">0</span>))<span class="comment">#将 0，2维通道交换。</span></span><br><span class="line">	<span class="number">2.</span>transformer.set_transpose(<span class="string">"data"</span>, (<span class="number">2</span>,<span class="number">0</span>,<span class="number">1</span>)) <span class="comment">#改变维度的顺序，由原始图片(227,227,3)变为(3,227,227)</span></span><br><span class="line"><span class="number">3.</span>set_raw_scale： <span class="comment">#大小0-255</span></span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h2 id="T20190429"><a href="#T20190429" class="headerlink" title="T20190429:"></a>T20190429:</h2><ol>
+<li><p><code>python</code> 中函数也是对象，可存入键值对中，也可以键值调用。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">e.g:</span><br><span class="line">	<span class="function"><span class="keyword">def</span> <span class="title">move_up</span><span class="params">(x)</span></span></span><br><span class="line">		x[1] += 1</span><br><span class="line">	<span class="function"><span class="keyword">def</span>....</span></span><br><span class="line"><span class="function">	...</span></span><br><span class="line"><span class="function">	...</span></span><br><span class="line">	actions=&#123;</span><br><span class="line">		<span class="string">'up'</span>:move_up,</span><br><span class="line">		<span class="string">'down'</span>:move_down,</span><br><span class="line">		<span class="string">'left'</span>:move_left,</span><br><span class="line">		<span class="string">'right'</span>:move_right</span><br><span class="line">	&#125;</span><br><span class="line"><span class="keyword">for</span> move <span class="keyword">in</span> moves:</span><br><span class="line">	actions[move](coord)</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><code>lamada</code> 函数：<br> 1.匿名函数，使用：lamada x:x[1],对输入变量输出x的第一维</p>
+</li>
+<li><p><code>python</code> 中高维度的<code>argmax(axis=*)</code></p>
+<ol>
+<li><code>out</code> = <code>net.blobs[&#39;score&#39;].data[0].argmax(axis=0)</code><br> 该行可以很方便地寻找到每一个像素点所对应的最大概率类。<br> 在C个<code>H*W</code>层上遍历每一个点，看该点在哪个通道(预测的类)上的概率取最大值，并且返回的是该通道的下标。<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">array.argmax(axis)如果array是一维的话，只返回第一次出现的最大值的索引</span><br><span class="line">axis : int, 可选,默认情况下，索引的是平铺的数组，否则沿指定的轴。可以按照每一个维度进行排序。但不是整个排序。</span><br><span class="line">array.argsort() 对所有的数据进行排序，返回的Index，最小的在最前面。如果不加参数，则是默认使用最深的维度（shape的最后一个数所对应），的来排序</span><br><span class="line">argsort(axis=0) 以第一维排序。看第一维有几层，那么返回的index最大是几。</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+</li>
+</ol>
+<p>简单的例子:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">#!/usr/bin/python</span><br><span class="line"># -*- coding:utf8 -*-</span><br><span class="line">import numpy as np</span><br><span class="line">a = np.array([[[1,0,1,1],[6,4,3,4],[3,5,2,1]],[[4,2,2,0],[5,3,2,1],[3,1,0,7]]])</span><br><span class="line">b= np.array([[1,1,1],[0,1,2]])</span><br><span class="line">print(a)</span><br><span class="line">#print(b)</span><br><span class="line">#argmax(axis=1)	</span><br><span class="line">```			</span><br><span class="line">以第几维排序，然后返回的是第几维`index`,返回的是某维度的最大值的`index`</span><br><span class="line">```python</span><br><span class="line">#axis ==0 -&gt;一维：将所有数据以第1维单独排列，每一个取最大。</span><br><span class="line">#a=[2x3x4]</span><br><span class="line">print(a.argmax(axis=0)) #返回的是降axis=0维的长度(axis=1 x axis=2)[3x4]，而值为axis=0维的个数。此处行维2个[0,1]</span><br><span class="line">print(a.argmax(axis=2)) #返回的是降axis=2维的长度(axis=0 x axis=1)[2x3]，而值为axis=2维的个数。此处行维4个[0-3]</span><br><span class="line">print (&apos;eg2:&apos;)</span><br><span class="line">a=&apos;python&apos;</span><br><span class="line">b=a[::-1] #间距为1，倒序</span><br><span class="line">print (b)</span><br><span class="line">c=a[::-2] #间距为2</span><br><span class="line">print (c)</span><br><span class="line">a = [0,1,2,3,4,5,6,7,8,9]</span><br><span class="line">b = a[1:3]   # [1,2]</span><br><span class="line">#a[i,j,x] 取a的i到j[i,j),步长为x #Out[13]: [1, 2]</span><br><span class="line">c=a[1:5]   #Out[15]: [1, 2, 3, 4]</span><br><span class="line">d=a[1:5:1] #Out[17]: [1, 2, 3, 4]</span><br><span class="line">e=a[1:5:2] #Out[19]: [1, 3]</span><br></pre></td></tr></table></figure></p>
+<ol>
+<li><p><code>map{}</code>:<br><code>map{}</code>是 <code>Python</code> 内置的高阶函数，它接收一个函数 f 和一个 list，并通过把函数 f 依次作用在 list 的每个元素上，得到一个新的 list 并返回。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">f</span><span class="params">(x)</span>:</span></span><br><span class="line">    <span class="keyword">return</span> x*x</span><br><span class="line"><span class="keyword">print</span> map(f, [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>, <span class="number">7</span>, <span class="number">8</span>, <span class="number">9</span>])//map()函数不改变原有的 list，而是返回一个新的 list。</span><br><span class="line">```			</span><br><span class="line">```python</span><br><span class="line">l=map(int,<span class="string">'1234'</span>)</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> l:</span><br><span class="line">	print(type(i))</span><br><span class="line">	print(i)</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><code>format()</code> 字符串格式化。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">str = <span class="string">'a is b and &#123;&#125; is &#123;&#125; not &#123;&#125;'</span>.format(<span class="string">'aa'</span>,<span class="string">'bb'</span>,<span class="number">1</span>)</span><br><span class="line">str = <span class="string">'a is b and &#123;0&#125; is &#123;2&#125; not &#123;1&#125;'</span>.format(<span class="string">'aa'</span>,<span class="string">'bb'</span>,<span class="number">1</span>)//可改变其顺序</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">1.对齐补齐：</span><br><span class="line">	1.str = &apos;5 length &#123;:0&gt;5d&#125;&apos;.format(a=1) #00001 #右补0</span><br><span class="line">	2.str = &apos;5 length &#123;:0&lt;5d&#125;&apos;.format(a=1) #10000 #左补0</span><br><span class="line">2.小数精度：</span><br><span class="line">	1.print(&apos;&#123;:.6f&#125;&apos;.format(a)) #小数点后6位。</span><br><span class="line">	2.print(&apos;&#123;:.1e&#125;&apos;.format(a)) #小数点后一位+科学指数法。</span><br><span class="line">	3.template = &apos;&#123;name&#125; is &#123;age&#125; years old&apos;</span><br><span class="line">		c= template.format(name=&apos;Tim&apos;,age=8)</span><br><span class="line">5.Python rstrip() 删除 string 字符串末尾的指定字符（默认为空格）.</span><br></pre></td></tr></table></figure>
+<h2 id="T20190501"><a href="#T20190501" class="headerlink" title="T20190501:"></a>T20190501:</h2><h3 id="python-中的-类："><a href="#python-中的-类：" class="headerlink" title="python 中的 类："></a>python 中的 类：</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">className</span>:</span></span><br><span class="line">	<span class="string">"""description"""</span></span><br><span class="line">	<span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self,**args)</span>:</span> <span class="string">"""构造参数可选择明确指出，也可以不定长。"""</span></span><br><span class="line">		self.param_1 = ..</span><br><span class="line">		self.param_2 = ..</span><br><span class="line">	<span class="string">"""这是类的构造函数，python中每个类的函数第一个参数必须适合self，这是类的存储空间指针,所以变量都是用self注册"""</span></span><br><span class="line">	<span class="string">"""函数中_一个下划线是protect函数，可被继承，__两个下划线则是私有函数，不能被继承，不带下划线的是public"""</span></span><br><span class="line">	<span class="string">"""__在编译时会在前面加上类名：__ClassName__Param__"""</span></span><br></pre></td></tr></table></figure>
+<h2 id="T20190510"><a href="#T20190510" class="headerlink" title="T20190510:"></a>T20190510:</h2><h4 id="squeeze"><a href="#squeeze" class="headerlink" title="squeeze()"></a><strong><code>squeeze()</code></strong></h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">caffe.io.load_image(<span class="string">''</span>).squeeze() 读入图像是<span class="number">0</span><span class="number">-1</span>之间,squeeze()是去掉 维度数量为<span class="number">1</span> 的维度</span><br></pre></td></tr></table></figure>
+<h4 id="np-newaxis"><a href="#np-newaxis" class="headerlink" title="np.newaxis"></a><strong><code>np.newaxis</code></strong></h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">im[np.newaxis,np.newaxis,:,:]是在im的原来基础上新了两个层，然后将源数据放在其：：对应上</span><br><span class="line"></span><br><span class="line">  im[<span class="literal">None</span>,<span class="literal">None</span>,:,:] </span><br><span class="line">``` </span><br><span class="line">为什么列的参数改成`<span class="literal">None</span>`，输出的shape都变了，这里大家要知道，<span class="literal">None</span>代表新增加一个维度，它有一个别称叫newaxis，大家可以输出一下`numpy.newaxis`就知道了，那么这个别称应该顾名思义了吧。那么为什么是<span class="number">5</span>x1x5，而不是</span><br><span class="line"></span><br><span class="line"><span class="comment">#### **`参数前面添加*`**</span></span><br><span class="line">```python</span><br><span class="line">python 中参数前面添加*：</span><br><span class="line">	<span class="function"><span class="keyword">def</span> <span class="title">accept</span><span class="params">(*s)</span>:</span> <span class="comment">#((0, 1, 2, 3, 7.5),)</span></span><br><span class="line">		print(s)</span><br><span class="line">		</span><br><span class="line">	list = (<span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">7.5</span>)</span><br><span class="line">	print(list)</span><br><span class="line">	accept(list)</span><br></pre></td></tr></table></figure>
+<p>分别打印一下<code>s</code>与<code>list</code>，输出是这样的：<code>(0, 1, 2, 3, 7.5)</code> <code>((0, 1, 2, 3, 7.5),)</code><br>可以看出当函数中参数位置上有<em>号时，其</em>的作用时<strong><code>不确定输入参数</code></strong>的大小：传入的变量会被收集为<code>tuple</code><br>对于键值<code>map</code>则需要<code>**</code>来解包。</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">data[...]它是省略所有的冒号来用省略号代替,当无法显示知道data的维度信息的时候</span><br><span class="line">range(2) -&gt; [0,1] 从0开始。</span><br></pre></td></tr></table></figure>
+<h2 id="T20190519："><a href="#T20190519：" class="headerlink" title="T20190519："></a>T20190519：</h2><h4 id="net"><a href="#net" class="headerlink" title="net"></a><strong>net</strong></h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1.</span> net.blobs[<span class="string">'data'</span>].reshape(*im_input.shape) 将data层reshape到输入图像的大小,这里时灰度图像。</span><br><span class="line">	net.blobs[<span class="string">'data'</span>].data[...] = im_input 因为data 已经reshape到指定大小所以其数据只需要直接全部赋值即可。</span><br><span class="line"></span><br><span class="line"><span class="number">2.</span> net.blobs[<span class="string">'conv'</span>].data.shape 是该层的输出数据，是进过卷积后的数据，所以其数据大小是可以根据公式计算得到的。其通道数和卷积核数相同。、</span><br><span class="line">	该层的data层就是该层的输出。</span><br><span class="line"></span><br><span class="line"><span class="number">3.</span> net.params[<span class="string">'conv'</span>][<span class="number">1</span>].data[<span class="number">0</span>] = <span class="number">1.</span> <span class="comment">#其中net.blobs['层名字']可以得到层的数据。</span></span><br><span class="line">										<span class="comment">#而net.params['层名字']可以得到层的权值</span></span><br><span class="line">		net.forward()</span><br></pre></td></tr></table></figure>
+<h4 id="np-array"><a href="#np-array" class="headerlink" title="np.array"></a><strong>np.array</strong></h4><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">1. array[0,1] = array[0][1],array[1,:2], -&gt;第一维的第一到二维的元素。</span><br><span class="line"></span><br><span class="line"><span class="number">2.</span> conv_params = &#123;pr: (net_full_conv.params[pr][<span class="number">0</span>].data, net_full_conv.params[pr][<span class="number">1</span>].data) <span class="keyword">for</span> pr <span class="keyword">in</span> params_full_conv&#125; 这时在conv_params 中是net_full_conv的引用别名，对conv_params的修改会作用于net_full_conv。</span><br><span class="line"></span><br><span class="line"><span class="number">3.</span> np.array.flat只是将array用flat的方式访问，其返回的是一个迭代器。可以使用强制转换：list(np.array.flat)</span><br><span class="line"></span><br><span class="line"><span class="number">4.</span> np.array.flatten 是返回的flat后的一个副本List</span><br><span class="line"></span><br><span class="line">5. np.array([1,2,3]). ()-&gt;tuple []-&gt;list &#123;&#125;-&gt;dict</span><br><span class="line">    都支持 + *运算, shape 返回的是元组(),超过范围可以是空。</span><br><span class="line"></span><br><span class="line">6. np.array.mean(axis) -&gt; axis 求和该维度/该维度的数量</span><br><span class="line"></span><br><span class="line">7.net.blobs['data'].reshape -&gt;调用的是blob的reshape 函数</span><br></pre></td></tr></table></figure>
+<h4 id="forward"><a href="#forward" class="headerlink" title="forward()"></a><strong>forward()</strong></h4><p>在<code>pycaffe</code> 中不同于<code>c++ caffe</code>，其 <code>forward()</code> 返回值是一个字典类型其对应键值才是blob，output[‘prob’][0]，而c++中直接返回blob，net_-&gt;output_blobs()[0];</p>
+<h4 id="slice（）"><a href="#slice（）" class="headerlink" title="slice（）"></a><strong>slice（）</strong></h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">b = a[i:j:s]这种格式呢，i,j与上面的一样，但s表示步进，缺省为<span class="number">1.</span></span><br><span class="line"></span><br><span class="line">所以a[i:j:<span class="number">1</span>]相当于a[i:j],当s&lt;<span class="number">0</span>时，i缺省时，默认为<span class="number">-1.</span> j缺省时，默认为-len(a)<span class="number">-1.</span></span><br><span class="line"></span><br><span class="line">所以a[::<span class="number">-1</span>]相当于 a[<span class="number">-1</span>:-len(a)<span class="number">-1</span>:<span class="number">-1</span>]，也就是从最后一个元素到第一个元素复制一遍。所以你看到一个倒序的东东。</span><br></pre></td></tr></table></figure>
+<p>所以在<code>Python</code>中转换图像的通道顺序就很方便了，直接<code>img_trans = img[::-1]</code>.<br>在 <code>caffe</code> 中 <code>CHW</code> 来存放，所以第一维是C，因为<code>img[0]  是 Red channel;img[1] 是 Green channel</code> 倒序只是第一维导。注意的是python中图像的类型转换<strong><code>uint8</code></strong>:<strong>array.astype(np.uint8)</strong>,Python默认的数字的数据类型为双精度浮点数</p>
+<ol>
+<li><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> layer_name, blob <span class="keyword">in</span> net.blobs.iteritems():</span><br><span class="line"><span class="comment"># 这样的foreach是对于键值map的，有两个输出一个是键一个是值。</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">plt.imshow(img,cmap=<span class="string">'gray'</span>,vmin=.vmax=) cmap 是显示类型，vmin,vmax 是归一化</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h4 id="pad"><a href="#pad" class="headerlink" title="pad()"></a><strong>pad()</strong></h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">padding = (((<span class="number">0</span>, n ** <span class="number">2</span> - data.shape[<span class="number">0</span>]),</span><br><span class="line">            (<span class="number">0</span>, <span class="number">1</span>), (<span class="number">0</span>, <span class="number">1</span>))  <span class="comment"># add some space between filters</span></span><br><span class="line">             + ((<span class="number">0</span>, <span class="number">0</span>),) * (data.ndim - <span class="number">3</span>))  <span class="comment"># don't pad the last dimension (if there is one)</span></span><br><span class="line">             </span><br><span class="line">data = np.pad(data, padding, mode=<span class="string">'constant'</span>, constant_values=<span class="number">1</span>)  <span class="comment"># pad with ones (white)</span></span><br><span class="line"></span><br><span class="line">data = np.pad(srs,padding,mode=<span class="string">''</span>,constant_values = (befor,after))</span><br><span class="line"></span><br><span class="line">将srs进行补全padding是tuple 元组，((fst_dim_b,fst_dim_a),(snd_dim_b,snd_dim_a)).其中fst_dim_b是该维中前面去要填补的数量，fst_dim_a该维中后面去要填补的数量</span><br><span class="line"></span><br><span class="line">constant_values = (befor,after)，对应前面后面填充的数字。</span><br><span class="line"></span><br><span class="line"><span class="comment">#在数组A的边缘填充constant_values指定的数值</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#（3,2）表示在A的第[0]轴填充（二维数组中，0轴表示行），即在0轴前面填充3个宽度的0，比如数组A中的95,96两个元素前面各填充了3个0；在后面填充2个0，比如数组A中的97,98两个元素后面各填充了2个0</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#（2,3）表示在A的第[1]轴填充（二维数组中，1轴表示列），即在1轴前面填充2个宽度的0，后面填充3个宽度的0</span></span><br><span class="line"></span><br><span class="line">np.pad(A,((<span class="number">3</span>,<span class="number">2</span>),(<span class="number">2</span>,<span class="number">3</span>)),<span class="string">'constant'</span>,constant_values = (<span class="number">0</span>,<span class="number">0</span>)) </span><br><span class="line"><span class="comment">#constant_values表示填充值，且(before，after)的填充值等于（0,0）</span></span><br><span class="line"></span><br><span class="line">array([[ <span class="number">0</span>,  <span class="number">0</span>,  <span class="number">0</span>,  <span class="number">0</span>,  <span class="number">0</span>,  <span class="number">0</span>,  <span class="number">0</span>],    &lt;--     array([[<span class="number">95</span>, <span class="number">96</span>],</span><br><span class="line">                                        &lt;--           [<span class="number">97</span>, <span class="number">98</span>]])</span><br><span class="line">     [ <span class="number">0</span>,  <span class="number">0</span>,  <span class="number">0</span>,  <span class="number">0</span>,  <span class="number">0</span>,  <span class="number">0</span>,  <span class="number">0</span>],      &lt;--</span><br><span class="line">     [ <span class="number">0</span>,  <span class="number">0</span>,  <span class="number">0</span>,  <span class="number">0</span>,  <span class="number">0</span>,  <span class="number">0</span>,  <span class="number">0</span>],      &lt;--</span><br><span class="line">     [ <span class="number">0</span>,  <span class="number">0</span>, <span class="number">95</span>, <span class="number">96</span>,  <span class="number">0</span>,  <span class="number">0</span>,  <span class="number">0</span>],      &lt;--</span><br><span class="line">     [ <span class="number">0</span>,  <span class="number">0</span>, <span class="number">97</span>, <span class="number">98</span>,  <span class="number">0</span>,  <span class="number">0</span>,  <span class="number">0</span>],      &lt;--</span><br><span class="line">     [ <span class="number">0</span>,  <span class="number">0</span>,  <span class="number">0</span>,  <span class="number">0</span>,  <span class="number">0</span>,  <span class="number">0</span>,  <span class="number">0</span>],      &lt;--</span><br><span class="line">     [ <span class="number">0</span>,  <span class="number">0</span>,  <span class="number">0</span>,  <span class="number">0</span>,  <span class="number">0</span>,  <span class="number">0</span>,  <span class="number">0</span>]])     &lt;--</span><br></pre></td></tr></table></figure>
+<ol>
+<li><code>imshow()</code>的<code>array</code>其<code>channel</code>是放在最后的</li>
+</ol>
+<h4 id="transpose"><a href="#transpose" class="headerlink" title="transpose"></a><strong>transpose</strong></h4><p><code>transpose</code>会将调换通道序 <strong>注意非原地操作！！！</strong><br>注意原地操作和非原地：<br><code>dif.transpose(1,0,2)</code>是非原地的。<br>需要赋值才行。<code>dif = dif.transpose.</code><br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">data = data.reshape((<span class="number">4</span>,<span class="number">4</span>,<span class="number">8</span>,<span class="number">8</span>))</span><br><span class="line">print( <span class="string">'data='</span>+ str(data[<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>]))</span><br><span class="line">print(<span class="string">'data_transpose='</span>+str(data.transpose(<span class="number">0</span>,<span class="number">2</span>,<span class="number">1</span>,<span class="number">3</span>)[<span class="number">1</span>,<span class="number">3</span>,<span class="number">2</span>,<span class="number">4</span>]))</span><br><span class="line">使用转置时，相近的<span class="string">','</span>可以相乘起来，然后reshape 到一个更低维的张量。</span><br><span class="line">不用在意transpose 后的细节，着重点应该放在维度本身的意义上。【数据转维、多维度一图可视化】</span><br><span class="line"></span><br><span class="line">1.如：将solver.net['conv1'][0].data -&gt;在样例中其是(20,1,5,5)的数据,要想将其转换在一张图片上进行Imshow</span><br><span class="line">        -&gt;先去前8通道。：</span><br><span class="line">        data  = solver.net[<span class="string">'conv1'</span>][<span class="number">0</span>].data[:<span class="number">8</span>].squeeze()  <span class="comment">#其shape 为(8,5,5)</span></span><br><span class="line">        或者data  = solver.net[<span class="string">'conv1'</span>][<span class="number">0</span>].data[:<span class="number">8</span>，<span class="number">0</span>]</span><br><span class="line">        -&gt;padding = ((0,0),(0,1),(0,1))</span><br><span class="line">        data = np.pad(data,padding,mode='constant',constant_value = max(data))-&gt;注意constant_value的取值，需要是该data的最大值，</span><br><span class="line">        如果是很大的值，那么在之后imshow时，会全黑，应为默认的imshow是会归一化的。</span><br><span class="line">        -&gt;此时data.shape=（8，6，6）</span><br><span class="line">        -&gt;想画的图：一行八副图。-&gt;data = data.transpose(1,0,2)将第二维与第一维交换数据，第二维是行，所以交换后为：</span><br><span class="line">        (6,8,6)-&gt;第一维是行，有6个通道，每个通道有8副图的6个列通道。</span><br><span class="line">        -&gt;reshape(6,48):6个像素行，每一行有48个像素。</span><br><span class="line">         <span class="comment"># solver.step(1)</span></span><br><span class="line">         <span class="comment"># dif = solver.net.params['conv1'][0].diff[:, 0][:]</span></span><br><span class="line">         <span class="comment"># maxx = np.max(dif)</span></span><br><span class="line">         <span class="comment"># dif = np.pad(dif, ((0, 0), (0, 1), (0, 1)), mode='constant', constant_values=maxx if maxx!=0 else 1 )</span></span><br><span class="line">         <span class="comment"># print 'maxx: '+str(maxx)</span></span><br><span class="line">         <span class="comment"># print 'dif1: '+str(dif.shape)</span></span><br><span class="line">         <span class="comment"># dif = dif.reshape(4,5,6,6)</span></span><br><span class="line">         <span class="comment"># dif = dif.transpose(0,2,1,3)</span></span><br><span class="line">         <span class="comment"># print 'dif2: '+str(dif.shape)</span></span><br><span class="line">         <span class="comment"># plt.subplot(2, 1, 1)</span></span><br><span class="line">         <span class="comment"># imshow(dif.reshape(24,30),cmap='gray');</span></span><br></pre></td></tr></table></figure></p>
+<h4 id="caffe的一次训练流程：【caffe注意实项】"><a href="#caffe的一次训练流程：【caffe注意实项】" class="headerlink" title="caffe的一次训练流程：【caffe注意实项】"></a><strong>caffe的一次训练流程：【caffe注意实项】</strong></h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1.</span> 使用SGDSolver直接load caffe网络。</span><br><span class="line">    <span class="number">1.</span>prototxt都写好</span><br><span class="line">    <span class="number">2.</span>solver = <span class="literal">None</span>  <span class="comment">#solver 每一个网络训练只能有一个。所以用时先None</span></span><br><span class="line">    </span><br><span class="line">    <span class="number">3.</span>solver = caffe.SGDSolver(<span class="string">'mnist/lenet_auto_solver.prototxt'</span>)        </span><br><span class="line">    <span class="comment">#加载solver，按照proto中，其中需要注意的是test_nets可能会有多个，按照solver.proto中申明的来。</span></span><br><span class="line">    </span><br><span class="line">    solver = caffe.SGDSolver(<span class="string">'你的网络的lenet_solver.prototxt 文件'</span>） </span><br><span class="line">    <span class="comment">#执行完上面的语句以后，网络的相应的权值与偏置会根据我们的定义进行赋值的；初始化，数据也会读入</span></span><br><span class="line">    </span><br><span class="line">    <span class="number">3</span>+.solver.net.copy_from(weights)从另外的模型中获得初始化</span><br><span class="line">    </span><br><span class="line">    <span class="number">4.</span>利用<span class="keyword">for</span> 可以看见net 中的每一个blob.返回的是键值对。</span><br><span class="line">    </span><br><span class="line">    <span class="number">5.</span> solver.net.forward() 是train 的初始化</span><br><span class="line">        solver.test_net[<span class="number">0</span>].forward() 是test的初始化</span><br><span class="line">        </span><br><span class="line">    6.solver.step(1) -&gt;反传一次</span><br><span class="line">        三个函数都是将批量大小(batch_size)的图片送到网络，</span><br><span class="line">    solver.net.forward() 和 solver.test_nets[<span class="number">0</span>].forward()是将batch_size个图片送到网络中去，只有前向传播(Forward Propagation，FP)，</span><br><span class="line">    solver.net.forward()作用于训练集，solver.test_nets[<span class="number">0</span>].forward() 作用于测试集，一般用于获得测试集的正确率。</span><br><span class="line">    solver.step(<span class="number">1</span>) 也是将batch_size个图片送到网络中去，不过 solver.step(<span class="number">1</span>) 不仅有FP，</span><br><span class="line">    而且还有反向传播(Back Propagation，BP)！这样就可以更新整个网络的权值(weights)，同时得到该batch的loss。</span><br><span class="line"><span class="number">2.</span>  使用caffe.Net() </span><br><span class="line">e.g.</span><br><span class="line">    <span class="number">1.</span>net = caffe.Net(<span class="string">'prototxt.path'</span>, weights, caffe.TEST)</span><br><span class="line">    <span class="comment">#'prototxt.path' prototxt的路径</span></span><br><span class="line">    <span class="comment"># weights pretrained的模型路径</span></span><br><span class="line">    <span class="comment"># caffe.TEST时态。</span></span><br><span class="line">    <span class="number">2.</span>net.forward()</span><br></pre></td></tr></table></figure>
+<ol>
+<li><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">net.params['name'][0](-&gt;w;[1]-&gt;bias;).data-&gt;data;diff-&gt;gradient</span><br><span class="line">solver.net.blobs['label'].data -&gt;标记</span><br><span class="line">solver.test_net[<span class="number">0</span>].blobs[<span class="string">'label'</span>].data</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h4 id="python-多图subplot"><a href="#python-多图subplot" class="headerlink" title="python 多图subplot:"></a><strong>python 多图subplot:</strong></h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">plt.subplot(<span class="number">2</span>, <span class="number">1</span>, <span class="number">1</span>)</span><br><span class="line">imshow(dif.reshape(<span class="number">24</span>,<span class="number">30</span>),cmap=<span class="string">'gray'</span>);</span><br><span class="line">plt.show()</span><br><span class="line"><span class="comment"># axis('off')</span></span><br><span class="line">plt.title(<span class="string">'123'</span>)</span><br><span class="line">plt.xlabel(<span class="string">'X'</span>)</span><br><span class="line">plt.ylabel(<span class="string">'Y'</span>)</span><br><span class="line">注意subplot是的图序号是从<span class="number">1</span>开始的。</span><br></pre></td></tr></table></figure>
+<h4 id="python-中获得图像句柄："><a href="#python-中获得图像句柄：" class="headerlink" title="python 中获得图像句柄："></a><strong>python 中获得图像句柄：</strong></h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">figure(figsize=(<span class="number">10</span>, <span class="number">2</span>))</span><br></pre></td></tr></table></figure>
+<h4 id="python-中三目运算符"><a href="#python-中三目运算符" class="headerlink" title="python 中三目运算符:"></a><strong>python 中三目运算符:</strong></h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">a = x <span class="keyword">if</span> x&gt;<span class="number">0</span> <span class="keyword">else</span> y <span class="comment">#当x大于0时返回x，否则返回y</span></span><br></pre></td></tr></table></figure>
+<h4 id="python-与"><a href="#python-与" class="headerlink" title="python /与 //"></a><strong>python <code>/</code>与 <code>//</code></strong></h4><p>在<code>3.0</code>中<code>&quot; / &quot;</code>就表示 浮点数除法，返回浮点结果;<code>&quot; // &quot;</code>表示整数除法。<code>2.0</code>中<code>/</code>要看数据类型。或在最开始<code>from __future__ import division</code><br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">测试solver.net_test[<span class="number">0</span>].blobs[<span class="string">'label'</span>].data</span><br><span class="line">solver.net_test[0].forward()-&gt;初始化测试的数据，batch_size大小。由测试网络定义。</span><br><span class="line">solver.net_test[0].forward(start='name') -&gt;从**层开始可以不用load数据。</span><br><span class="line"><span class="comment">##</span></span><br><span class="line">solver.test_nets[<span class="number">0</span>].forward()  <span class="comment">#第1次 / 第101次 == 1次</span></span><br><span class="line"><span class="keyword">for</span> test_it <span class="keyword">in</span> range(<span class="number">100</span>):     <span class="comment">#读100次 /</span></span><br><span class="line">       solver.test_nets[<span class="number">0</span>].forward()</span><br><span class="line">       <span class="keyword">print</span> solver.test_nets[<span class="number">0</span>].blobs[<span class="string">'label'</span>].data[:<span class="number">8</span>]</span><br><span class="line">solver.test_nets[<span class="number">0</span>].forward(start=<span class="string">'conv1'</span>)</span><br><span class="line"><span class="keyword">print</span> solver.test_nets[<span class="number">0</span>].blobs[<span class="string">'label'</span>].data[:<span class="number">8</span>]</span><br><span class="line">output[it] = solver.test_nets[<span class="number">0</span>].blobs[<span class="string">'score'</span>].data[:<span class="number">8</span>]</span><br><span class="line"><span class="comment">##</span></span><br><span class="line">如果从lmdb中读入数据读完一轮，那么将会循环。</span><br><span class="line">这也时为什么在样例中可以一直读到不同轮次的output.</span><br></pre></td></tr></table></figure></p>
+<ol>
+<li><p>np.array中支持array的每个item单独比较，</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">[2,1,3,1] == [2,0,0,1] -&gt;[t,f,f,t]</span><br><span class="line">如果两个array不同大小，则是返回F</span><br><span class="line">a = np.array([[<span class="number">2</span>,<span class="number">3</span>],[<span class="number">1</span>,<span class="number">2</span>]])</span><br><span class="line">b = np.array([[<span class="number">0</span>,<span class="number">3</span>],[<span class="number">2</span>,<span class="number">1</span>]])</span><br><span class="line">print (a==b) ---&gt; [[False  True],[False False]]</span><br><span class="line"><span class="literal">False</span> = <span class="number">0</span>,<span class="literal">True</span> = <span class="number">0</span>;</span><br><span class="line">..range = np.arange</span><br><span class="line"></span><br><span class="line">np.array中支持对整个list中所有数单独做运算：</span><br><span class="line">2*np.array([1,2,3]) --&gt;[2,4,6]</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>一张图中画两个函数：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#fig, ax1 = plt.subplots()</span></span><br><span class="line">_, ax1 = subplots()</span><br><span class="line">ax2 = ax1.twinx() <span class="comment">#公用x轴，ax1.twiny()公用y轴</span></span><br><span class="line">ax1.plot(arange(niter), train_loss) <span class="comment">#x,y</span></span><br><span class="line">ax2.plot(test_interval * arange(len(test_acc)), test_acc, <span class="string">'r'</span>) <span class="comment">#x,y</span></span><br><span class="line">    <span class="comment">#在test_acc 中本来是每step(1),25次后记录对10000的正确率。所以实际上对应的迭代次数是</span></span><br><span class="line">    <span class="number">25</span> <span class="number">50</span> <span class="number">75.</span>..<span class="number">.250</span> 次迭代所测试的结果。</span><br><span class="line">    整个x粒度为<span class="number">1</span>，<span class="number">0</span><span class="number">-250</span>，第一个图像画loss，train_loss[it]记录了每次迭代的Loss</span><br><span class="line">    但在test_acc[it]中记录的是<span class="number">25</span>，<span class="number">50.</span>..的测试结果，所以需要×<span class="number">25</span>的x粒度。</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>python 中imshow的补足:</p>
+<pre><code>Imshow会将图像中的数据归一化显示出来，默认是minmax。imshow将数据标准化为最小和最大值。 您可以使用vmin和vmax参数或norm参数来控制（如果您想要非线性缩放）。
+如果imshow的不是连续的图像，维度长度太小其中会有过渡线性的填充不足，
+如果不想要线性渐变的填充的话可以使用interpolation=&#39;nearest&#39;，最近邻填充。
+</code></pre></li>
+</ol>
+<h3 id="写solver-prototxt"><a href="#写solver-prototxt" class="headerlink" title="写solver.prototxt"></a>写solver.prototxt</h3><p>需要：<code>from caffe.proto import caffe_pb2</code><br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line">train_net_path = <span class="string">'mnist/custom_auto_train.prototxt'</span></span><br><span class="line">test_net_path = <span class="string">'mnist/custom_auto_test.prototxt'</span></span><br><span class="line">solver_config_path = <span class="string">'mnist/custom_auto_solver.prototxt'</span></span><br><span class="line"><span class="keyword">from</span> caffe.proto <span class="keyword">import</span> caffe_pb2</span><br><span class="line">s = caffe_pb2.SolverParameter()</span><br><span class="line"><span class="comment"># Set a seed for reproducible experiments:</span></span><br><span class="line"><span class="comment"># this controls for randomization in training.</span></span><br><span class="line">s.random_seed = <span class="number">0xCAFFE</span></span><br><span class="line"><span class="comment"># Specify locations of the train and (maybe) test networks.</span></span><br><span class="line">s.train_net = train_net_path</span><br><span class="line">s.test_net.append(test_net_path)</span><br><span class="line">s.test_interval = <span class="number">500</span>  <span class="comment"># Test after every 500 training iterations.</span></span><br><span class="line">s.test_iter.append(<span class="number">100</span>) <span class="comment"># Test on 100 batches each time we test.</span></span><br><span class="line">s.max_iter = <span class="number">10000</span>     <span class="comment"># no. of times to update the net (training iterations)</span></span><br><span class="line"><span class="comment"># EDIT HERE to try different solvers</span></span><br><span class="line"><span class="comment"># solver types include "SGD", "Adam", and "Nesterov" among others.</span></span><br><span class="line">s.type = <span class="string">"SGD"</span></span><br><span class="line"><span class="comment"># Set the initial learning rate for SGD.</span></span><br><span class="line">s.base_lr = <span class="number">0.01</span>  <span class="comment"># EDIT HERE to try different learning rates</span></span><br><span class="line"><span class="comment"># Set momentum to accelerate learning by</span></span><br><span class="line"><span class="comment"># taking weighted average of current and previous updates.</span></span><br><span class="line">s.momentum = <span class="number">0.9</span></span><br><span class="line"><span class="comment"># Set weight decay to regularize and prevent overfitting</span></span><br><span class="line">s.weight_decay = <span class="number">5e-4</span></span><br><span class="line"><span class="comment"># Set `lr_policy` to define how the learning rate changes during training.</span></span><br><span class="line"><span class="comment"># This is the same policy as our default LeNet.</span></span><br><span class="line">s.lr_policy = <span class="string">'inv'</span></span><br><span class="line">s.gamma = <span class="number">0.0001</span></span><br><span class="line">s.power = <span class="number">0.75</span></span><br><span class="line"><span class="comment"># EDIT HERE to try the fixed rate (and compare with adaptive solvers)</span></span><br><span class="line"><span class="comment"># `fixed` is the simplest policy that keeps the learning rate constant.</span></span><br><span class="line"><span class="comment"># s.lr_policy = 'fixed'</span></span><br><span class="line"><span class="comment"># Display the current training loss and accuracy every 1000 iterations.</span></span><br><span class="line">s.display = <span class="number">1000</span></span><br><span class="line"><span class="comment"># Snapshots are files used to store networks we've trained.</span></span><br><span class="line"><span class="comment"># We'll snapshot every 5K iterations -- twice during training.</span></span><br><span class="line">s.snapshot = <span class="number">5000</span></span><br><span class="line">s.snapshot_prefix = <span class="string">'mnist/custom_net'</span></span><br><span class="line"><span class="comment"># Train on the GPU</span></span><br><span class="line">s.solver_mode = caffe_pb2.SolverParameter.GPU</span><br><span class="line"><span class="comment"># Write the solver to a temporary file and return its filename.</span></span><br></pre></td></tr></table></figure></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">image[image &lt; <span class="number">0</span>], image[image &gt; <span class="number">255</span>] = <span class="number">0</span>, <span class="number">255</span></span><br><span class="line">类似于matlab的find操作，但又有所不同。</span><br><span class="line">返回的是bool数组，然后赋值。</span><br><span class="line"></span><br><span class="line">image = np.round(image) //四舍五入</span><br><span class="line">image = np.require(image, dtype=np.uint8)</span><br></pre></td></tr></table></figure>
+<h4 id="python-中文件是否存在"><a href="#python-中文件是否存在" class="headerlink" title="python 中文件是否存在"></a><strong>python 中文件是否存在</strong></h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">python 中文件是否存在：<span class="keyword">assert</span> os.path.exists(path_file)</span><br><span class="line">weights = os.path.join()</span><br><span class="line"><span class="number">1.</span>如果各组件名首字母不包含’/’，则函数会自动加上　　　</span><br><span class="line"><span class="number">2.</span>如果各组件存在不含<span class="string">'/'</span>的，则会被忽略掉，直到第一个/出现。</span><br><span class="line">    Path1 = <span class="string">'home'</span></span><br><span class="line">    Path2 = <span class="string">'/develop'</span></span><br><span class="line">    Path3 = <span class="string">'code'</span></span><br><span class="line">    Path20 = os.path.join(Path1,Path2,Path3) <span class="comment">#Path20 = /develop\code 会舍弃非/开头的</span></span><br></pre></td></tr></table></figure>
+<h4 id="load-the-txt-in-python"><a href="#load-the-txt-in-python" class="headerlink" title="load the txt in python"></a><strong>load the txt in python</strong></h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">Python默认的数字的数据类型为双精度浮点数</span><br><span class="line">np.loadtxt</span><br><span class="line">    (   fname, <span class="comment">#file_path</span></span><br><span class="line">        dtype=, <span class="comment">#读入的数据类型</span></span><br><span class="line">        comments=<span class="string">'#'</span>, <span class="comment">#comment的是指, 如果行的开头为#就会跳过该行</span></span><br><span class="line">        delimiter=<span class="literal">None</span>, <span class="comment">#分隔符txt中数据，如','分割。</span></span><br><span class="line">        converters=<span class="literal">None</span>, <span class="comment">#converters参数, 这个是对数据进行预处理的参数, </span></span><br><span class="line">        </span><br><span class="line">        <span class="comment">#我们可以先定义一个函数</span></span><br><span class="line">        <span class="comment"># converters = &#123;0:add_one&#125;这里的converters是一个字典, 表示第零列使用函数add_one来进行预处理</span></span><br><span class="line">        </span><br><span class="line">        usecols=（），</span><br><span class="line">        skiprows=<span class="number">0</span>, <span class="comment">#skiprows是指跳过前1行, 如果设置skiprows=2, 就会跳过前两行</span></span><br><span class="line">        unpack=<span class="literal">False</span>,<span class="comment">#unpack是指会把每一列当成一个向量输出, 而不是合并在一起。</span></span><br><span class="line">        ndmin=<span class="number">0</span></span><br><span class="line">    )</span><br></pre></td></tr></table></figure>
+<h4 id="‘string’-join"><a href="#‘string’-join" class="headerlink" title="‘string’.join()"></a><strong>‘string’.join()</strong></h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">_str.join（src）用于以特定的分隔符(_str)分隔源变量(src)，将其作为新的元素加入到一个列表中</span><br><span class="line">_mail_from = <span class="string">'hehuLi'</span></span><br><span class="line">_mail_to = <span class="string">'lihao'</span></span><br><span class="line">_mail_text =<span class="string">'ni hao'</span></span><br><span class="line">body = <span class="string">"\r\n"</span>.join(</span><br><span class="line">    (<span class="string">"From : %s"</span> %_mail_from, <span class="comment">#%不同于.format(),format必须要键值对。</span></span><br><span class="line">    <span class="string">"to : %s"</span> %_mail_to,</span><br><span class="line">    <span class="string">""</span>,</span><br><span class="line">    _mail_text)</span><br><span class="line">)</span><br><span class="line">% 的用法：</span><br><span class="line"><span class="keyword">print</span> (<span class="string">"pi的值是%s"</span>%pi)</span><br><span class="line">print(<span class="string">"%6.3f"</span> % <span class="number">2.3</span>)</span><br><span class="line"><span class="comment"># 第一个"%"后面的内容为显示的格式说明，6为显示宽度，3为小数点位数，f为浮点数类型</span></span><br><span class="line"><span class="comment"># 第二个"%"后面为显示的内容来源，输出结果右对齐，2.300长度为5，故前面有一空格</span></span><br></pre></td></tr></table></figure>
+<h4 id="临时文件的创建："><a href="#临时文件的创建：" class="headerlink" title="临时文件的创建："></a>临时文件的创建：</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">empfile.NamedTemporaryFile(delete=<span class="literal">False</span>)</span><br><span class="line">f.write(str(n.to_proto()))</span><br></pre></td></tr></table></figure>
+<p><code>caffe</code> 中 <code>DummyData</code>层是用来产生数的，就像<code>np.random</code>一样产生一些随机数。</p>
+<h4 id="程序解析："><a href="#程序解析：" class="headerlink" title="程序解析："></a>程序解析：</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">run_solvers</span><span class="params">(niter, solvers, disp_interval=<span class="number">10</span>)</span>:</span></span><br><span class="line">    <span class="string">"""Run solvers for niter iterations,</span></span><br><span class="line"><span class="string">       returning the loss and accuracy recorded each iteration.</span></span><br><span class="line"><span class="string">       `solvers` is a list of (name, solver) tuples."""</span></span><br><span class="line">    blobs = (<span class="string">'loss'</span>, <span class="string">'acc'</span>)</span><br><span class="line">    loss, acc = (&#123;name: np.zeros(niter) <span class="keyword">for</span> name, _ <span class="keyword">in</span> solvers&#125;</span><br><span class="line">                 <span class="keyword">for</span> _ <span class="keyword">in</span> blobs)</span><br><span class="line">    <span class="keyword">for</span> it <span class="keyword">in</span> range(niter):</span><br><span class="line">        <span class="keyword">for</span> name, s <span class="keyword">in</span> solvers:</span><br><span class="line">            s.step(<span class="number">1</span>)  <span class="comment"># run a single SGD step in Caffe</span></span><br><span class="line">            loss[name][it], acc[name][it] = (s.net.blobs[b].data.copy()</span><br><span class="line">                                             <span class="keyword">for</span> b <span class="keyword">in</span> blobs)</span><br><span class="line">        <span class="keyword">if</span> it % disp_interval == <span class="number">0</span> <span class="keyword">or</span> it + <span class="number">1</span> == niter:</span><br><span class="line">            loss_disp = <span class="string">'; '</span>.join(<span class="string">'%s: loss=%.3f, acc=%2d%%'</span> %</span><br><span class="line">                                  (n, loss[n][it], np.round(<span class="number">100</span>*acc[n][it]))</span><br><span class="line">                                  <span class="keyword">for</span> n, _ <span class="keyword">in</span> solvers)</span><br><span class="line">            <span class="keyword">print</span> <span class="string">'%3d) %s'</span> % (it, loss_disp)     </span><br><span class="line">    <span class="comment"># Save the learned weights from both nets.</span></span><br><span class="line">    weight_dir = tempfile.mkdtemp()</span><br><span class="line">    weights = &#123;&#125;</span><br><span class="line">    <span class="keyword">for</span> name, s <span class="keyword">in</span> solvers:</span><br><span class="line">        filename = <span class="string">'weights.%s.caffemodel'</span> % name</span><br><span class="line">        weights[name] = os.path.join(weight_dir, filename)</span><br><span class="line">        s.net.save(weights[name])</span><br><span class="line"><span class="keyword">return</span> loss, acc, weights</span><br></pre></td></tr></table></figure>
+<p>该函数功能是对两个已经定义的<code>solver</code>进行细节处理：</p>
+<p><code>solvers</code>有两个网络，是在<code>caffe/02-fine-tuning</code> 中的例子。其中一个是没有初始化赋值的<code>model</code>,一个是初始化了的<code>model.</code><br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">style_solver_filename = solver(style_net(train=<span class="literal">True</span>))</span><br><span class="line">style_solver = caffe.get_solver(style_solver_filename)</span><br><span class="line">style_solver.net.copy_from(weights)</span><br><span class="line"></span><br><span class="line"><span class="comment"># For reference, we also create a solver that isn't initialized from</span></span><br><span class="line"><span class="comment"># the pretrained ImageNet weights.</span></span><br><span class="line">scratch_style_solver_filename = solver(style_net(train=<span class="literal">True</span>))</span><br><span class="line">scratch_style_solver = caffe.get_solver(scratch_style_solver_filename)</span><br><span class="line">style_solver是初始化了的：style_solver.net.copy_from(weights)</span><br><span class="line">在caffe中也可以使用caffe.Net(<span class="string">"prototxt"</span>,weights)来初始化。</span><br><span class="line">也可以用style_solver.net.copy_from(weights)，weights caffemodel的路径</span><br></pre></td></tr></table></figure></p>
+<p>3.<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">blobs = (<span class="string">'loss'</span>, <span class="string">'acc'</span>) <span class="comment">#将要取出的模型的blob的名字。</span></span><br><span class="line"><span class="comment">#格式为：s.net.blobs['loss'].data[0] -&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>4.<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">loss, acc = (&#123;name: np.zeros(niter) <span class="keyword">for</span> name, _ <span class="keyword">in</span> solvers&#125;</span><br><span class="line">     				 <span class="keyword">for</span> _ <span class="keyword">in</span> blobs)</span><br><span class="line">     				 </span><br><span class="line">list_a, list_b = (&#123;&#125; <span class="keyword">for</span> _ <span class="keyword">in</span> blobs),可以生成两个list。</span><br></pre></td></tr></table></figure></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/DL/" rel="tag"># DL</a>
+          
+            <a href="/tags/Python/" rel="tag"># Python</a>
+          
+            <a href="/tags/caffe/" rel="tag"># caffe</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/07/10/13_连连看WG-1-0-2-0版本/" rel="next" title="LLK_WG--1.0+2.0版本">
+                <i class="fa fa-chevron-left"></i> LLK_WG--1.0+2.0版本
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/07/11/4_Python+Pytorch学习记录/" rel="prev" title="Python + Pytorch 持续更新">
+                Python + Pytorch 持续更新 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/avatar.gif" alt="JoeyF">
+            
+              <p class="site-author-name" itemprop="name">JoeyF</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">21</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">17</span>
+                  <span class="site-state-item-name">tags</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/ZhouYiiFeng" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:joeyf.z.y.wen@gmail.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#learn-numpy-python"><span class="nav-number">1.</span> <span class="nav-text">learn_numpy_python</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#T20190418"><span class="nav-number">1.1.</span> <span class="nav-text">T20190418:</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#T20190425"><span class="nav-number">1.2.</span> <span class="nav-text">T20190425:</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#T20190426-安装PyCharm-配置Pycaffe"><span class="nav-number">1.3.</span> <span class="nav-text">T20190426: 安装PyCharm, 配置Pycaffe</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#T20190427："><span class="nav-number">1.4.</span> <span class="nav-text">T20190427：</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#DATA层"><span class="nav-number">1.4.0.1.</span> <span class="nav-text">DATA层:</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#卷积层"><span class="nav-number">1.4.0.2.</span> <span class="nav-text">卷积层:</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#全连接层"><span class="nav-number">1.4.0.3.</span> <span class="nav-text">全连接层:</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#损失层："><span class="nav-number">1.4.0.4.</span> <span class="nav-text">损失层：</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#fine-tune-模型："><span class="nav-number">1.4.1.</span> <span class="nav-text">fine-tune 模型：</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#T20190428："><span class="nav-number">1.5.</span> <span class="nav-text">T20190428：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#T20190501：学习style-transfer-的源码记录"><span class="nav-number">1.6.</span> <span class="nav-text">T20190501：学习style transfer 的源码记录</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#T20190429"><span class="nav-number">1.7.</span> <span class="nav-text">T20190429:</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#T20190501"><span class="nav-number">1.8.</span> <span class="nav-text">T20190501:</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#python-中的-类："><span class="nav-number">1.8.1.</span> <span class="nav-text">python 中的 类：</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#T20190510"><span class="nav-number">1.9.</span> <span class="nav-text">T20190510:</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#squeeze"><span class="nav-number">1.9.0.1.</span> <span class="nav-text">squeeze()</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#np-newaxis"><span class="nav-number">1.9.0.2.</span> <span class="nav-text">np.newaxis</span></a></li></ol></li></ol><li class="nav-item nav-level-2"><a class="nav-link" href="#T20190519："><span class="nav-number">1.10.</span> <span class="nav-text">T20190519：</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#net"><span class="nav-number">1.10.0.1.</span> <span class="nav-text">net</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#np-array"><span class="nav-number">1.10.0.2.</span> <span class="nav-text">np.array</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#forward"><span class="nav-number">1.10.0.3.</span> <span class="nav-text">forward()</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#slice（）"><span class="nav-number">1.10.0.4.</span> <span class="nav-text">slice（）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#pad"><span class="nav-number">1.10.0.5.</span> <span class="nav-text">pad()</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#transpose"><span class="nav-number">1.10.0.6.</span> <span class="nav-text">transpose</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#caffe的一次训练流程：【caffe注意实项】"><span class="nav-number">1.10.0.7.</span> <span class="nav-text">caffe的一次训练流程：【caffe注意实项】</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#python-多图subplot"><span class="nav-number">1.10.0.8.</span> <span class="nav-text">python 多图subplot:</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#python-中获得图像句柄："><span class="nav-number">1.10.0.9.</span> <span class="nav-text">python 中获得图像句柄：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#python-中三目运算符"><span class="nav-number">1.10.0.10.</span> <span class="nav-text">python 中三目运算符:</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#python-与"><span class="nav-number">1.10.0.11.</span> <span class="nav-text">python /与 //</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#写solver-prototxt"><span class="nav-number">1.10.1.</span> <span class="nav-text">写solver.prototxt</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#python-中文件是否存在"><span class="nav-number">1.10.1.1.</span> <span class="nav-text">python 中文件是否存在</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#load-the-txt-in-python"><span class="nav-number">1.10.1.2.</span> <span class="nav-text">load the txt in python</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#‘string’-join"><span class="nav-number">1.10.1.3.</span> <span class="nav-text">‘string’.join()</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#临时文件的创建："><span class="nav-number">1.10.1.4.</span> <span class="nav-text">临时文件的创建：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#程序解析："><span class="nav-number">1.10.1.5.</span> <span class="nav-text">程序解析：</span></a></li></ol></li></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">JoeyF</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Gemini</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+
+
+  
+
+  
+
+</body>
+</html>

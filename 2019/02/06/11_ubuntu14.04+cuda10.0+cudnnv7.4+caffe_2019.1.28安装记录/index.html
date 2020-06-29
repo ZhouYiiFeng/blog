@@ -1,0 +1,854 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="DL,caffe,Ubuntu,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="1.安装ubuntu注意事项：这是在我安装完Ubuntu14.04的记录： 1. 版本选择：刚开始安装的是16.04，最新是18.04，不必去装最新的东西，很多bug没有维护好的。 1.2 参考第一次安装Ubuntu，按照网上的教程，看了很多篇，但是网上的教程层次不齐，有许多自己遇见的问题网上的博客却没有遇见，而且网上的博客有些都已经过时了。所以我在这里写下自己的一些感悟。 1.3 寻找资源博客资">
+<meta name="keywords" content="DL,caffe,Ubuntu">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ubuntu14.04+cuda10.0+cudnnv7.4+caffe_2019.1.28安装记录">
+<meta property="og:url" content="http://zhoef.com/2019/02/06/11_ubuntu14.04+cuda10.0+cudnnv7.4+caffe_2019.1.28安装记录/index.html">
+<meta property="og:site_name" content="JoeyF&#39;s Home">
+<meta property="og:description" content="1.安装ubuntu注意事项：这是在我安装完Ubuntu14.04的记录： 1. 版本选择：刚开始安装的是16.04，最新是18.04，不必去装最新的东西，很多bug没有维护好的。 1.2 参考第一次安装Ubuntu，按照网上的教程，看了很多篇，但是网上的教程层次不齐，有许多自己遇见的问题网上的博客却没有遇见，而且网上的博客有些都已经过时了。所以我在这里写下自己的一些感悟。 1.3 寻找资源博客资">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2019-08-25T02:56:40.754Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="ubuntu14.04+cuda10.0+cudnnv7.4+caffe_2019.1.28安装记录">
+<meta name="twitter:description" content="1.安装ubuntu注意事项：这是在我安装完Ubuntu14.04的记录： 1. 版本选择：刚开始安装的是16.04，最新是18.04，不必去装最新的东西，很多bug没有维护好的。 1.2 参考第一次安装Ubuntu，按照网上的教程，看了很多篇，但是网上的教程层次不齐，有许多自己遇见的问题网上的博客却没有遇见，而且网上的博客有些都已经过时了。所以我在这里写下自己的一些感悟。 1.3 寻找资源博客资">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://zhoef.com/2019/02/06/11_ubuntu14.04+cuda10.0+cudnnv7.4+caffe_2019.1.28安装记录/">
+
+
+
+
+
+  <title>ubuntu14.04+cuda10.0+cudnnv7.4+caffe_2019.1.28安装记录 | JoeyF's Home</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="default">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">JoeyF's Home</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            About
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://zhoef.com/2019/02/06/11_ubuntu14.04+cuda10.0+cudnnv7.4+caffe_2019.1.28安装记录/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="JoeyF">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="JoeyF's Home">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">ubuntu14.04+cuda10.0+cudnnv7.4+caffe_2019.1.28安装记录</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-02-06T12:39:39+08:00">
+                2019-02-06
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="1-安装ubuntu注意事项："><a href="#1-安装ubuntu注意事项：" class="headerlink" title="1.安装ubuntu注意事项："></a>1.安装ubuntu注意事项：</h1><p>这是在我安装完Ubuntu14.04的记录：</p>
+<h2 id="1-版本选择："><a href="#1-版本选择：" class="headerlink" title="1. 版本选择："></a>1. 版本选择：</h2><p>刚开始安装的是16.04，最新是18.04，不必去装最新的东西，很多bug没有维护好的。</p>
+<h2 id="1-2-参考"><a href="#1-2-参考" class="headerlink" title="1.2 参考"></a>1.2 参考</h2><p>第一次安装Ubuntu，按照网上的教程，看了很多篇，但是网上的教程层次不齐，有许多自己遇见的问题网上的博客却没有遇见，而且网上的博客有些都已经过时了。所以我在这里写下自己的一些感悟。</p>
+<h2 id="1-3-寻找资源"><a href="#1-3-寻找资源" class="headerlink" title="1.3 寻找资源"></a>1.3 寻找资源</h2><h4 id="博客资源"><a href="#博客资源" class="headerlink" title="博客资源"></a>博客资源</h4><p><strong>找一篇还算新的博客。</strong><br>可参考这三篇博客</p>
+<blockquote>
+<p>Win10 + Ubuntu双系统U盘安装，详细过程（带图解）<br>win10下安装Ubuntu16.04双系统、配置深度学习主机与环境（TensorFlow+1080Ti）<br>Win10&amp;Ubuntu双系统与显卡驱动安装</p>
+</blockquote>
+<h4 id="安装顺序"><a href="#安装顺序" class="headerlink" title="安装顺序"></a>安装顺序</h4><p>在win10 安装好后在安装Linux，不然会冲突。假设你的win10已经安装好，并且安装了一个Ubuntu的镜像文件</p>
+<h4 id="什么是镜像文件"><a href="#什么是镜像文件" class="headerlink" title="什么是镜像文件"></a>什么是镜像文件</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">就是以.iso结尾的，其实是个压缩包。</span><br></pre></td></tr></table></figure>
+<h3 id="镜像网站上下载"><a href="#镜像网站上下载" class="headerlink" title="镜像网站上下载"></a>镜像网站上下载</h3><p>可以在官网上下载，也可以在国内的镜像网站上下载，我是在清华的镜像网站上下载的，可以百度出来这个网站，然后找到Ubuntu release，其中有各个版本的Ubuntu，选择你想要的即可。</p>
+<p>找到一个U盘空的，备份好随后会被格式化，注意要格式化为FAT32的。<br>下载UUI或者anyother将ISO写成开机驱动的软件。</p>
+<p>分一个区出来，在win10中可以直接分区，压缩是将原来的某一个区抽出多少空间，扩展是将连续的两个分区合并。注意是连续的！如果两者之间有其他的，需要移动。</p>
+<p>开始安装Ubuntu。</p>
+<h2 id="这里会出现一大堆问题。"><a href="#这里会出现一大堆问题。" class="headerlink" title="这里会出现一大堆问题。"></a>这里会出现一大堆问题。</h2><h3 id="Por1-找不到U盘启动选项。"><a href="#Por1-找不到U盘启动选项。" class="headerlink" title="Por1. 找不到U盘启动选项。"></a>Por1. 找不到U盘启动选项。</h3><h3 id="Por2-在安装界面点击Install-Ubuntu-后在Ubuntu界面卡住，下面5个点，红点始终填不满。"><a href="#Por2-在安装界面点击Install-Ubuntu-后在Ubuntu界面卡住，下面5个点，红点始终填不满。" class="headerlink" title="Por2. 在安装界面点击Install Ubuntu 后在Ubuntu界面卡住，下面5个点，红点始终填不满。"></a>Por2. 在安装界面点击<code>Install Ubuntu</code> 后在<code>Ubuntu</code>界面卡住，下面5个点，红点始终填不满。</h3><p>一个一个来<strong><code>solve</code></strong></p>
+<h4 id="1-对于Pro1"><a href="#1-对于Pro1" class="headerlink" title="1. 对于Pro1."></a>1. 对于<strong>Pro1</strong>.</h4><ol>
+<li>在开机后，会有2s左右的时间进入你PC的BIOS界面，按F2，或其他键，这个在PC开机logo下的提示可见。</li>
+<li>进入BIOS界面后，不同的主板有不同的UI，见到网上的截图和你不一样不要慌。找到boot启动界面。</li>
+<li>选择使用UIE**(一个格式名称)打头的+“你的U盘名称”的启动选项。你还可以看到你win10的manager boot(win10应该是默认放在第一个)</li>
+<li>将你的U盘拖到，或设置到第一个，就是你Windows的位置</li>
+</ol>
+<h4 id="2-对于Pro2"><a href="#2-对于Pro2" class="headerlink" title="2. 对于Pro2."></a>2. 对于<strong>Pro2</strong>.</h4><ol>
+<li>卡住后这是个大问题，千万别慌，网上有些东西全是乱写，什么和N卡冲突，什么要改这改那的，真是醉了。<br><strong>解决方案</strong>：<br>1.换个U盘，3.0的接口要。<br>2.重做U盘，换个写入软件试试，比如你之前用的软碟通就换UUI….<br>3.换版本，Ubuntu那么多版本我就换到14.04了<br>4.将开机安全启动关闭。这里有些主板是清楚key然后自动disable的。所以你点击不了(灰的按钮).<br>5.u盘要FAT32的格式。</li>
+</ol>
+<h1 id="如果你没有出现上面的问题，那么你很幸运。直接来到了Ubuntu的GUI。"><a href="#如果你没有出现上面的问题，那么你很幸运。直接来到了Ubuntu的GUI。" class="headerlink" title="如果你没有出现上面的问题，那么你很幸运。直接来到了Ubuntu的GUI。"></a>如果你没有出现上面的问题，那么你很幸运。直接来到了Ubuntu的GUI。</h1><h2 id="1-正式安装Ubuntu。"><a href="#1-正式安装Ubuntu。" class="headerlink" title="1. 正式安装Ubuntu。"></a>1. 正式安装Ubuntu。</h2><p>选择什么的网上还是很清楚的，注意的是不要选win10共存的那个选择，一定要选other其他选择！！！不然你win10就没了<br>分区的话，之前预留了多少空间就按多少来分。/home做DL的话200G—500G不等。</p>
+<pre><code>1.  注意的是swap选择的时候是在etx4那一项选择。
+</code></pre><h3 id="安装开始…"><a href="#安装开始…" class="headerlink" title="安装开始…"></a>安装开始…</h3><p><strong>ps.</strong> 目前ubuntu 好像将/home分区和/分区视为同样的分区，所以只要保证/分区足够大，就不用担心空间不够用的问题了<em>（仅个人见解）</em></p>
+<h2 id="2-更新源"><a href="#2-更新源" class="headerlink" title="2. 更新源"></a>2. 更新源</h2><ol>
+<li>安装过程到某一步时会特别慢，这时更改你的更新设置，将源更新到国内的库中(主要有阿里云镜像，清华镜像等)。这样速度就会变快了。</li>
+<li>配置镜像源是在软件更新中设置的。参照(ubuntu14.04-更换阿里云源这篇博客)</li>
+</ol>
+<h2 id="3-安装完了ubuntu会发现分辨率无法调回来，这是开始调整分辨率"><a href="#3-安装完了ubuntu会发现分辨率无法调回来，这是开始调整分辨率" class="headerlink" title="3. 安装完了ubuntu会发现分辨率无法调回来，这是开始调整分辨率"></a>3. 安装完了ubuntu会发现分辨率无法调回来，这是开始调整分辨率</h2><ol>
+<li>参考(Ubuntu 14.04安装Nvidia显卡驱动以及查看显卡驱动)这篇博客即可</li>
+</ol>
+<h2 id="4-分辨率调整好了这是开始下载cuda"><a href="#4-分辨率调整好了这是开始下载cuda" class="headerlink" title="4.分辨率调整好了这是开始下载cuda"></a>4.分辨率调整好了这是开始下载cuda</h2><ol>
+<li>官网下载。NVIDIA官网时不时抽风，下载速度很慢且易挂。本人使用手机4G网流量下载，可以解决速度问题。</li>
+</ol>
+<h1 id="务必先装cuda再看是否需要显卡驱动安装"><a href="#务必先装cuda再看是否需要显卡驱动安装" class="headerlink" title="务必先装cuda再看是否需要显卡驱动安装"></a>务必先装cuda再看是否需要显卡驱动安装</h1><p>因为cuda中自带显卡驱动，省的版本匹配问题</p>
+<h2 id="5-Cuda"><a href="#5-Cuda" class="headerlink" title="5. Cuda"></a>5. Cuda</h2><h3 id="1-下载："><a href="#1-下载：" class="headerlink" title="1. 下载："></a>1. 下载：</h3><p>在Nvidia官网下载和配置一样的cuda，注意(有些CUda的版本是没有对应的ubuntu版本的，所以在安装Ubuntu时最好安装16.04这个版本，因为这个版本支持的最多) 注意Nvidia下载有时会很慢，试用手机流量下载或许会变快。</p>
+<h3 id="2-安装"><a href="#2-安装" class="headerlink" title="2.安装"></a>2.安装</h3><ol>
+<li>安装cuda之前无需安装显卡驱动，在安装cuda中在安装，首先还需要下载你的显卡的驱动，最新的驱动。我下载的是410.93的驱动是个.run文件，这个根据你自己的显卡版本在它官网下载即可。有个网站是看驱动和cuda要求的版本是否匹配的网站，具体我忘记了，百度可搜到。</li>
+</ol>
+<h4 id="下载清单："><a href="#下载清单：" class="headerlink" title="下载清单："></a>下载清单：</h4><pre><code>1.驱动.run
+2.cuda你对应版本的
+</code></pre><h3 id="3-行动："><a href="#3-行动：" class="headerlink" title="3. 行动："></a>3. 行动：</h3><ol>
+<li>关闭图形界面，此时你需要在另外电脑上看这份文件。</li>
+<li>卸掉之前的驱动，书《深度学习实践》p20页上部分(这本书安装顺序是有问题的)</li>
+<li>安装cuda.deb文件 sudo dpkg…apt.update</li>
+<li>安装cuda中的sample， 并且编译 make —j32这里注意有两个—</li>
+<li>运行 ./deviceQuery</li>
+<li>正常情况下一般是会报错的。因为你驱动都没装啊。</li>
+<li>错误提示：<ol>
+<li>驱动不匹配</li>
+<li>它可能会提示你 nvcc 找不到，让你安装apt-get nvcctoolkit（不要安装）</li>
+</ol>
+</li>
+<li>安装驱动.run，都选yes</li>
+<li>配置blacklist.conf 加上书《深度学习实践》p19页5行。+重启</li>
+<li>配置环境变量参考（解决nvcc找不到的问题（Ubuntu14.04 CUDA 8.0）这篇博文）<ol>
+<li>如下：(cuda8.0要换为你下载的那个版本)</li>
+<li>最近在linux上安装了CUDA 8.0，但是nvcc -V找不到命令。</li>
+<li>然后在terminal中提示sudo apt-get install</li>
+</ol>
+</li>
+</ol>
+<h3 id="Nvidia-Cuda-Toolkit安装"><a href="#Nvidia-Cuda-Toolkit安装" class="headerlink" title="Nvidia-Cuda-Toolkit安装:"></a>Nvidia-Cuda-Toolkit安装:</h3><p>我脑残的跟着执行命令后，nvcc命令可以正常执行，但是运行nvcc —version发现版本为5.5，与原来安装的CUDA 8.0不匹配，这将会导致一系列不兼容问题（比如在python中使用sk-cuda库就报错，因为nvcc版本不一致），遂通过如下步骤解决：</p>
+<ol>
+<li>使用sudo apt-get autoremove nvidia-cuda-toolkit 卸载5.5版本</li>
+<li>查看/usr/local/cuda/bin下是否有nvcc可执行程序，如果没有说明cuda没有正常安装，需要重新安装，如果有，进入下一步</li>
+<li>添加环境变量，打开~/.bashrc ，添加环境变量export PATH=$PATH:/usr/local/cuda/bin    export LD_LIBRARY_PATH=/usr/local/cuda-8.0/bin/lib64:$LD_LIBRARY_PATH</li>
+<li>再在terminal中输入nvcc -V可以看到已经可以显示为8.0版本了+重启</li>
+<li>此时两个报错基本解决了。且版本统一，再运行 ./deviceQuery（切换到该目录下）应该没有错误</li>
+</ol>
+<h2 id="3-Cudnn"><a href="#3-Cudnn" class="headerlink" title="3. Cudnn"></a>3. Cudnn</h2><ol>
+<li>下载对应版本的cudnn在NVIDIA官网上注册后，按照它的选项来下载。是一个liberay for linux文件。</li>
+<li>按照官方提示安装那个deb。并且复制其头文件已经lib×的几个文件到cuda中，最后建立软连接(参考《手把手AI项目》二)</li>
+<li>检验nvcc -V（V大写）</li>
+</ol>
+<h1 id="另外要注意的东西："><a href="#另外要注意的东西：" class="headerlink" title="另外要注意的东西："></a>另外要注意的东西：</h1><h2 id="4-gcc版本更新："><a href="#4-gcc版本更新：" class="headerlink" title="4. gcc版本更新："></a>4. gcc版本更新：</h2><ol>
+<li>至少4.8以上，最好5.0</li>
+<li>参考（<a href="https://www.cnblogs.com/loadofleaf/p/5667989.html虽然网速较慢幸好gcc不大）" target="_blank" rel="noopener">https://www.cnblogs.com/loadofleaf/p/5667989.html虽然网速较慢幸好gcc不大）</a></li>
+</ol>
+<h2 id="6-若-目录磁盘不够：（参考ubuntu-16-04根目录磁盘空间扩容（亲测！！））"><a href="#6-若-目录磁盘不够：（参考ubuntu-16-04根目录磁盘空间扩容（亲测！！））" class="headerlink" title="6. 若/目录磁盘不够：（参考ubuntu 16.04根目录磁盘空间扩容（亲测！！））"></a>6. 若/目录磁盘不够：（参考ubuntu 16.04根目录磁盘空间扩容（亲测！！））</h2><ol>
+<li>下载gparted</li>
+<li>一u盘驱动试运行ubuntu</li>
+<li>划分空间依次上移</li>
+<li>应用于全OS。</li>
+</ol>
+<h2 id="7-安装caffe（参考《手把手AI项目》二）注-opencv已经Python可以之后安装，暂时可以不管"><a href="#7-安装caffe（参考《手把手AI项目》二）注-opencv已经Python可以之后安装，暂时可以不管" class="headerlink" title="7. 安装caffe（参考《手把手AI项目》二）注 opencv已经Python可以之后安装，暂时可以不管"></a>7. 安装caffe（参考《手把手AI项目》二）注 opencv已经Python可以之后安装，暂时可以不管</h2><ol>
+<li>配置caffe的两个文档<ol>
+<li>Makefile.config <ol>
+<li>USE_CUDNN := 1</li>
+</ol>
+</li>
+</ol>
+</li>
+<li>修改 caffe 目录下的 Makefile 文件<ol>
+<li>LIBRARIES += glog gflags protobuf boost_system boost_filesystem m（貌似不用修改。）</li>
+</ol>
+</li>
+<li>NVCCFLAGS += -D_FORCE_INLINES -ccbin=$(CXX) -Xcompiler -fPIC $(COMMON_FLAGS)</li>
+<li>CUDA architecture setting （这里它有注释提示，按提示删除即可）</li>
+</ol>
+<h4 id="注意："><a href="#注意：" class="headerlink" title="注意："></a><strong>注意</strong>：</h4><p>显卡驱动要装最新的，cuda要和驱动一样的版本，cudnn要和cuda对应。<br>环境变量有时只做了局部的，需要到一个文件中最后添加一行环境设置，可百度。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/DL/" rel="tag"># DL</a>
+          
+            <a href="/tags/caffe/" rel="tag"># caffe</a>
+          
+            <a href="/tags/Ubuntu/" rel="tag"># Ubuntu</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/02/07/12_win-OpenCV/" rel="prev" title="win10 + VS2017 配置 Opencv3.4.2">
+                win10 + VS2017 配置 Opencv3.4.2 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/avatar.gif" alt="JoeyF">
+            
+              <p class="site-author-name" itemprop="name">JoeyF</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">21</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">17</span>
+                  <span class="site-state-item-name">tags</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/ZhouYiiFeng" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:joeyf.z.y.wen@gmail.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-安装ubuntu注意事项："><span class="nav-number">1.</span> <span class="nav-text">1.安装ubuntu注意事项：</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-版本选择："><span class="nav-number">1.1.</span> <span class="nav-text">1. 版本选择：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-2-参考"><span class="nav-number">1.2.</span> <span class="nav-text">1.2 参考</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-3-寻找资源"><span class="nav-number">1.3.</span> <span class="nav-text">1.3 寻找资源</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#博客资源"><span class="nav-number">1.3.0.1.</span> <span class="nav-text">博客资源</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#安装顺序"><span class="nav-number">1.3.0.2.</span> <span class="nav-text">安装顺序</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#什么是镜像文件"><span class="nav-number">1.3.0.3.</span> <span class="nav-text">什么是镜像文件</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#镜像网站上下载"><span class="nav-number">1.3.1.</span> <span class="nav-text">镜像网站上下载</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#这里会出现一大堆问题。"><span class="nav-number">1.4.</span> <span class="nav-text">这里会出现一大堆问题。</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Por1-找不到U盘启动选项。"><span class="nav-number">1.4.1.</span> <span class="nav-text">Por1. 找不到U盘启动选项。</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Por2-在安装界面点击Install-Ubuntu-后在Ubuntu界面卡住，下面5个点，红点始终填不满。"><span class="nav-number">1.4.2.</span> <span class="nav-text">Por2. 在安装界面点击Install Ubuntu 后在Ubuntu界面卡住，下面5个点，红点始终填不满。</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-对于Pro1"><span class="nav-number">1.4.2.1.</span> <span class="nav-text">1. 对于Pro1.</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-对于Pro2"><span class="nav-number">1.4.2.2.</span> <span class="nav-text">2. 对于Pro2.</span></a></li></ol></li></ol></li></ol><li class="nav-item nav-level-1"><a class="nav-link" href="#如果你没有出现上面的问题，那么你很幸运。直接来到了Ubuntu的GUI。"><span class="nav-number">2.</span> <span class="nav-text">如果你没有出现上面的问题，那么你很幸运。直接来到了Ubuntu的GUI。</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-正式安装Ubuntu。"><span class="nav-number">2.1.</span> <span class="nav-text">1. 正式安装Ubuntu。</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#安装开始…"><span class="nav-number">2.1.1.</span> <span class="nav-text">安装开始…</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-更新源"><span class="nav-number">2.2.</span> <span class="nav-text">2. 更新源</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-安装完了ubuntu会发现分辨率无法调回来，这是开始调整分辨率"><span class="nav-number">2.3.</span> <span class="nav-text">3. 安装完了ubuntu会发现分辨率无法调回来，这是开始调整分辨率</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-分辨率调整好了这是开始下载cuda"><span class="nav-number">2.4.</span> <span class="nav-text">4.分辨率调整好了这是开始下载cuda</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#务必先装cuda再看是否需要显卡驱动安装"><span class="nav-number">3.</span> <span class="nav-text">务必先装cuda再看是否需要显卡驱动安装</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#5-Cuda"><span class="nav-number">3.1.</span> <span class="nav-text">5. Cuda</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-下载："><span class="nav-number">3.1.1.</span> <span class="nav-text">1. 下载：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-安装"><span class="nav-number">3.1.2.</span> <span class="nav-text">2.安装</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#下载清单："><span class="nav-number">3.1.2.1.</span> <span class="nav-text">下载清单：</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-行动："><span class="nav-number">3.1.3.</span> <span class="nav-text">3. 行动：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Nvidia-Cuda-Toolkit安装"><span class="nav-number">3.1.4.</span> <span class="nav-text">Nvidia-Cuda-Toolkit安装:</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-Cudnn"><span class="nav-number">3.2.</span> <span class="nav-text">3. Cudnn</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#另外要注意的东西："><span class="nav-number">4.</span> <span class="nav-text">另外要注意的东西：</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#4-gcc版本更新："><span class="nav-number">4.1.</span> <span class="nav-text">4. gcc版本更新：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-若-目录磁盘不够：（参考ubuntu-16-04根目录磁盘空间扩容（亲测！！））"><span class="nav-number">4.2.</span> <span class="nav-text">6. 若/目录磁盘不够：（参考ubuntu 16.04根目录磁盘空间扩容（亲测！！））</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#7-安装caffe（参考《手把手AI项目》二）注-opencv已经Python可以之后安装，暂时可以不管"><span class="nav-number">4.3.</span> <span class="nav-text">7. 安装caffe（参考《手把手AI项目》二）注 opencv已经Python可以之后安装，暂时可以不管</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#注意："><span class="nav-number">4.3.0.1.</span> <span class="nav-text">注意：</span></a></li></ol></li></ol></li></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">JoeyF</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Gemini</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+
+
+  
+
+  
+
+</body>
+</html>

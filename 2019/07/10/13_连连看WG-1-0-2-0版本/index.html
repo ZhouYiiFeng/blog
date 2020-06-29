@@ -1,0 +1,817 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Opencv,DL,Pytorch,Python,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="导言：本篇主要开发了2个版本的辅助程序。  LLK_1.0是基于C++开发的使用的opencv中自带的直方图相似进行分类。 LLK_2.0是基于Python开发的，使用的Pytorch进行网络的训练，采用的网络结构是简化版的VGG  连连看辅助程序1.0博主童年时一直被一款游戏虐待：QQGame中的连连看小游戏，该游戏给博主留下了很深的童年手残经历，在学到了一些知识后博主准备使用另一种角度去看到这">
+<meta name="keywords" content="Opencv,DL,Pytorch,Python">
+<meta property="og:type" content="article">
+<meta property="og:title" content="LLK_WG--1.0+2.0版本">
+<meta property="og:url" content="http://zhoef.com/2019/07/10/13_连连看WG-1-0-2-0版本/index.html">
+<meta property="og:site_name" content="JoeyF&#39;s Home">
+<meta property="og:description" content="导言：本篇主要开发了2个版本的辅助程序。  LLK_1.0是基于C++开发的使用的opencv中自带的直方图相似进行分类。 LLK_2.0是基于Python开发的，使用的Pytorch进行网络的训练，采用的网络结构是简化版的VGG  连连看辅助程序1.0博主童年时一直被一款游戏虐待：QQGame中的连连看小游戏，该游戏给博主留下了很深的童年手残经历，在学到了一些知识后博主准备使用另一种角度去看到这">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="http://zhoef.com/2019/07/10/13_连连看WG-1-0-2-0版本/qqgame.png">
+<meta property="og:image" content="http://zhoef.com/2019/07/10/13_连连看WG-1-0-2-0版本/连连看logo.png">
+<meta property="og:image" content="http://zhoef.com/2019/07/10/13_连连看WG-1-0-2-0版本/全屏截图1.png">
+<meta property="og:image" content="http://zhoef.com/2019/07/10/13_连连看WG-1-0-2-0版本/target_area.png">
+<meta property="og:image" content="http://zhoef.com/2019/07/10/13_连连看WG-1-0-2-0版本/分割小块.png">
+<meta property="og:image" content="http://zhoef.com/2019/07/10/13_连连看WG-1-0-2-0版本/小块.png">
+<meta property="og:image" content="http://zhoef.com/2019/07/10/13_连连看WG-1-0-2-0版本/边界处不能消除.png">
+<meta property="og:image" content="http://zhoef.com/2019/07/10/13_连连看WG-1-0-2-0版本/数据集1.0.png">
+<meta property="og:updated_time" content="2019-08-20T05:19:09.060Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="LLK_WG--1.0+2.0版本">
+<meta name="twitter:description" content="导言：本篇主要开发了2个版本的辅助程序。  LLK_1.0是基于C++开发的使用的opencv中自带的直方图相似进行分类。 LLK_2.0是基于Python开发的，使用的Pytorch进行网络的训练，采用的网络结构是简化版的VGG  连连看辅助程序1.0博主童年时一直被一款游戏虐待：QQGame中的连连看小游戏，该游戏给博主留下了很深的童年手残经历，在学到了一些知识后博主准备使用另一种角度去看到这">
+<meta name="twitter:image" content="http://zhoef.com/2019/07/10/13_连连看WG-1-0-2-0版本/qqgame.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://zhoef.com/2019/07/10/13_连连看WG-1-0-2-0版本/">
+
+
+
+
+
+  <title>LLK_WG--1.0+2.0版本 | JoeyF's Home</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="default">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">JoeyF's Home</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            About
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://zhoef.com/2019/07/10/13_连连看WG-1-0-2-0版本/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="JoeyF">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="JoeyF's Home">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">LLK_WG--1.0+2.0版本</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-07-10T13:14:31+08:00">
+                2019-07-10
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="导言："><a href="#导言：" class="headerlink" title="导言："></a>导言：</h1><p>本篇主要开发了2个版本的辅助程序。</p>
+<ol>
+<li>LLK_1.0是基于<code>C++</code>开发的使用的<code>opencv</code>中自带的直方图相似进行分类。</li>
+<li>LLK_2.0是基于<code>Python</code>开发的，使用的<code>Pytorch</code>进行网络的训练，采用的网络结构是简化版的<code>VGG</code></li>
+</ol>
+<h1 id="连连看辅助程序1-0"><a href="#连连看辅助程序1-0" class="headerlink" title="连连看辅助程序1.0"></a>连连看辅助程序1.0</h1><p>博主童年时一直被一款游戏虐待：<strong>QQGame</strong>中的<strong>连连看</strong>小游戏，该游戏给博主留下了很深的童年手残经历，在学到了一些知识后博主准备使用另一种角度去看到这款游戏：<br><img src="/2019/07/10/13_连连看WG-1-0-2-0版本/qqgame.png" alt="qqgame.png"><center>QQGame</center><br><img src="/2019/07/10/13_连连看WG-1-0-2-0版本/连连看logo.png" alt="LLlogo.png"><center>连连看</center></p>
+<h2 id="开发环境："><a href="#开发环境：" class="headerlink" title="开发环境："></a>开发环境：</h2><ol>
+<li>VS 2017</li>
+<li>OpenCV2</li>
+</ol>
+<h1 id="一-LLK-1-0-算法逻辑："><a href="#一-LLK-1-0-算法逻辑：" class="headerlink" title="一. LLK_1.0 算法逻辑："></a>一. LLK_1.0 算法逻辑：</h1><h2 id="1-1-定位目标框"><a href="#1-1-定位目标框" class="headerlink" title="1.1 定位目标框"></a>1.1 定位目标框</h2><p>根据每个人的分辨率不同，<code>连连看</code>游戏的界面会默认出现在屏幕的正中，所以需要自己手动设置。<br><img src="/2019/07/10/13_连连看WG-1-0-2-0版本/全屏截图1.png" alt="全屏截图1.png"><center>图1.1</center><br>下面是我的屏幕信息的宏定义：<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">define</span> CONEROFPIC_LT_X 570	<span class="comment">//桌面左上角x坐标，依据显示器分辨率调整。</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> CONEROFPIC_LT_Y 400	<span class="comment">//桌面左上角y坐标，依据显示器分辨率调整。</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> CONEROFPIC_RB_X 1165 <span class="comment">//桌面右下角x坐标，依据显示器分辨率调整。</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> CONEROFPIC_RB_Y 785	<span class="comment">//桌面右下角y坐标，依据显示器分辨率调整。</span></span></span><br></pre></td></tr></table></figure></p>
+<p>有了上面的参数就可以轻松获得到目标区域：<br><img src="/2019/07/10/13_连连看WG-1-0-2-0版本/target_area.png" alt="target_area.png"><center>图1.2</center></p>
+<p><strong>PS</strong> 像素点精确定位我是用画图软件看的</p>
+<h2 id="1-2-分割小块："><a href="#1-2-分割小块：" class="headerlink" title="1.2 分割小块："></a>1.2 分割小块：</h2><p>每一个小块的大小也可以测量得到：<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">define</span> SEGIMGROW 35.0f			<span class="comment">//分割出来的小块的长度</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> SEGIMGCOL 31.0f			<span class="comment">//分割出来的小块的宽度</span></span></span><br></pre></td></tr></table></figure></p>
+<p>那么可以直接将刚才的目标图像（图1.2所示）分割成 <strong><code>11 × 19</code></strong>的<strong><code>grid</code></strong>每一小块是这样的：<br><img src="/2019/07/10/13_连连看WG-1-0-2-0版本/分割小块.png" alt="分割小块.png"><center>图1.3</center><br><img src="/2019/07/10/13_连连看WG-1-0-2-0版本/小块.png" alt="小块.png"><center>图1.4</center></p>
+<h2 id="1-3-分类："><a href="#1-3-分类：" class="headerlink" title="1.3 分类："></a>1.3 分类：</h2><p>当得到<strong><code>11 × 19</code></strong>个小块后，可以采取的措施有很多种：</p>
+<ol>
+<li>无监督学习：<code>SVM</code>等，将209块分成不同的类别，然后得到分类矩阵<strong><code>mat</code></strong>，但是很显然，对于多类别(<em>此游戏有45个不同的小块类别</em>)这样的精度是很不够的，且分类时间过长。<strong>不是首选</strong></li>
+<li>传统识别方法：<code>直方图相似</code> <code>拐点数计数</code> <code>灰度图相似</code> 对于后两个方案，在<strong>拐点数量相同</strong>的图案、<strong>形状同但颜色不同</strong>的图案中的精确他很<strong>低</strong>，无法使用，所以只有<strong><code>直方图相似</code></strong>可以使用</li>
+<li>深度学习方案：<strong>数据集</strong>的采集比较困难，但其<strong>预测速度</strong>和<strong>精度</strong>远高于1，2，是最优的方案。将在版本2.0中深入讨论。<br><strong>在LLK_1.0中采用的是<code>直方图相似</code>来分类209块图像</strong></li>
+</ol>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">std</span>::<span class="built_in">queue</span>&lt;ansPPair&gt; getMat() &#123;</span><br><span class="line">	matInfo matall;</span><br><span class="line">	cv::Mat temp1 = cv::imread(<span class="string">"screenShot\\ss.bmp"</span>); <span class="comment">//读入刚刚截屏的图。</span></span><br><span class="line">	<span class="comment">//cv::Mat image = temp1(cv::Rect(cv::Point(295, 245), cv::Point(890, 635))); //将目标板块分割出来。</span></span><br><span class="line">	cv::Mat image = temp1(cv::Rect(cv::Point(CONEROFPIC_LT_X, CONEROFPIC_LT_Y), cv::Point(CONEROFPIC_RB_X, CONEROFPIC_RB_Y)));</span><br><span class="line">	<span class="keyword">int</span> size = <span class="number">0</span>;	<span class="comment">//初始化mat</span></span><br><span class="line">	<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">13</span>; i++) &#123;</span><br><span class="line">		vec tv;</span><br><span class="line">		<span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; <span class="number">21</span>; j++) &#123;</span><br><span class="line">			tv.push_back(<span class="number">0</span>);</span><br><span class="line">		&#125;</span><br><span class="line">		matall.matr.push_back(tv);</span><br><span class="line">		matall.mat.push_back(tv);</span><br><span class="line">	&#125;</span><br><span class="line">	cv::Mat segt, segGray; classLL;</span><br><span class="line">	classLL classtLL;</span><br><span class="line">	Mat temp;</span><br><span class="line">	<span class="keyword">char</span> *img_name_str = <span class="keyword">new</span> <span class="keyword">char</span>[<span class="number">10</span>];</span><br><span class="line">	<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt; <span class="number">45</span>; i++) &#123; <span class="comment">//45张图依次匹配，总数为 45 * 11 * 19次。</span></span><br><span class="line">		<span class="built_in">sprintf</span>(img_name_str, <span class="string">"llexp/%03d.PNG"</span>, i);</span><br><span class="line">		temp = cv::imread(img_name_str);	<span class="comment">//拐点检测+直方图匹配。</span></span><br><span class="line">		<span class="keyword">for</span> (<span class="keyword">int</span> x = <span class="number">0</span>; x &lt;<span class="number">19</span>; x++) &#123;</span><br><span class="line">			<span class="keyword">for</span> (<span class="keyword">int</span> y = <span class="number">0</span>; y &lt; <span class="number">11</span>; y++) &#123;</span><br><span class="line">				<span class="keyword">if</span> (matall.matr[y + <span class="number">1</span>][x + <span class="number">1</span>] != <span class="number">-1</span>) &#123; <span class="comment">//-1 表示该块是空块。0是初始化，未知块</span></span><br><span class="line">					segt = image(cv::Rect(cv::Point2f(x*SEGIMGCOL + <span class="number">3</span>, y*SEGIMGROW + <span class="number">3</span>), cv::Point2f((x + <span class="number">1</span>) *SEGIMGCOL - <span class="number">3</span>, (y + <span class="number">1</span>)*SEGIMGROW - <span class="number">3</span>)));</span><br><span class="line">					cvtColor(segt, segGray, CV_RGB2GRAY);</span><br><span class="line">					<span class="built_in">std</span>::<span class="built_in">vector</span>&lt;cv::Point2f&gt; corners;</span><br><span class="line">					cv::goodFeaturesToTrack(segGray, corners, <span class="number">17</span>, <span class="number">0.01</span>, <span class="number">10</span>, cv::Mat());</span><br><span class="line">					<span class="keyword">if</span> (corners.size() == <span class="number">0</span>) &#123; <span class="comment">//拐点为0直接设为空块，加快匹配速度。</span></span><br><span class="line">						matall.matr[y + <span class="number">1</span>][x + <span class="number">1</span>] = <span class="number">-1</span>;</span><br><span class="line">						matall.black++;</span><br><span class="line">					&#125;</span><br><span class="line">					<span class="keyword">else</span> &#123; <span class="comment">//如果不是空块，且该位置未知，那么将其与现在匹配图匹配，将数值放入matr中。</span></span><br><span class="line">						<span class="keyword">int</span> prei = matall.mat[y + <span class="number">1</span>][x + <span class="number">1</span>];</span><br><span class="line">						<span class="keyword">if</span> (matall.matr[y + <span class="number">1</span>][x + <span class="number">1</span>]&lt; calculateHistSim(temp, segt) * <span class="number">1000</span>) &#123;</span><br><span class="line">							matall.matr[y + <span class="number">1</span>][x + <span class="number">1</span>] = calculateHistSim(temp, segt) * <span class="number">1000</span>;</span><br><span class="line">							matall.mat[y + <span class="number">1</span>][x + <span class="number">1</span>] = i;	<span class="comment">//如果比之前的匹配值大，那么就复制mat。最终每个块都得到最佳匹配的号数。</span></span><br><span class="line">						&#125;</span><br><span class="line">					&#125;</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="comment">//delete(img_name_str);</span></span><br><span class="line">	printMat(matall.mat); <span class="comment">//调试看看mat</span></span><br><span class="line">	matall.pairs = (<span class="number">11</span> * <span class="number">19</span> - matall.black) &gt;&gt; <span class="number">1</span>;</span><br><span class="line">	setData(matall);</span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">"\n 空白有  %d  个，还有  %d 对要消除"</span>, matall.black, matall.pairs);</span><br><span class="line">	<span class="keyword">return</span> findWay(matall);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>代码中有些地方可能会有疑问：</strong></p>
+<ol>
+<li>循环为什么是 <strong><code>13×21</code></strong>？</li>
+</ol>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">13</span>; i++) &#123;</span><br><span class="line">		vec tv;</span><br><span class="line">		<span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; <span class="number">21</span>; j++) &#123;</span><br><span class="line">			tv.push_back(<span class="number">0</span>);</span><br><span class="line">		&#125;</span><br><span class="line">		matall.matr.push_back(tv);</span><br><span class="line">		matall.mat.push_back(tv);</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>解答：</strong> 刚开始我以为处于边界的两个相同块是可以在高于边界处相互消掉的(<strong>如图1.4所示</strong>)，但是在腾讯的连连看中是没有这种机制的，我将在2.0中进行修改。<br><img src="/2019/07/10/13_连连看WG-1-0-2-0版本/边界处不能消除.png" alt="边界处不能消除.png"><center>图1.5</center></p>
+<ol>
+<li>这个for 45 次迭代是干嘛的?</li>
+</ol>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt; <span class="number">45</span>; i++)</span><br></pre></td></tr></table></figure>
+<p><strong>解答：</strong> 我采取的方法<strong>不是将209个图像两两依次</strong>比较这样会比较<strong>209 × 209</strong>次。如果有一个<strong>本地不同的45张图</strong>的数据集，来依次匹配的话只用匹配<strong>45 × 11 × 19</strong>次就可以得到分类矩阵。<br>我会在我的<a href="https://github.com/ZhouYiiFeng" target="_blank" rel="noopener">Github</a>上提供1.0的数据集：<br><img src="/2019/07/10/13_连连看WG-1-0-2-0版本/数据集1.0.png" alt="数据集1.0.png"><center>图1.6</center></p>
+<ol>
+<li>另外需要指出的是：<br>我先使用拐点探测处背景再来分类的，因为背景就是蓝色的那个小块，可以很快的得到。</li>
+</ol>
+<h2 id="求解"><a href="#求解" class="headerlink" title="求解"></a>求解</h2><p>分类完成后就可以对<code>mat</code>分类矩阵进行连连看算法的求解了。<br>两个点之间是否可以相消主要的判断方法：<br>逻辑很简单，依次检测<strong>水平</strong>，<strong>竖直</strong>、<strong>中间节点数为1</strong>、<strong>中间节点数为2</strong>的情况。<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">bool</span> <span class="title">detect</span><span class="params">(MatLL &amp; mat, PointLL &amp; oriPoint, PointLL &amp; targPoint)</span> </span>&#123;</span><br><span class="line">	<span class="keyword">if</span> (detect_horizen(mat, oriPoint, targPoint))</span><br><span class="line">		<span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">	<span class="keyword">if</span> (detect_vertical(mat, oriPoint, targPoint))</span><br><span class="line">		<span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">	<span class="keyword">if</span> (detect_oneNode(mat, oriPoint, targPoint))</span><br><span class="line">		<span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">	<span class="keyword">if</span> (detect_twoNode(mat, oriPoint, targPoint))</span><br><span class="line">		<span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">	<span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p><strong>注意</strong>的是，上述的检测是<strong>有顺序的！</strong>,当执行下一个检测时，要确保两点之间无法通过之前的检测进行消除。<br><strong>中间节点数为1：</strong><br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">bool</span> <span class="title">detect_oneNode</span><span class="params">(MatLL &amp; mat, PointLL &amp;oriPoint, PointLL &amp; targPoint)</span> </span>&#123;	<span class="comment">//经过一个点是否可以到达另一个点。</span></span><br><span class="line">	<span class="comment">// find if there's  connection through one Node</span></span><br><span class="line">	<span class="comment">//方法。这个bridgeNode 肯定在其目标点与源点的矩形角上。有两个桥点分开判断。</span></span><br><span class="line">	<span class="comment">//所以要确保不在水平，以及竖直方向有解。即确保矩形的高不为0.</span></span><br><span class="line">	<span class="keyword">if</span> (oriPoint.x == targPoint.x || oriPoint.y == targPoint.y)</span><br><span class="line">		<span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">	<span class="keyword">if</span> (!OCUP(oriPoint.x, targPoint.y)) &#123; <span class="comment">//如果bridge点可达，那么只要桥店可以再通过一次水平或竖直到底目标点那么可消。</span></span><br><span class="line">		PointLL bridgeNode1 = PointLL(oriPoint.x, targPoint.y,<span class="number">0</span>);</span><br><span class="line">		<span class="keyword">if</span> (detect_vertical(mat, bridgeNode1, oriPoint) &amp;&amp; detect_horizen(mat, bridgeNode1, targPoint))</span><br><span class="line">			<span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">if</span> (!OCUP(targPoint.x, oriPoint.y)) &#123;</span><br><span class="line">		PointLL bridgeNode2 = PointLL(oriPoint.y, targPoint.x,<span class="number">0</span>);</span><br><span class="line">		<span class="keyword">if</span> (detect_horizen(mat, bridgeNode2, oriPoint) &amp;&amp; detect_vertical(mat, bridgeNode2, targPoint))</span><br><span class="line">			<span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">	<span class="comment">//</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p><strong>中间节点数为2：</strong><br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">bool</span> <span class="title">detect_twoNode</span><span class="params">(MatLL &amp; mat, PointLL &amp;oriPoint, PointLL &amp; targPoint)</span> </span>&#123;	<span class="comment">//经过两个拐点是否可达。</span></span><br><span class="line">	<span class="comment">// find if there's  connection between two Nodes</span></span><br><span class="line">	<span class="comment">//这个检测比较困难。</span></span><br><span class="line">	<span class="comment">//需要枚举桥点。</span></span><br><span class="line">	<span class="comment">//只要桥点和源点可达，桥点和目标点可达，那么就可以消掉。</span></span><br><span class="line">	<span class="comment">//需要注意的是如果达到方式必是  （水平或竖直+一拐点 || 一拐点+水平或竖直） 的组合方式。</span></span><br><span class="line">	<span class="comment">//这里再一次看到必须保证能 一拐点 到的点一定要确保不能直接水平竖直 达到。</span></span><br><span class="line">	<span class="comment">//因为如果 一拐点 也能水平竖直的话，那么在两拐点判定中，已有一个水平竖直，另一个经过一拐点返回的也是水平竖直达到方式，只能是属于一拐的，而不是二拐点。</span></span><br><span class="line">	<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; MATYROW; i++) &#123;</span><br><span class="line">		<span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; MATXCOL; j++) &#123;</span><br><span class="line">			<span class="keyword">if</span> (!OCUP(j, i)) &#123;</span><br><span class="line">				PointLL c = PointLL(j, i,<span class="number">0</span>);</span><br><span class="line">				<span class="keyword">if</span> (c == oriPoint || c == targPoint) <span class="keyword">continue</span>;</span><br><span class="line">				<span class="keyword">if</span> (detect_horizen(mat, c, oriPoint) &amp;&amp; detect_oneNode(mat, c, targPoint))</span><br><span class="line">					<span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">				<span class="keyword">else</span> <span class="keyword">if</span> (detect_vertical(mat, c, oriPoint) &amp;&amp; detect_oneNode(mat, c, targPoint))</span><br><span class="line">					<span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">				<span class="keyword">else</span> <span class="keyword">if</span> (detect_oneNode(mat, c, oriPoint) &amp;&amp; detect_horizen(mat, c, targPoint))</span><br><span class="line">					<span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">				<span class="keyword">else</span> <span class="keyword">if</span> (detect_oneNode(mat, c, oriPoint) &amp;&amp; detect_vertical(mat, c, targPoint))</span><br><span class="line">					<span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">	<span class="comment">//</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>代码我会帖子我的<a href="https://github.com/ZhouYiiFeng" target="_blank" rel="noopener">Github</a>上</p>
+<h1 id="连连看辅助程序2-0"><a href="#连连看辅助程序2-0" class="headerlink" title="连连看辅助程序2.0"></a>连连看辅助程序2.0</h1><p><em>与1.0版本不同处：</em></p>
+<ol>
+<li>将代码迁移至Python <strong>使其符合更多的开发者选项</strong></li>
+<li>使用Pytorch进行图像分类训练  </li>
+<li>使用简化版Vgg16模型</li>
+<li>使用GPU预测   <strong>加快了预测速度</strong></li>
+</ol>
+<h2 id="开发环境：-1"><a href="#开发环境：-1" class="headerlink" title="开发环境："></a>开发环境：</h2><ol>
+<li>Pycharm </li>
+<li>Pytorch</li>
+</ol>
+<h1 id="LLK-2-0-算法逻辑："><a href="#LLK-2-0-算法逻辑：" class="headerlink" title="LLK_2.0 算法逻辑："></a>LLK_2.0 算法逻辑：</h1>
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Opencv/" rel="tag"># Opencv</a>
+          
+            <a href="/tags/DL/" rel="tag"># DL</a>
+          
+            <a href="/tags/Pytorch/" rel="tag"># Pytorch</a>
+          
+            <a href="/tags/Python/" rel="tag"># Python</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/02/07/12_win-OpenCV/" rel="next" title="win10 + VS2017 配置 Opencv3.4.2">
+                <i class="fa fa-chevron-left"></i> win10 + VS2017 配置 Opencv3.4.2
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/07/11/2_Python+Caffe学习记录/" rel="prev" title="Python+Caffe学习记录">
+                Python+Caffe学习记录 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/avatar.gif" alt="JoeyF">
+            
+              <p class="site-author-name" itemprop="name">JoeyF</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">21</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">17</span>
+                  <span class="site-state-item-name">tags</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/ZhouYiiFeng" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:joeyf.z.y.wen@gmail.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#导言："><span class="nav-number">1.</span> <span class="nav-text">导言：</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#连连看辅助程序1-0"><span class="nav-number">2.</span> <span class="nav-text">连连看辅助程序1.0</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#开发环境："><span class="nav-number">2.1.</span> <span class="nav-text">开发环境：</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#一-LLK-1-0-算法逻辑："><span class="nav-number">3.</span> <span class="nav-text">一. LLK_1.0 算法逻辑：</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-1-定位目标框"><span class="nav-number">3.1.</span> <span class="nav-text">1.1 定位目标框</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-2-分割小块："><span class="nav-number">3.2.</span> <span class="nav-text">1.2 分割小块：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-3-分类："><span class="nav-number">3.3.</span> <span class="nav-text">1.3 分类：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#求解"><span class="nav-number">3.4.</span> <span class="nav-text">求解</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#连连看辅助程序2-0"><span class="nav-number">4.</span> <span class="nav-text">连连看辅助程序2.0</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#开发环境：-1"><span class="nav-number">4.1.</span> <span class="nav-text">开发环境：</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#LLK-2-0-算法逻辑："><span class="nav-number">5.</span> <span class="nav-text">LLK_2.0 算法逻辑：</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">JoeyF</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Gemini</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,844 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="DL,Pytorch,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="导言：入门Pytorch，Mnist的训练！当然这篇文章肯定不会只是教你进行一个Mnist训练(这种网上已经够多了)，我会将里面每一个使用的函数、或者Pytoch中的工具进行稍微的深入讲解。 训练你的MNIST模型：先给出一段训练源码：这段源码是不完整地，一些完整地源码可以在网上找到，在这里只是对一些函数分开进行讲解。 123456789101112131415161718192021222324">
+<meta name="keywords" content="DL,Pytorch">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Pytorch入门以Mnist为例">
+<meta property="og:url" content="http://zhoef.com/2019/07/25/17_Pytorch_入门_Mnist/index.html">
+<meta property="og:site_name" content="JoeyF&#39;s Home">
+<meta property="og:description" content="导言：入门Pytorch，Mnist的训练！当然这篇文章肯定不会只是教你进行一个Mnist训练(这种网上已经够多了)，我会将里面每一个使用的函数、或者Pytoch中的工具进行稍微的深入讲解。 训练你的MNIST模型：先给出一段训练源码：这段源码是不完整地，一些完整地源码可以在网上找到，在这里只是对一些函数分开进行讲解。 123456789101112131415161718192021222324">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2019-08-25T02:55:12.062Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Pytorch入门以Mnist为例">
+<meta name="twitter:description" content="导言：入门Pytorch，Mnist的训练！当然这篇文章肯定不会只是教你进行一个Mnist训练(这种网上已经够多了)，我会将里面每一个使用的函数、或者Pytoch中的工具进行稍微的深入讲解。 训练你的MNIST模型：先给出一段训练源码：这段源码是不完整地，一些完整地源码可以在网上找到，在这里只是对一些函数分开进行讲解。 123456789101112131415161718192021222324">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://zhoef.com/2019/07/25/17_Pytorch_入门_Mnist/">
+
+
+
+
+
+  <title>Pytorch入门以Mnist为例 | JoeyF's Home</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="default">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">JoeyF's Home</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            About
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://zhoef.com/2019/07/25/17_Pytorch_入门_Mnist/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="JoeyF">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="JoeyF's Home">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Pytorch入门以Mnist为例</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-07-25T10:42:39+08:00">
+                2019-07-25
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>导言：入门Pytorch，Mnist的训练！当然这篇文章肯定不会只是教你进行一个Mnist训练(这种网上已经够多了)，我会将里面每一个使用的函数、或者Pytoch中的工具进行稍微的深入讲解。</p>
+<h1 id="训练你的MNIST模型："><a href="#训练你的MNIST模型：" class="headerlink" title="训练你的MNIST模型："></a>训练你的MNIST模型：</h1><p>先给出一段训练源码：这段源码是不完整地，一些完整地源码可以在网上找到，在这里只是对一些函数分开进行讲解。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"><span class="keyword">from</span> torch.autograd <span class="keyword">import</span> Variable</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">from</span> collections <span class="keyword">import</span> OrderedDict</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"><span class="keyword">import</span> torchvision</span><br><span class="line"><span class="keyword">from</span> torchvision <span class="keyword">import</span> transforms,datasets</span><br><span class="line"><span class="keyword">from</span> PIL <span class="keyword">import</span> Image</span><br><span class="line"><span class="keyword">import</span> cv2</span><br><span class="line"><span class="keyword">import</span> torch.utils.data</span><br><span class="line"><span class="comment"># print(cv2.__version__)</span></span><br><span class="line"><span class="keyword">from</span> Model <span class="keyword">import</span> Model</span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line">...</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">train</span><span class="params">()</span>:</span>		</span><br><span class="line">	model = Model()</span><br><span class="line">	epochs = <span class="number">5</span></span><br><span class="line">	cost = torch.nn.CrossEntropyLoss()</span><br><span class="line">	optimizer = torch.optim.Adam(model.parameters())</span><br><span class="line">	<span class="keyword">for</span> epoch <span class="keyword">in</span> range(epochs):</span><br><span class="line">	    total_loss = <span class="number">0.0</span></span><br><span class="line">	    acc = <span class="number">0.0</span></span><br><span class="line">	    <span class="keyword">for</span> data <span class="keyword">in</span> data_loader_train:</span><br><span class="line">	        x,y = data</span><br><span class="line">	        var_x, var_y = Variable(x) ,Variable(y)</span><br><span class="line">	        y_pred = model(var_x)</span><br><span class="line">	        _,pred = torch.max(y_pred,<span class="number">1</span>)</span><br><span class="line">	        optimizer.zero_grad()</span><br><span class="line">	        loss = cost(y_pred,var_y) <span class="comment">#注意顺序不能改变！！！！</span></span><br><span class="line">	        loss.backward()</span><br><span class="line">	        optimizer.step()</span><br><span class="line">	        total_loss += loss  <span class="comment">#loss是这次的损失值</span></span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+<h2 id="损失函数"><a href="#损失函数" class="headerlink" title="损失函数"></a>损失函数</h2><ol>
+<li><p><code>cost = torch.nn.CrossEntropyLoss()</code> <code>softmax</code>损失</p>
+<ol>
+<li>定义cost对象，之后计算只用传入数据即可</li>
+<li>需要<strong>注意</strong>的是<br> <code>loss = cost(y_pred,var_y)</code> 输入时有顺序的先写预测，再写<code>label</code></li>
+</ol>
+</li>
+<li><p><code>cost = torch.nn.MSELoss()</code> 欧式损失</p>
+</li>
+</ol>
+<h2 id="优化算法"><a href="#优化算法" class="headerlink" title="优化算法"></a>优化算法</h2><ol>
+<li><code>optimizer = torch.optim.Adam(model.parameters())</code><ol>
+<li>定义opt对象,可采用自定义优化算法，需要将model的参数全部传入，以算法进行计算。</li>
+<li>需要<strong>注意</strong>的是：<br> <code>optimizer.zero_grad()</code>，每次更新<code>w</code>前，需要将上一次迭代的梯度清理。</li>
+</ol>
+</li>
+</ol>
+<h2 id="关于data-loader-train、data的说明："><a href="#关于data-loader-train、data的说明：" class="headerlink" title="关于data_loader_train、data的说明："></a>关于<code>data_loader_train</code>、<code>data</code>的说明：</h2><ol>
+<li><p><code>data_loader_train</code> 是整个数据集</p>
+</li>
+<li><p><code>data_loader_train</code> 一次生成<code>batch_size</code>个数据<br> <strong><code>shape</code></strong> = (64,1,28,28)<br>所有第二个for是整个<code>batch_size</code>的矩阵计算</p>
+</li>
+</ol>
+<h2 id="Model的forward"><a href="#Model的forward" class="headerlink" title="Model的forward()"></a>Model的forward()</h2><ol>
+<li><p>自定义Model继承了Module后需要重写父类的 forward()函数<br>即计算整个计算图。<br><code>y_pred = model(var_x)</code></p>
+<p>需要<strong>注意</strong>的是：<br><code>model(var_x)</code>的输入参数必须是<code>Variable</code>类型，需要转换。</p>
+</li>
+</ol>
+<h2 id="torch-max"><a href="#torch-max" class="headerlink" title="torch.max()"></a>torch.max()</h2><ol>
+<li><p>排列得到最优解，<code>torch.max(data,dim)</code><br>与<code>python</code> 中 <code>argmax(data,dim)</code>有着差不多的功能，</p>
+</li>
+<li><p>其返回值有2个，一个是获得最大值的值，以及其索引。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">a = torch.tensor([[<span class="number">1</span>,<span class="number">3</span>,<span class="number">2</span>],[<span class="number">4</span>,<span class="number">1</span>,<span class="number">3</span>]])</span><br><span class="line">_,pred = torch.max(a,<span class="number">0</span>)</span><br><span class="line">print(_)</span><br><span class="line">	<span class="comment">#[4,3,3]</span></span><br><span class="line">print(pred)</span><br><span class="line">	<span class="comment">#[1,0,1]</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>类似与python中这种带维度的比较技巧 <code>torch.max(a,dim)</code><br><strong>dim 维度</strong> 依次递增，其他维度不变，遍历得到各个数据之间相互比较得到</p>
+</li>
+<li><p><strong>样例</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">torch.max(a,<span class="number">0</span>)</span><br><span class="line">a =	[</span><br><span class="line">		[<span class="number">1</span>,<span class="number">3</span>,<span class="number">2</span>],</span><br><span class="line">		[<span class="number">3</span>,<span class="number">2</span>,<span class="number">1</span>]</span><br><span class="line">	]</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>保持第1维度不变，0维度遍历。</p>
+<p>a[0][0] a[1][0] a[2][0] 比较一次 输出一次结果</p>
+<p>a<a href="https://zhoef.com/2019/08/15/9_Pytorch_Data/">0</a> a<a href="https://zhoef.com/2019/08/15/9_Pytorch_Data/">1</a> a<a href="https://zhoef.com/2019/08/15/9_Pytorch_Data/">2</a> 比较一次 输出一次结果</p>
+<h1 id="GPU训练MNIST"><a href="#GPU训练MNIST" class="headerlink" title="GPU训练MNIST"></a>GPU训练MNIST</h1><h2 id="数据的载入："><a href="#数据的载入：" class="headerlink" title="数据的载入："></a>数据的载入：</h2><p>Mnist的读入有专门的接口函数封装在torchvision.Datasets中可以直接使用，这对新手很友好。</p>
+<ul>
+<li><code>datasets</code> 分多种，在<code>MNIST</code>中使用的是<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">data_train = datasets.MNIST(</span><br><span class="line">		root = <span class="string">"./data/"</span>,</span><br><span class="line">		transform = transform_,</span><br><span class="line">		train = <span class="literal">True</span>, <span class="comment">#是训练集</span></span><br><span class="line">		download = <span class="literal">False</span> <span class="comment">#使用本地的训练集</span></span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>在读入了新的数据集后，使用DataLoader进行数据的提取，具体的Dataloader的源码分析可以参考我的<a href="https://zhoef.com/2019/08/15/9_Pytorch_Data/">这篇文章</a><br>使用torch.utils.data.DataLoader()<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">data_loader_train = torch.utils.data.DataLoader(</span><br><span class="line">		batch_size = <span class="number">64</span>,</span><br><span class="line">		dataset = data_train,</span><br><span class="line">		shuffle = <span class="literal">True</span></span><br><span class="line">)</span><br></pre></td></tr></table></figure></p>
+<ul>
+<li><code>batch_size</code>指定了数据中每次读入的数据量。</li>
+<li><code>dataset</code> 指定了数据集</li>
+<li><code>data_train</code> 是 <code>torchvision.datasets</code> 类。</li>
+</ul>
+<h2 id="从Dataloader中读出数据："><a href="#从Dataloader中读出数据：" class="headerlink" title="从Dataloader中读出数据："></a>从Dataloader中读出数据：</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">x,y = next(iter(dataloader[<span class="string">"train"</span>]))</span><br><span class="line">plt.plot(x.numpy(),y.numpy(),<span class="string">'o'</span>,color= <span class="string">"blue"</span>)</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+<p>将<code>dataloader</code>强制转为迭代器，然后用<code>next</code>读出一个<code>batch</code><br><strong>注意</strong>读出的数据是<code>tensor</code>形式，有时需要转为<code>numpy</code>的格式，使用<code>tensor.numpy()</code>即可。而从<code>numpy</code>构造<code>tensor</code>可以 <code>torch.from_numpy(array).float()</code>，需要指定数据格式，<code>torch</code>中需要<code>float</code>的数据。</p>
+<h2 id="Transforms"><a href="#Transforms" class="headerlink" title="Transforms"></a>Transforms</h2><p>包名<code>torchvision.transforms</code>，在数据集的读入时使用，目的时将数据集进行各种变化，数据加强等操作。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">transforms.Compose(</span><br><span class="line">		[</span><br><span class="line">			transform.ToTensor(),</span><br><span class="line">			transform.Nomalize(mean = <span class="number">.5</span>,std = <span class="number">.5</span>)</span><br><span class="line">		]</span><br><span class="line">	)</span><br></pre></td></tr></table></figure></p>
+<h2 id="总结下："><a href="#总结下：" class="headerlink" title="总结下："></a>总结下：</h2><p>Pytorch读入数据时需要的步骤：</p>
+<ol>
+<li>数据集的准备</li>
+<li>数据装载</li>
+</ol>
+<p>对于数据集的准备主要有以下几种方式：</p>
+<h3 id="使用已经封装好的函数"><a href="#使用已经封装好的函数" class="headerlink" title="使用已经封装好的函数"></a>使用已经封装好的函数</h3><p>比如之前说的Mnist的载入。</p>
+<h3 id="使用文件夹的分类创建数据集"><a href="#使用文件夹的分类创建数据集" class="headerlink" title="使用文件夹的分类创建数据集"></a>使用文件夹的分类创建数据集</h3><p>下面再举一个图像数据集的例子，使用文件夹的分类创建数据集：<br><code>raw data</code>:可以是文件夹中的图片：直接用dataset.<br><strong>torchvision.datasets:中</strong></p>
+<ul>
+<li><code>torchvision.datasets.DatasetFolder</code> (暂无信息。)</li>
+<li><code>torchvision.datasets.ImageFolder</code><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dset.ImageFolder(root=<span class="string">"root folder path"</span>, [transform, target_transform])</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p><strong><code>torchvision.datasets</code> 是继承自<code>torch.utils.data.Dataset</code></strong></p>
+<ul>
+<li><code>torch.utils.data.TensorDataset(data_tensor, target_tensor)</code><br>这让函数可以将tensor数据转为数据集</li>
+</ul>
+<h3 id="使用numpy中的数据构造数据集"><a href="#使用numpy中的数据构造数据集" class="headerlink" title="使用numpy中的数据构造数据集"></a>使用numpy中的数据构造数据集</h3><p>新建两个<code>np.array</code>类型的数据转为<code>tensor</code>再转为<code>dataset</code><br><strong>将np-&gt;转为Tensor：</strong> <code>torch.from_numpy(train_x).float()</code><br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#tain data</span></span><br><span class="line">train_x = np.linspace(<span class="number">-6</span>, <span class="number">8</span>, self.N_SAMPEL)[:,np.newaxis]</span><br><span class="line"><span class="comment"># print(type(self.x))</span></span><br><span class="line">self.bias = <span class="number">5</span></span><br><span class="line">self.noisy = np.random.normal(<span class="number">0</span>,<span class="number">2</span>,train_x.shape)</span><br><span class="line">train_y = np.power(train_x,<span class="number">2</span>) + self.bias + self.noisy</span><br><span class="line"><span class="comment"># print(self.x.shape)</span></span><br><span class="line"><span class="comment"># self.plot_data(train_x,train_y)</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># test data</span></span><br><span class="line">test_x = np.linspace(<span class="number">-7</span>, <span class="number">10</span>, <span class="number">200</span>)[:, np.newaxis]</span><br><span class="line">noise = np.random.normal(<span class="number">0</span>, <span class="number">2</span>, test_x.shape)</span><br><span class="line">test_y = np.square(test_x) - <span class="number">5</span> + noise</span><br><span class="line"></span><br><span class="line"><span class="comment"># self.plot_data(test_x,test_y)</span></span><br><span class="line"><span class="comment"># plt.plot(train_x,train_y,'o',color= "blue")</span></span><br><span class="line"><span class="comment"># plt.plot(test_x,test_y,'+',color = "red")</span></span><br><span class="line"><span class="comment"># plt.show()</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#装载到dataloader里面：</span></span><br><span class="line">train_x = torch.from_numpy(train_x).float()</span><br><span class="line">train_y = torch.from_numpy(train_y).float()</span><br><span class="line">test_x = torch.from_numpy(test_x).float()</span><br><span class="line">test_y = torch.from_numpy(test_y).float()</span><br><span class="line">data = &#123;</span><br><span class="line">    <span class="string">"train"</span>:</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="string">"x"</span>:train_x,</span><br><span class="line">            <span class="string">"y"</span>:train_y</span><br><span class="line">        &#125;,</span><br><span class="line">    <span class="string">"test"</span>:</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="string">"x"</span>:test_x,</span><br><span class="line">            <span class="string">"y"</span>:test_y</span><br><span class="line">        &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">dataset = &#123;x: Data.dataset.TensorDataset(data[x][<span class="string">"x"</span>],data[x][<span class="string">"y"</span>]) <span class="keyword">for</span> x <span class="keyword">in</span> [<span class="string">"train"</span>,<span class="string">"test"</span>] &#125;</span><br><span class="line"></span><br><span class="line">dataloader = &#123;x : Data.DataLoader(dataset = dataset[x], batch_size = self.BATCH_SIZE, shuffle= <span class="literal">True</span>) <span class="keyword">for</span> x <span class="keyword">in</span> [<span class="string">"train"</span>,<span class="string">"test"</span>] &#125;</span><br></pre></td></tr></table></figure></p>
+<h1 id="使用GPU处理数据："><a href="#使用GPU处理数据：" class="headerlink" title="使用GPU处理数据："></a>使用GPU处理数据：</h1><ol>
+<li>model = Model()<br><strong>model.cuda()</strong> 开启GPU训练模式</li>
+<li><p><strong>变量</strong>的转换：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> data_t <span class="keyword">in</span> data_loader_train:</span><br><span class="line">	x,y = data_t</span><br><span class="line">	var_x,var_y = Variable(x).cuda(),Variable(y).cuda()</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>cpu-&gt;gpu:<br><strong>variable(x).cuda()</strong><br>gpu-&gt;cpu:<br><strong>cuda_var(x).cpu()</strong></p>
+</li>
+</ol>
+<h1 id="加载以及存储模型权值"><a href="#加载以及存储模型权值" class="headerlink" title="加载以及存储模型权值"></a>加载以及存储模型权值</h1><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Model</span><span class="params">(torch.nn.Module)</span>:</span></span><br><span class="line">	<span class="string">"""docstring for Mo"""</span></span><br><span class="line">	<span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, arg)</span>:</span></span><br><span class="line">		super(Model, self).__init__()</span><br><span class="line">		self.arg = arg</span><br><span class="line">		<span class="comment">############</span></span><br><span class="line">		<span class="comment">#网络结构定义#</span></span><br><span class="line">		<span class="comment">############</span></span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">def</span> <span class="title">forward</span><span class="params">(self,x)</span>:</span></span><br><span class="line">		<span class="comment">#########</span></span><br><span class="line">		<span class="comment">#传播过程#</span></span><br><span class="line">		<span class="comment">#########</span></span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">def</span> <span class="title">save</span><span class="params">(self,name = None)</span>:</span>		</span><br><span class="line">		<span class="keyword">if</span> name == <span class="literal">None</span>:</span><br><span class="line">			self.model_name = str(type(self))</span><br><span class="line">			path = <span class="string">'checkPoints/'</span> + self.model_name + <span class="string">'_'</span></span><br><span class="line">			name = time.strftime(path + <span class="string">'%m%d_%H:%M:%S.pth'</span>)</span><br><span class="line">		torch.save(self.state_dict(),name)</span><br><span class="line">		<span class="keyword">return</span> name</span><br><span class="line"><span class="string">"""</span></span><br><span class="line"><span class="string"># strftime():</span></span><br><span class="line"><span class="string">#	time.strftime(format[,t])</span></span><br><span class="line"><span class="string">#	format -- 格式字符串，和printf("一样的 今天是：%m_%d_%H:%M:%S"),其中</span></span><br><span class="line"><span class="string">#	的%S,%M,%H是占位符，放对应的时间变量，%m—&gt;月份，%d-&gt;日</span></span><br><span class="line"><span class="string">#	t 是可选的一个struct_time对象</span></span><br><span class="line"><span class="string">#	如果不加t的话默认跟的是当前时间t</span></span><br><span class="line"><span class="string">#   torch.save(self.state_dict(),name)</span></span><br><span class="line"><span class="string">	self.state_dict() state_dict 是一个简单的python的字典对象,将每一层与它的对应参数建立映射关</span></span><br><span class="line"><span class="string">	name是完整的路径名称加上模型名字，其后缀名为.pth</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">"""</span></span><br></pre></td></tr></table></figure>
+<h1 id="加载模型"><a href="#加载模型" class="headerlink" title="加载模型"></a>加载模型</h1><p><code>model.load_state_dict(torch.load(&quot;checkPoints/LLModel_0708_21:54:25.pth&quot;))</code>  </p>
+<p><code>model</code>的加载是使用.<code>load_state_dict()</code></p>
+<p><code>torch.load(&quot;checkPoints/LLModel_0708_21:54:25.pth&quot;)</code> 这个得到的是一个<code>OrderDict</code>,包含了每一层的参数（有参数的参数层，像Pool层是没有的）</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">model_path = <span class="string">"/home/joey/Documents/models"</span></span><br><span class="line"><span class="comment"># model = models.resnet50(pretrained=True)</span></span><br><span class="line"><span class="comment"># # model_modules = model._modules</span></span><br><span class="line"><span class="comment"># features = model.features</span></span><br><span class="line">model_name = <span class="string">"vgg16"</span></span><br><span class="line">load_model_path =  os.path.join(model_path,model_name,<span class="string">"Pytorch"</span>,model_name+<span class="string">".pth"</span>)</span><br><span class="line">model = models.vgg16(pretrained= <span class="literal">False</span>)</span><br><span class="line">model.load_state_dict(torch.load(load_model_path))</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/DL/" rel="tag"># DL</a>
+          
+            <a href="/tags/Pytorch/" rel="tag"># Pytorch</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/07/11/4_Python+Pytorch学习记录/" rel="next" title="Python + Pytorch 持续更新">
+                <i class="fa fa-chevron-left"></i> Python + Pytorch 持续更新
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/07/27/3_Clion_Caffe/" rel="prev" title="Clion + Caffe">
+                Clion + Caffe <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/avatar.gif" alt="JoeyF">
+            
+              <p class="site-author-name" itemprop="name">JoeyF</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">21</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">17</span>
+                  <span class="site-state-item-name">tags</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/ZhouYiiFeng" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:joeyf.z.y.wen@gmail.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#训练你的MNIST模型："><span class="nav-number">1.</span> <span class="nav-text">训练你的MNIST模型：</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#损失函数"><span class="nav-number">1.1.</span> <span class="nav-text">损失函数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#优化算法"><span class="nav-number">1.2.</span> <span class="nav-text">优化算法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#关于data-loader-train、data的说明："><span class="nav-number">1.3.</span> <span class="nav-text">关于data_loader_train、data的说明：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Model的forward"><span class="nav-number">1.4.</span> <span class="nav-text">Model的forward()</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#torch-max"><span class="nav-number">1.5.</span> <span class="nav-text">torch.max()</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#GPU训练MNIST"><span class="nav-number">2.</span> <span class="nav-text">GPU训练MNIST</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#数据的载入："><span class="nav-number">2.1.</span> <span class="nav-text">数据的载入：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#从Dataloader中读出数据："><span class="nav-number">2.2.</span> <span class="nav-text">从Dataloader中读出数据：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Transforms"><span class="nav-number">2.3.</span> <span class="nav-text">Transforms</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结下："><span class="nav-number">2.4.</span> <span class="nav-text">总结下：</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#使用已经封装好的函数"><span class="nav-number">2.4.1.</span> <span class="nav-text">使用已经封装好的函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#使用文件夹的分类创建数据集"><span class="nav-number">2.4.2.</span> <span class="nav-text">使用文件夹的分类创建数据集</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#使用numpy中的数据构造数据集"><span class="nav-number">2.4.3.</span> <span class="nav-text">使用numpy中的数据构造数据集</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#使用GPU处理数据："><span class="nav-number">3.</span> <span class="nav-text">使用GPU处理数据：</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#加载以及存储模型权值"><span class="nav-number">4.</span> <span class="nav-text">加载以及存储模型权值</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#加载模型"><span class="nav-number">5.</span> <span class="nav-text">加载模型</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">JoeyF</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Gemini</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+
+
+  
+
+  
+
+</body>
+</html>

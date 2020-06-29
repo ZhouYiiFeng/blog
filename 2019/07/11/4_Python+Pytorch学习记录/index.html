@@ -1,0 +1,1144 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="DL,Pytorch,Python,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="T20190704:1.使用pip3 换源：pip3 install opencv-python —user -i https://pypi.tuna.tsinghua.edu.cn/simple/ ubuntu中python site-package 的位置： /home/joey/.local/python  .bachrc的位置： /home/joey/.bashrc   2.pychram">
+<meta name="keywords" content="DL,Pytorch,Python">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Python + Pytorch 持续更新">
+<meta property="og:url" content="http://zhoef.com/2019/07/11/4_Python+Pytorch学习记录/index.html">
+<meta property="og:site_name" content="JoeyF&#39;s Home">
+<meta property="og:description" content="T20190704:1.使用pip3 换源：pip3 install opencv-python —user -i https://pypi.tuna.tsinghua.edu.cn/simple/ ubuntu中python site-package 的位置： /home/joey/.local/python  .bachrc的位置： /home/joey/.bashrc   2.pychram">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="http://zhoef.com/2019/07/11/4_Python+Pytorch学习记录/Screenshot%20from%202019-07-30%2016-31-35.png">
+<meta property="og:image" content="http://zhoef.com/2019/07/11/4_Python+Pytorch学习记录/Screenshot%20from%202019-07-30%2016-37-43.png">
+<meta property="og:image" content="http://zhoef.com/2019/07/11/4_Python+Pytorch学习记录/Screenshot%20from%202019-07-30%2016-39-05.png">
+<meta property="og:image" content="http://zhoef.com/2019/07/11/4_Python+Pytorch学习记录/Screenshot%20from%202019-07-30%2016-45-33.png">
+<meta property="og:image" content="http://zhoef.com/2019/07/11/4_Python+Pytorch学习记录/Screenshot%20from%202019-07-30%2017-06-52.png">
+<meta property="og:image" content="http://zhoef.com/2019/07/11/4_Python+Pytorch学习记录/Screenshot%20from%202019-07-30%2017-09-49.png">
+<meta property="og:image" content="http://zhoef.com/2019/07/11/4_Python+Pytorch学习记录/Screenshot%20from%202019-07-30%2017-19-34.png">
+<meta property="og:image" content="http://zhoef.com/2019/07/11/4_Python+Pytorch学习记录/BN-1.png">
+<meta property="og:updated_time" content="2019-08-25T02:39:44.307Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Python + Pytorch 持续更新">
+<meta name="twitter:description" content="T20190704:1.使用pip3 换源：pip3 install opencv-python —user -i https://pypi.tuna.tsinghua.edu.cn/simple/ ubuntu中python site-package 的位置： /home/joey/.local/python  .bachrc的位置： /home/joey/.bashrc   2.pychram">
+<meta name="twitter:image" content="http://zhoef.com/2019/07/11/4_Python+Pytorch学习记录/Screenshot%20from%202019-07-30%2016-31-35.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://zhoef.com/2019/07/11/4_Python+Pytorch学习记录/">
+
+
+
+
+
+  <title>Python + Pytorch 持续更新 | JoeyF's Home</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="default">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">JoeyF's Home</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            About
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://zhoef.com/2019/07/11/4_Python+Pytorch学习记录/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="JoeyF">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="JoeyF's Home">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Python + Pytorch 持续更新</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-07-11T12:39:39+08:00">
+                2019-07-11
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="T20190704"><a href="#T20190704" class="headerlink" title="T20190704:"></a>T20190704:</h1><h2 id="1-使用pip3-换源："><a href="#1-使用pip3-换源：" class="headerlink" title="1.使用pip3 换源："></a>1.使用pip3 换源：</h2><p>pip3 install opencv-python —user -i <a href="https://pypi.tuna.tsinghua.edu.cn/simple/" target="_blank" rel="noopener">https://pypi.tuna.tsinghua.edu.cn/simple/</a></p>
+<h2 id="ubuntu中python-site-package-的位置："><a href="#ubuntu中python-site-package-的位置：" class="headerlink" title="ubuntu中python site-package 的位置："></a>ubuntu中python site-package 的位置：</h2><ol>
+<li><p>/home/joey/.local/python</p>
+</li>
+<li><p>.bachrc的位置： /home/joey/.bashrc</p>
+</li>
+</ol>
+<h2 id="2-pychram-中没有opencv的智能提示：（linux）"><a href="#2-pychram-中没有opencv的智能提示：（linux）" class="headerlink" title="2.pychram 中没有opencv的智能提示：（linux）"></a>2.pychram 中没有opencv的智能提示：（linux）</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">在 opencv 的 __init__.py 中修改为：<span class="keyword">import</span> sys</span><br><span class="line">	<span class="keyword">import</span> os</span><br><span class="line">	<span class="keyword">import</span> importlib </span><br><span class="line">	<span class="keyword">from</span> .cv2 <span class="keyword">import</span> * </span><br><span class="line">	os.environ[<span class="string">"PATH"</span>] += os.pathsep + os.path.dirname(os.path.realpath(__file__)) </span><br><span class="line">	globals().update(importlib.import_module(<span class="string">'cv2.cv2'</span>).__dict__)</span><br></pre></td></tr></table></figure>
+<h2 id="3-pychram-中没有opencv的智能提示："><a href="#3-pychram-中没有opencv的智能提示：" class="headerlink" title="3.pychram 中没有opencv的智能提示："></a>3.pychram 中没有opencv的智能提示：</h2><p><code>win10</code>参考博客:<a href="https://blog.csdn.net/Tianxiadatong1001/article/details/87959884" target="_blank" rel="noopener">blog</a></p>
+<ol>
+<li>配置opencv pip -install opencv-python</li>
+<li>将./cv2/下的cv2.cp37-win_amd64.pyd 文件拷贝到site-pachages目录下</li>
+<li>import cv2 ok</li>
+</ol>
+<h2 id="4-python-继承"><a href="#4-python-继承" class="headerlink" title="4.python 继承"></a>4.python 继承</h2><p><a href="https://www.runoob.com/w3cnote/python-extends-init.html" target="_blank" rel="noopener">参考博客</a></p>
+<p><strong>在子类中必须要执行父类的构造函数</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">B</span><span class="params">(A)</span>:</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></span><br><span class="line">    self.b = <span class="number">10</span> <span class="comment">#这样就是错的因为没有执行父类的构造函数</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">B</span><span class="params">(A)</span>:</span></span><br><span class="line">	<span class="string">"""docstring for B"""</span></span><br><span class="line">	<span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, arg)</span>:</span></span><br><span class="line">		super(B, self).__init__() <span class="comment">#使用super调用父类构造 super(类名,self).__init__()</span></span><br><span class="line">		self.arg = arg</span><br><span class="line">		</span><br><span class="line">	<span class="comment">##或者使用父类名字.__init()___</span></span><br><span class="line">	<span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self,arg)</span>:</span></span><br><span class="line">		A.__init__()</span><br><span class="line">		self.arg = arg</span><br></pre></td></tr></table></figure>
+<h2 id="5-重写Model-类"><a href="#5-重写Model-类" class="headerlink" title="5.重写Model 类"></a>5.重写Model 类</h2><p><strong>在Model类中可以实现网络结构以及前向、候选传播函数</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Model</span><span class="params">(torch.nn.Module)</span>:</span></span><br><span class="line">	<span class="string">"""docstring for Model"torch.nn.Module"""</span></span><br><span class="line">	<span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></span><br><span class="line">		super(Model,self).__init__() </span><br><span class="line"></span><br><span class="line">		<span class="comment">##可以定意网络结构：</span></span><br><span class="line">		self.conv1 = torch.nn.Sequential(</span><br><span class="line">				torch.nn.Conv2d(<span class="number">1</span>,<span class="number">64</span>,kernel_size = <span class="number">3</span>,strid = <span class="number">1</span>,padding =<span class="number">1</span>),</span><br><span class="line">				torch.nn.ReLU(),</span><br><span class="line">				torch.nn.Conv2d(<span class="number">64</span>,<span class="number">128</span>,kernel_size = <span class="number">3</span>,strid = <span class="number">1</span>,padding =<span class="number">1</span>),</span><br><span class="line">				torch.nn.ReLU(),</span><br><span class="line">				torch.nn.MaxPool2d(strid = <span class="number">2</span>,kernel_size = <span class="number">2</span>)</span><br><span class="line">			)</span><br><span class="line"></span><br><span class="line">		Conv2d(输入通道数，输出通道数...).</span><br><span class="line"></span><br><span class="line">		<span class="comment">##不一定需要定义完，可以分开定意不同模块：</span></span><br><span class="line">		self.dense = torch.nn.Sequential(</span><br><span class="line">				torch.nn.Linear(<span class="number">14</span>*<span class="number">14</span>*<span class="number">128</span>,<span class="number">1024</span>),</span><br><span class="line">				torch.nn.ReLU(),</span><br><span class="line">				torch.nn.Dropout(p=<span class="number">0.5</span>),</span><br><span class="line">				torch.nn.Linear(<span class="number">1024</span>,<span class="number">10</span>)</span><br><span class="line">			)</span><br><span class="line"></span><br><span class="line">	<span class="comment">##定义forward() 函数：</span></span><br><span class="line">	<span class="function"><span class="keyword">def</span> <span class="title">forward</span><span class="params">(self,x)</span>:</span></span><br><span class="line">		x = conv1(x)</span><br><span class="line">		x = view(<span class="number">-1</span>,<span class="number">14</span>*<span class="number">14</span>*<span class="number">1024</span>) <span class="comment">##torch中对Tensor变量的flat操作。</span></span><br><span class="line">		x = dense(x)</span><br><span class="line">		<span class="keyword">return</span> x</span><br></pre></td></tr></table></figure>
+<p><strong>计算网络中的参数</strong></p>
+<p><strong><code>(n-2p-f)/s +</code></strong> <strong>1</strong> = 图像边长.</p>
+<hr>
+<h2 id="训练模型MNIST模型："><a href="#训练模型MNIST模型：" class="headerlink" title="训练模型MNIST模型："></a>训练模型MNIST模型：</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"><span class="keyword">from</span> torch.autograd <span class="keyword">import</span> Variable</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">from</span> collections <span class="keyword">import</span> OrderedDict</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"><span class="keyword">import</span> torchvision</span><br><span class="line"><span class="keyword">from</span> torchvision <span class="keyword">import</span> transforms,datasets</span><br><span class="line"><span class="keyword">from</span> PIL <span class="keyword">import</span> Image</span><br><span class="line"><span class="keyword">import</span> cv2</span><br><span class="line"><span class="keyword">import</span> torch.utils.data</span><br><span class="line"><span class="comment"># print(cv2.__version__)</span></span><br><span class="line"><span class="keyword">from</span> Model <span class="keyword">import</span> Model</span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"></span><br><span class="line">	model = Model()</span><br><span class="line">	epochs = <span class="number">5</span></span><br><span class="line">	cost = torch.nn.CrossEntropyLoss()</span><br><span class="line">	optimizer = torch.optim.Adam(model.parameters())</span><br><span class="line">	<span class="keyword">for</span> epoch <span class="keyword">in</span> range(epochs):</span><br><span class="line">	    total_loss = <span class="number">0.0</span></span><br><span class="line">	    acc = <span class="number">0.0</span></span><br><span class="line">	    <span class="keyword">for</span> data <span class="keyword">in</span> data_loader_train:</span><br><span class="line">	        x,y = data</span><br><span class="line">	        var_x, var_y = Variable(x) ,Variable(y)</span><br><span class="line">	        y_pred = model(var_x)</span><br><span class="line">	        _,pred = torch.max(y_pred,<span class="number">1</span>)</span><br><span class="line">	        optimizer.zero_grad()</span><br><span class="line">	        loss = cost(y_pred,var_y) <span class="comment">#注意！！！！</span></span><br><span class="line">	        loss.backward()</span><br><span class="line">	        optimizer.step()</span><br><span class="line">	        total_loss += loss  <span class="comment">#loss是这次的损失值</span></span><br></pre></td></tr></table></figure>
+<h3 id="损失函数"><a href="#损失函数" class="headerlink" title="损失函数"></a>损失函数</h3><ol>
+<li><p><code>cost = torch.nn.CrossEntropyLoss()</code> <code>softmax</code>损失</p>
+<ol>
+<li>定义cost对象，之后计算只用传入数据即可</li>
+<li>需要<strong>注意</strong>的是<br> <code>loss = cost(y_pred,var_y)</code> 输入时有顺序的先写预测，再写<code>label</code></li>
+</ol>
+</li>
+<li><p><code>cost = torch.nn.MSELoss()</code> 欧式损失</p>
+</li>
+</ol>
+<h3 id="优化算法"><a href="#优化算法" class="headerlink" title="优化算法"></a>优化算法</h3><ol>
+<li><code>optimizer = torch.optim.Adam(model.parameters())</code><ol>
+<li>定义opt对象,可采用自定义优化算法，需要将model的参数全部传入，以算法进行计算。</li>
+<li>需要<strong>注意</strong>的是：<br> <code>optimizer.zero_grad()</code>，每次更新<code>w</code>前，需要将上一次迭代的梯度清理。</li>
+</ol>
+</li>
+</ol>
+<h3 id="关于data-loader-train、data的说明："><a href="#关于data-loader-train、data的说明：" class="headerlink" title="关于data_loader_train、data的说明："></a>关于<code>data_loader_train</code>、<code>data</code>的说明：</h3><ol>
+<li><p><code>data_loader_train</code> 是整个数据集</p>
+</li>
+<li><p><code>data_loader_train</code> 一次生成<code>batch_size</code>个数据<br> <strong><code>shape</code></strong> = (64,1,28,28)<br>所有第二个for是整个<code>batch_size</code>的矩阵计算</p>
+</li>
+</ol>
+<h3 id="Model的forward"><a href="#Model的forward" class="headerlink" title="Model的forward()"></a>Model的forward()</h3><ol>
+<li><p>自定义Model继承了Module后需要重写父类的 forward()函数<br>即计算整个计算图。<br><code>y_pred = model(var_x)</code></p>
+<p>需要<strong>注意</strong>的是：<br><code>model(var_x)</code>的输入参数必须是<code>Variable</code>类型，需要转换。</p>
+</li>
+</ol>
+<h3 id="torch-max"><a href="#torch-max" class="headerlink" title="torch.max()"></a>torch.max()</h3><ol>
+<li><p>排列得到最优解，<code>torch.max(data,dim)</code><br>与<code>python</code> 中 <code>argmax(data,dim)</code>有着差不多的功能，</p>
+</li>
+<li><p>其返回值有2个，一个是获得最大值的值，以及其索引。</p>
+</li>
+</ol>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">a = torch.tensor([[<span class="number">1</span>,<span class="number">3</span>,<span class="number">2</span>],[<span class="number">4</span>,<span class="number">1</span>,<span class="number">3</span>]])</span><br><span class="line">_,pred = torch.max(a,<span class="number">0</span>)</span><br><span class="line">print(_)</span><br><span class="line">	<span class="comment">#[4,3,3]</span></span><br><span class="line">print(pred)</span><br><span class="line">	<span class="comment">#[1,0,1]</span></span><br></pre></td></tr></table></figure>
+<ol>
+<li><p>类似与python中这种带维度的比较技巧 <code>torch.max(a,dim)</code><br><strong>dim 维度</strong> 依次递增，其他维度不变，遍历得到各个数据之间相互比较得到</p>
+</li>
+<li><p><strong>样例</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">torch.max(a,<span class="number">0</span>)</span><br><span class="line">a =	[</span><br><span class="line">		[<span class="number">1</span>,<span class="number">3</span>,<span class="number">2</span>],</span><br><span class="line">		[<span class="number">3</span>,<span class="number">2</span>,<span class="number">1</span>]</span><br><span class="line">	]</span><br></pre></td></tr></table></figure>
+<p> 保持第1维度不变，0维度遍历。</p>
+<p> a[0][0] a[1][0] a[2][0] 比较一次 输出一次结果</p>
+<p> a[0][1] a[1][1] a[2][1] 比较一次 输出一次结果</p>
+</li>
+</ol>
+<h1 id="T20190705"><a href="#T20190705" class="headerlink" title="T20190705:"></a>T20190705:</h1><h2 id="GPU训练MNIST"><a href="#GPU训练MNIST" class="headerlink" title="GPU训练MNIST"></a>GPU训练MNIST</h2><h3 id="数据的载入："><a href="#数据的载入：" class="headerlink" title="数据的载入："></a><strong>数据的载入：</strong></h3><pre><code>1. 使用torch.utils.data.DataLoader()
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">data_loader_train = torch.utils.data.DataLoader(</span><br><span class="line">		batch_size = <span class="number">64</span>,</span><br><span class="line">		dataset = data_train,</span><br><span class="line">		shuffle = <span class="literal">True</span></span><br><span class="line">	)</span><br></pre></td></tr></table></figure>
+<ul>
+<li><code>batch_size</code>指定了数据中每次读入的数据量。</li>
+<li><p><code>dataset</code> 指定了数据集</p>
+</li>
+<li><p><code>data_train</code> 是 <code>torchvision.datasets</code> 类。</p>
+</li>
+<li><code>datasets</code> 分多种，在<code>MNIST</code>中使用的是<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">datasets.MNIST(</span><br><span class="line">	root = <span class="string">"./data/"</span>,</span><br><span class="line">	transform = transform_,</span><br><span class="line">	train = <span class="literal">True</span>, <span class="comment">#是训练集</span></span><br><span class="line">	download = <span class="literal">False</span> <span class="comment">#使用本地的训练集</span></span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h3 id="从Dataloader中读出数据："><a href="#从Dataloader中读出数据：" class="headerlink" title="从Dataloader中读出数据："></a>从Dataloader中读出数据：</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">x,y = next(iter(dataloader[<span class="string">"train"</span>]))</span><br><span class="line">plt.plot(x.numpy(),y.numpy(),<span class="string">'o'</span>,color= <span class="string">"blue"</span>)</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+<p>将<code>dataloader</code>强制转为迭代器，然后用<code>next</code>读出一个<code>batch</code><br><strong>注意</strong>读出的数据是<code>tensor</code>形式，有时需要转为<code>numpy</code>的格式，使用<code>tensor.numpy()</code>即可。而从<code>numpy</code>构造<code>tensor</code>可以 <code>torch.from_numpy(array).float()</code>，需要指定数据格式，<code>torch</code>中需要<code>float</code>的数据。</p>
+<h3 id="Transforms"><a href="#Transforms" class="headerlink" title="Transforms"></a>Transforms</h3><p>包名<code>torchvision.transforms</code><br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">transforms.Compose(</span><br><span class="line">		[</span><br><span class="line">			transform.ToTensor(),</span><br><span class="line">			transform.Nomalize(mean = <span class="number">.5</span>,std = <span class="number">.5</span>)</span><br><span class="line">		]</span><br><span class="line">	)</span><br></pre></td></tr></table></figure></p>
+<h3 id="Pytorch读入数据时需要的步骤："><a href="#Pytorch读入数据时需要的步骤：" class="headerlink" title="Pytorch读入数据时需要的步骤："></a>Pytorch读入数据时需要的步骤：</h3><p>数据集的准备：<br><strong>数据库的获得：</strong><br><code>raw data</code>:可以是文件夹中的图片：直接用dataset.<br><strong>torchvision.datasets:中</strong></p>
+<ul>
+<li><p><code>torchvision.datasets.DatasetFolder</code> (暂无信息。)</p>
+</li>
+<li><p><code>torchvision.datasets.ImageFolder</code></p>
+</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dset.ImageFolder(root=<span class="string">"root folder path"</span>, [transform, target_transform])</span><br></pre></td></tr></table></figure>
+<p><strong><code>torchvision.datasets</code> 是继承自<code>torch.utils.data.Dataset</code></strong></p>
+<ul>
+<li><code>torch.utils.data.TensorDataset(data_tensor, target_tensor)</code><br>这让函数可以将tensor数据转为数据集</li>
+</ul>
+<h3 id="样例："><a href="#样例：" class="headerlink" title="样例："></a>样例：</h3><p>新建两个<code>np.array</code>类型的数据转为<code>tensor</code>再转为<code>dataset</code><br><strong>将np-&gt;转为Tensor：</strong> <code>torch.from_numpy(train_x).float()</code><br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#tain data</span></span><br><span class="line">train_x = np.linspace(<span class="number">-6</span>, <span class="number">8</span>, self.N_SAMPEL)[:,np.newaxis]</span><br><span class="line"><span class="comment"># print(type(self.x))</span></span><br><span class="line">self.bias = <span class="number">5</span></span><br><span class="line">self.noisy = np.random.normal(<span class="number">0</span>,<span class="number">2</span>,train_x.shape)</span><br><span class="line">train_y = np.power(train_x,<span class="number">2</span>) + self.bias + self.noisy</span><br><span class="line"><span class="comment"># print(self.x.shape)</span></span><br><span class="line"><span class="comment"># self.plot_data(train_x,train_y)</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># test data</span></span><br><span class="line">test_x = np.linspace(<span class="number">-7</span>, <span class="number">10</span>, <span class="number">200</span>)[:, np.newaxis]</span><br><span class="line">noise = np.random.normal(<span class="number">0</span>, <span class="number">2</span>, test_x.shape)</span><br><span class="line">test_y = np.square(test_x) - <span class="number">5</span> + noise</span><br><span class="line"></span><br><span class="line"><span class="comment"># self.plot_data(test_x,test_y)</span></span><br><span class="line"><span class="comment"># plt.plot(train_x,train_y,'o',color= "blue")</span></span><br><span class="line"><span class="comment"># plt.plot(test_x,test_y,'+',color = "red")</span></span><br><span class="line"><span class="comment"># plt.show()</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#装载到dataloader里面：</span></span><br><span class="line">train_x = torch.from_numpy(train_x).float()</span><br><span class="line">train_y = torch.from_numpy(train_y).float()</span><br><span class="line">test_x = torch.from_numpy(test_x).float()</span><br><span class="line">test_y = torch.from_numpy(test_y).float()</span><br><span class="line">data = &#123;</span><br><span class="line">    <span class="string">"train"</span>:</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="string">"x"</span>:train_x,</span><br><span class="line">            <span class="string">"y"</span>:train_y</span><br><span class="line">        &#125;,</span><br><span class="line">    <span class="string">"test"</span>:</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="string">"x"</span>:test_x,</span><br><span class="line">            <span class="string">"y"</span>:test_y</span><br><span class="line">        &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">da_i = torchvision.datasets.ImageFolder()</span><br><span class="line">da  = torchvision.datasets.DatasetFolder()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">dataset = &#123;x: Data.dataset.TensorDataset(data[x][<span class="string">"x"</span>],data[x][<span class="string">"y"</span>]) <span class="keyword">for</span> x <span class="keyword">in</span> [<span class="string">"train"</span>,<span class="string">"test"</span>] &#125;</span><br><span class="line"></span><br><span class="line">dataloader = &#123;x : Data.DataLoader(dataset = dataset[x], batch_size = self.BATCH_SIZE, shuffle= <span class="literal">True</span>) <span class="keyword">for</span> x <span class="keyword">in</span> [<span class="string">"train"</span>,<span class="string">"test"</span>] &#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="使用GPU处理数据："><a href="#使用GPU处理数据：" class="headerlink" title="使用GPU处理数据："></a>使用GPU处理数据：</h3><p><code>model = Model()</code><br><strong>model.cuda()</strong> 开启GPU训练模式</p>
+<hr>
+<p><strong>如果要使用GPU训练，则所所有数据必须转换成cuda的形式</strong></p>
+<hr>
+<h4 id="需要转换的地方："><a href="#需要转换的地方：" class="headerlink" title="需要转换的地方："></a>需要转换的地方：</h4><ol>
+<li><p><strong>损失函数</strong>的转换：</p>
+<ol>
+<li>cost = torch.nn.CrossEntorpyLoss()<br> cost.cuda()</li>
+</ol>
+</li>
+<li><p><strong>变量</strong>的转换：</p>
+</li>
+</ol>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> data_t <span class="keyword">in</span> data_loader_train:</span><br><span class="line">	x,y = data_t</span><br><span class="line">	var_x,var_y = Variable(x).cuda(),Variable(y).cuda()</span><br></pre></td></tr></table></figure>
+<ol>
+<li>cpu-&gt;gpu:<br><strong>variable(x).cuda()</strong><br>gpu-&gt;cpu:<br><strong>cuda_var(x).cpu()</strong></li>
+</ol>
+<h1 id="T20190707"><a href="#T20190707" class="headerlink" title="T20190707"></a>T20190707</h1><h2 id="Pytorch-数据结构："><a href="#Pytorch-数据结构：" class="headerlink" title="Pytorch 数据结构："></a>Pytorch 数据结构：</h2><h3 id="Model"><a href="#Model" class="headerlink" title="Model"></a><strong><code>Model</code></strong></h3><p><strong>Model</strong> 类来自package: <strong>torch.nn.Module</strong><br>其中会有定义的网络<strong>Sequential</strong>参数,比如定义了 <strong><code>conv1</code></strong> 在其下有<strong><code>_modules</code></strong>参数：可以在着拉看到每一层的data。在该层变量中，可以看到其中包含的参数，其中比较重要的是：</p>
+<ul>
+<li><strong><code>weight</code></strong> </li>
+<li><strong><code>bias</code></strong> </li>
+<li><strong><code>dense</code></strong></li>
+</ul>
+<h3 id="2-datasets"><a href="#2-datasets" class="headerlink" title="2. datasets:"></a>2. datasets:</h3><ul>
+<li>在<strong><code>datasets</code></strong>类中主要负责<strong>数据的读入</strong>，所以数据的<strong>增强</strong>以及数据的<strong>修建</strong>放在了这里。transform参数很好的体现了这一点。</li>
+<li><strong><code>datasets</code></strong> 来自package: <strong><code>torchvision.datasets</code></strong> </li>
+<li>目前学习到的数据集类有：</li>
+<li><strong><code>ImageFolder</code></strong> 每一个文件夹为一个类，加载后，同一个文件夹下的label是一致的。</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">image_dataset = &#123; x: torchvision.datasets.ImageFolder(</span><br><span class="line">		root = os.path.join(data_dir,x),transform = data_transform[x]</span><br><span class="line">	) <span class="keyword">for</span> x <span class="keyword">in</span> [<span class="string">"train"</span>,<span class="string">"valid"</span>]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ol>
+<li>在ImageFolder 中，datasets含有以下数据结构：<ol>
+<li><strong><code>class_to_idx</code></strong>     dict{标签名称与对应索引的字典}</li>
+<li><strong><code>classes</code></strong>         list[标签名称]</li>
+<li><strong><code>imgs</code></strong>             list[tuple(‘Image完整路径’,’对应label索引’)]</li>
+<li><strong><code>targets</code></strong>         list[lable]</li>
+<li><strong><code>transform</code></strong></li>
+</ol>
+</li>
+</ol>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">print(len(image_datasets[<span class="string">"train"</span>])) <span class="comment"># 20000 注意可能image_datasets是字典类型！分了train,test,valid</span></span><br></pre></td></tr></table></figure>
+<ol>
+<li><strong><code>MNIST</code></strong> 直接对MNIST数据集进行加载</li>
+</ol>
+<h3 id="3-DataLoader"><a href="#3-DataLoader" class="headerlink" title="3. DataLoader:"></a>3. DataLoader:</h3><ol>
+<li><strong><code>DataLoader</code></strong>中设置<strong><code>batch_size</code></strong></li>
+<li><strong><code>DataLoader</code></strong> 在package:<strong><code>torch.utils.data.DataLoader</code></strong>中</li>
+<li><strong><code>DataLoader</code></strong> 这个类是用来装载<strong><code>datasets</code></strong>中的数据的，因为数据集可能很大，<strong><code>DataLoader</code></strong>划分batch_size装载，并且可以shuffle读入。</li>
+<li>使用生成器或者迭代器就可以获得每一个batch的数据，数量是一个batch_size的数据，顺序是shuffle后的数据。</li>
+<li><strong><code>len(dataloader)</code></strong>  #好像和 <strong><code>len(image_dataset)</code></strong>不一样</li>
+</ol>
+<h3 id="4-Model类："><a href="#4-Model类：" class="headerlink" title="4. Model类："></a>4. Model类：</h3><h4 id="1-试例代码1"><a href="#1-试例代码1" class="headerlink" title="1. 试例代码1"></a>1. 试例代码1</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Model</span><span class="params">(torch.nn.Module)</span>:</span></span><br><span class="line">	<span class="string">"""docstring for Mo"""</span></span><br><span class="line">	<span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, arg)</span>:</span></span><br><span class="line">		super(Model, self).__init__()</span><br><span class="line">		self.arg = arg</span><br><span class="line">		<span class="comment">############</span></span><br><span class="line">		<span class="comment">#网络结构定义#</span></span><br><span class="line">		<span class="comment">############</span></span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">def</span> <span class="title">forward</span><span class="params">(self,x)</span>:</span></span><br><span class="line">		<span class="comment">#########</span></span><br><span class="line">		<span class="comment">#传播过程#</span></span><br><span class="line">		<span class="comment">#########</span></span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">def</span> <span class="title">save</span><span class="params">(self,name = None)</span>:</span>		</span><br><span class="line">		<span class="keyword">if</span> name == <span class="literal">None</span>:</span><br><span class="line">			self.model_name = str(type(self))</span><br><span class="line">			path = <span class="string">'checkPoints/'</span> + self.model_name + <span class="string">'_'</span></span><br><span class="line">			name = time.strftime(path + <span class="string">'%m%d_%H:%M:%S.pth'</span>)</span><br><span class="line">		torch.save(self.state_dict(),name)</span><br><span class="line">		<span class="keyword">return</span> name</span><br><span class="line"><span class="string">"""</span></span><br><span class="line"><span class="string"># strftime():</span></span><br><span class="line"><span class="string">#	time.strftime(format[,t])</span></span><br><span class="line"><span class="string">#	format -- 格式字符串，和printf("一样的 今天是：%m_%d_%H:%M:%S"),其中</span></span><br><span class="line"><span class="string">#	的%S,%M,%H是占位符，放对应的时间变量，%m—&gt;月份，%d-&gt;日</span></span><br><span class="line"><span class="string">#	t 是可选的一个struct_time对象</span></span><br><span class="line"><span class="string">#	如果不加t的话默认跟的是当前时间t</span></span><br><span class="line"><span class="string">#   torch.save(self.state_dict(),name)</span></span><br><span class="line"><span class="string">	self.state_dict() state_dict 是一个简单的python的字典对象,将每一层与它的对应参数建立映射关</span></span><br><span class="line"><span class="string">	name是完整的路径名称加上模型名字，其后缀名为.pth</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">"""</span></span><br></pre></td></tr></table></figure>
+<h4 id="2-试例代码2"><a href="#2-试例代码2" class="headerlink" title="2. 试例代码2"></a>2. 试例代码2</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> torchvision.models <span class="keyword">as</span> models</span><br><span class="line"></span><br><span class="line">model = models.vgg16(pretrained =<span class="literal">True</span>)</span><br><span class="line"></span><br><span class="line">model_modules = model._modules</span><br><span class="line"></span><br><span class="line">feature_layers = model._modules[<span class="string">"feature"</span>]</span><br><span class="line"></span><br><span class="line">conv1_2 = feature_layers[<span class="number">2</span>] <span class="comment"># layer 也可以通过下标访问</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> layer <span class="keyword">in</span> feature_layers:</span><br><span class="line">	<span class="keyword">pass</span></span><br></pre></td></tr></table></figure>
+<p><strong><code>models.vgg16(pretrained =True)</code></strong> <code>pretrained =True</code>表示不下载模型</p>
+<p><strong><code>model</code></strong>:包含了所有参数</p>
+<p><strong><code>model_modules</code></strong>:  <strong><code>OrderedDict</code></strong>类型，字典类的派生，键值为模型中定义的网络块(<strong><code>Sequential</code></strong>定义的名称就为定义的名字，其值为<strong><code>Sequential</code></strong>类型包含了定义的所有层)</p>
+<p><strong><code>feature_layers</code></strong>: <strong><code>Sequential</code></strong>类型包含了各种层，<strong>也可以直接model.feature访问，因为其feature相当于是model的一个公变量</strong></p>
+<p><strong><code>layer</code></strong>: 层的定义类型，conv层是conv层类型，pool层是pool层类型，包含各自的参数，也可以通过 <strong><code>feature_layers</code></strong> 下标访问。其中比较重要的有：</p>
+<ol>
+<li>weight : parameter类型</li>
+<li>bias    : parameter类型</li>
+</ol>
+<h3 id="样例：-1"><a href="#样例：-1" class="headerlink" title="样例："></a>样例：</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#全冻</span></span><br><span class="line"><span class="keyword">for</span> parma <span class="keyword">in</span> model.parameters():</span><br><span class="line">	parma.require_grad = <span class="literal">False</span></span><br><span class="line"><span class="comment">#只部分冻</span></span><br><span class="line">list_freeze_idx = [<span class="number">0</span>,<span class="number">1</span>,<span class="number">3</span>,<span class="number">5</span>,<span class="number">7</span>]</span><br><span class="line"><span class="keyword">for</span> num,param <span class="keyword">in</span> enumerate(model.parameters(),<span class="number">0</span>):</span><br><span class="line">    <span class="keyword">if</span> num <span class="keyword">in</span> list_freeze_idx:</span><br><span class="line">	    param.requires_grad = <span class="literal">False</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">model.Classifier = torch.nn.Sequential(</span><br><span class="line">		torch.nn.Linear()</span><br><span class="line">		torch.nn.ReLU()</span><br><span class="line">		torch.nn.Dropout(p=<span class="number">0.5</span>)</span><br><span class="line">		torch.nn.Linear()</span><br><span class="line">		torch.nn.ReLU()</span><br><span class="line">		torch.nn.Dropout(p=<span class="number">0.5</span>)</span><br><span class="line">		torch.nn.Linear()</span><br><span class="line">	)</span><br></pre></td></tr></table></figure>
+<h3 id="Parameters"><a href="#Parameters" class="headerlink" title="Parameters():"></a>Parameters():</h3><p>凡是关于参数的，都使用Parameters()来进行操作</p>
+<p><strong><code>model.parameters()</code></strong>: 返回的是所有参数的生成器，每个item是parameter类型，包含Tensor，requires_grad等类型。无法下标访问  <strong>注意的是requires_grad 是有s的</strong></p>
+<p><strong><code>parame</code></strong> 即生成器的返回变量，拥有data参数，可以访问到该的数据，有grad,shape，等。</p>
+<p>新建的Sequential是默认可以更新的。</p>
+<p><strong><code>model.Classifier</code></strong> 可以直接操作整个Squential</p>
+<h1 id="T20190711"><a href="#T20190711" class="headerlink" title="T20190711:"></a>T20190711:</h1><h2 id="loadModel"><a href="#loadModel" class="headerlink" title="loadModel"></a><strong>loadModel</strong></h2><p><code>model.load_state_dict(torch.load(&quot;checkPoints/LLModel_0708_21:54:25.pth&quot;))</code>  </p>
+<p><code>model</code>的加载是使用.<code>load_state_dict()</code></p>
+<p><code>torch.load(&quot;checkPoints/LLModel_0708_21:54:25.pth&quot;)</code> 这个得到的是一个<code>OrderDict</code>,包含了每一层的参数（有参数的参数层，像Pool层是没有的）</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">model_path = <span class="string">"/home/joey/Documents/models"</span></span><br><span class="line"><span class="comment"># model = models.resnet50(pretrained=True)</span></span><br><span class="line"><span class="comment"># # model_modules = model._modules</span></span><br><span class="line"><span class="comment"># features = model.features</span></span><br><span class="line">model_name = <span class="string">"vgg16"</span></span><br><span class="line">load_model_path =  os.path.join(model_path,model_name,<span class="string">"Pytorch"</span>,model_name+<span class="string">".pth"</span>)</span><br><span class="line">model = models.vgg16(pretrained= <span class="literal">False</span>)</span><br><span class="line">model.load_state_dict(torch.load(load_model_path))</span><br></pre></td></tr></table></figure>
+<h2 id="显存的节约"><a href="#显存的节约" class="headerlink" title="显存的节约"></a><strong>显存的节约</strong></h2><p>在测试或验证集的预测中，不要带有梯度可以省去一大步分的cuda，GPU显存。可以一定程度上缓解CUDA.memery的问题。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> phrase == <span class="string">"valid"</span>:</span><br><span class="line">    <span class="keyword">with</span> torch.no_grad():</span><br><span class="line">        x,y = Variable(x).cuda(),Variable(y).cuda()</span><br><span class="line">        y_pred = model(x)</span><br><span class="line">        _,y_pred_class = torch.max(y_pred,<span class="number">1</span>)</span><br><span class="line">        loss = loss_f(y_pred,y)</span><br></pre></td></tr></table></figure></p>
+<h1 id="T20190726："><a href="#T20190726：" class="headerlink" title="T20190726："></a>T20190726：</h1><h2 id="optim"><a href="#optim" class="headerlink" title="optim"></a>optim</h2><p>优化函数可以只传入模型的部分参数：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">optimizer = torch.optim.Adam(model.Classifier.parameters(),lr = lr)</span><br></pre></td></tr></table></figure></p>
+<p>仅仅传入最后全连接层的参数，<strong>存疑</strong>这样是否就可以不用设置冻结之前层？<br>《pytorch-cv》是既设置了冻结，又只传入了部分参数</p>
+<h1 id="T20190729"><a href="#T20190729" class="headerlink" title="T20190729:"></a>T20190729:</h1><h2 id="st-gcn-Code-Analyze"><a href="#st-gcn-Code-Analyze" class="headerlink" title="st-gcn Code Analyze:"></a>st-gcn Code Analyze:</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mod_str, _sep, class_str = import_str.rpartition(<span class="string">'.'</span>)</span><br></pre></td></tr></table></figure>
+<p><code>rpartition()</code> 方法类似于 <code>partition()</code> 方法，只是该方法是从目标字符串的末尾也就是右边开始搜索分割符。<br>如果字符串包含指定的分隔符，则返回一个<strong>3元的元组</strong>，第一个为<strong>分隔符左边的子串</strong>，第二个为<strong>分隔符本身</strong>，第三个为<strong>分隔符右边的子串</strong>。</p>
+<h3 id="实例："><a href="#实例：" class="headerlink" title="实例："></a>实例：</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">#!/usr/bin/python</span></span><br><span class="line"> </span><br><span class="line">str = <span class="string">"www.runoob.com"</span></span><br><span class="line"> </span><br><span class="line"><span class="keyword">print</span> str.rpartition(<span class="string">"."</span>)</span><br><span class="line"><span class="comment"># ('www.runoob', '.', 'com')</span></span><br></pre></td></tr></table></figure>
+<h3 id="import："><a href="#import：" class="headerlink" title="import："></a><strong>import</strong>：</h3><p><code>__import__()</code> 函数用于动态加载类和函数</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">__import__(mod_str)</span><br></pre></td></tr></table></figure>
+<p>源码中首先使用import<em>class的方法，传入文件名以及类名。<br>然后使用`<em>_import</em></em>`来加载类。只是申明并未实例化。</p>
+<p>得到的<code>processors</code>是一个字典，包含了两个类<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">processors[<span class="string">'recognition'</span>] = import_class(<span class="string">'processor.recognition.REC_Processor'</span>)</span><br><span class="line">processors[<span class="string">'demo'</span>] = import_class(<span class="string">'processor.demo.Demo'</span>)</span><br></pre></td></tr></table></figure></p>
+<h4 id="import-的一个小实例："><a href="#import-的一个小实例：" class="headerlink" title="import()的一个小实例："></a><strong>import</strong>()的一个小实例：</h4><p>文件T20190801中：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"> <span class="function"><span class="keyword">def</span> <span class="title">import_model</span><span class="params">(self,str)</span>:</span></span><br><span class="line">        mod_str, _sep, class_str = str.rpartition(<span class="string">'.'</span>)</span><br><span class="line">        __import__(mod_str)</span><br><span class="line">        <span class="keyword">return</span> getattr(sys.modules[mod_str], class_str)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">start</span><span class="params">(self)</span>:</span></span><br><span class="line">    train_x,train_y,test_x,test_y = self.makedata()</span><br><span class="line">    Model = (self.import_model(<span class="string">"T20190801_Model.Model"</span>))</span><br><span class="line">    model = Model()</span><br><span class="line">    print(model)</span><br></pre></td></tr></table></figure></p>
+<p><code>__import__(mod_str)</code>中只有传入文件名称就可以导入该文件了.</p>
+<p><code>getattr(sys.modules[mod_str], class_str)</code> 可以得到<code>class_str</code>这个类，相当于类的申明。</p>
+<p>可以使用这个申明来实例化类对象</p>
+<p>文件T20190801_Model中：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Model</span><span class="params">(torch.nn.Module)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></span><br><span class="line">        super(Model,self).__init__()</span><br><span class="line">        self.classification = nn.Sequential(</span><br><span class="line">            nn.Conv2d(<span class="number">1</span>, <span class="number">20</span>, <span class="number">5</span>),</span><br><span class="line">            nn.ReLU(),</span><br><span class="line">            nn.Conv2d(<span class="number">20</span>, <span class="number">64</span>, <span class="number">5</span>),</span><br><span class="line">            nn.ReLU()</span><br><span class="line">        )</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">forward</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="keyword">pass</span></span><br></pre></td></tr></table></figure></p>
+<h3 id="parse-以及-subparsers："><a href="#parse-以及-subparsers：" class="headerlink" title="parse 以及 subparsers："></a>parse 以及 subparsers：</h3><p>每一个subparser可以继承父类的parse<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># add sub-parser</span></span><br><span class="line">subparsers = parser.add_subparsers(dest=<span class="string">'processor'</span>)</span><br><span class="line"><span class="keyword">for</span> k, p <span class="keyword">in</span> processors.items():</span><br><span class="line">    subparsers.add_parser(k, parents=[p.get_parser()])</span><br></pre></td></tr></table></figure></p>
+<p><code>k</code>是键，<code>{&quot;recognition&quot; &quot;demo&quot;}</code>，即parser的名称，注意后面使用parse_args()时所输入的子parser器名称必须要和其一样。不然会报错。详细见下面例子<br>实例：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">python3 main.py recognition -h <span class="comment">#正确调用，因为parser有名为recognition的parse</span></span><br><span class="line"></span><br><span class="line">python3 main.py sdeqds -h <span class="comment">#错误，找不到名为sdeqds子parse。</span></span><br></pre></td></tr></table></figure></p>
+<p><code>p</code>是值，包含了两个类。</p>
+<p><code>p.get_parser()</code>可以进入到该类的<code>get_parser</code>方法中</p>
+<p>在对应的类中，<code>get_parser</code>都会执行。</p>
+<p><code>subparsers = parser.add_subparsers(dest=&#39;processor&#39;)</code>得到的<code>subparsers</code>可以有多个<code>parser</code>，相当于<code>parser</code>的<code>子parsers</code>的<strong>句柄</strong>。向其中加入<code>parser</code>使用<code>add_parser</code>即可</p>
+<p><strong>parser.add_subparsers(dest=’processor’)返回的是子parser的句柄！！</strong></p>
+<p><strong>使用add_parser()向subparsers中加入parser</strong></p>
+<p>add_parser(“名字”，parent = “父parser”)。</p>
+<p><code>recognition</code>类的<code>get_parser</code><br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_parser</span><span class="params">(add_help=False)</span>:</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># parameter priority: command line &gt; config &gt; default</span></span><br><span class="line">    parent_parser = Processor.get_parser(add_help=<span class="literal">False</span>)</span><br><span class="line">    parser = argparse.ArgumentParser(</span><br><span class="line">        add_help=add_help,</span><br><span class="line">        parents=[parent_parser],</span><br><span class="line">        description=<span class="string">'Spatial Temporal Graph Convolution Network'</span>)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># region arguments yapf: disable</span></span><br><span class="line">    <span class="comment"># evaluation</span></span><br><span class="line">    parser.add_argument(<span class="string">'--show_topk'</span>, type=int, default=[<span class="number">1</span>, <span class="number">5</span>], nargs=<span class="string">'+'</span>, help=<span class="string">'which Top K accuracy will be shown'</span>)</span><br><span class="line">    <span class="comment"># optim</span></span><br><span class="line">    parser.add_argument(<span class="string">'--base_lr'</span>, type=float, default=<span class="number">0.01</span>, help=<span class="string">'initial learning rate'</span>)</span><br><span class="line">    parser.add_argument(<span class="string">'--step'</span>, type=int, default=[], nargs=<span class="string">'+'</span>, help=<span class="string">'the epoch where optimizer reduce the learning rate'</span>)</span><br><span class="line">    parser.add_argument(<span class="string">'--optimizer'</span>, default=<span class="string">'SGD'</span>, help=<span class="string">'type of optimizer'</span>)</span><br><span class="line">    parser.add_argument(<span class="string">'--nesterov'</span>, type=str2bool, default=<span class="literal">True</span>, help=<span class="string">'use nesterov or not'</span>)</span><br><span class="line">    parser.add_argument(<span class="string">'--weight_decay'</span>, type=float, default=<span class="number">0.0001</span>, help=<span class="string">'weight decay for optimizer'</span>)</span><br><span class="line">    <span class="comment"># endregion yapf: enable</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> parser</span><br></pre></td></tr></table></figure></p>
+<p>调用处：<code>subparsers.add_parser(k, parents=[p.get_parser()])</code><br>返回了一个<code>parser</code><br>这个<code>parser</code>继承了Processor的parser，并且添加了自己的参数。</p>
+<p>各个类的父子关系：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">|IO----|----demo</span><br><span class="line">	   |</span><br><span class="line">	   |----processor----|----REC_Processor</span><br></pre></td></tr></table></figure></p>
+<p><code>subparser</code>的作用可以复用相同的参数接口</p>
+<p>所有<code>parser写完后</code>调用根parse进行解析：</p>
+<ol>
+<li><p><code>parser = argparse.ArgumentParser(description=&#39;Processor collection&#39;)</code></p>
+</li>
+<li><p><code>subparsers = parser.add_subparsers(dest=&#39;processor&#39;)</code>，添加子解析器<br>…</p>
+</li>
+<li><p><code>arg = parser.parse_args()</code>，开启解析，定义了所有参数之后，你就可以给 <code>parse_args()</code> 传递一组参数字符串来解析命令行。默认情况下，参数是从 sys.argv[1:] 中获取，但你也可以传递自己的参数列表。选项是使用<code>GNU/POSIX</code>语法来处理的，所以在序列中选项和参数值可以混合。</p>
+</li>
+</ol>
+<p>parse_args() 的返回值是一个命名空间，包含传递给命令的参数。该对象将参数保存其属性，因此如果你的参数 <code>dest</code> 是 <code>myoption</code>，那么你就可以<code>args.myoption</code>来访问该值。</p>
+<ol>
+<li>可以自己向parse_args中传递参数：<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">parser.parse_args([<span class="string">'-a'</span>, <span class="string">'-bval'</span>, <span class="string">'-c'</span>, <span class="string">'3'</span>])</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>如果不<code>parse_args()</code>不加参数则是默认从<code>sys.argv[1:]</code>来传入</p>
+<h3 id="argparse-add-argument-dest参数的意义："><a href="#argparse-add-argument-dest参数的意义：" class="headerlink" title="argparse.add_argument() dest参数的意义："></a>argparse.add_argument() dest参数的意义：</h3><p><code>subparsers = parser.add_subparsers(dest=&#39;processor&#39;)</code></p>
+<p><code>dest</code>指定的值用作<code>key</code>值，从解析后的对象中取出用户输入的第一个参数</p>
+<p>所以上述的parser拥有一个arg.processor的属性。而这个属性对应了cmd中第一个输入值。</p>
+<h3 id="得到类对象："><a href="#得到类对象：" class="headerlink" title="得到类对象："></a>得到类对象：</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Processor = processors[arg.processor]</span><br><span class="line">p = Processor(sys.argv[<span class="number">2</span>:])</span><br></pre></td></tr></table></figure>
+<p><code>processors</code>中存储了两个类，只不过这两个类还并未实例化。<br><code>p = Processor(sys.argv[2:])</code>实例化了此类。</p>
+<h3 id="recognition构造函数"><a href="#recognition构造函数" class="headerlink" title="recognition构造函数:"></a><code>recognition</code>构造函数:</h3><p>先执行父类的构造：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">"""</span></span><br><span class="line"><span class="string">        Base Processor</span></span><br><span class="line"><span class="string">"""</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, argv=None)</span>:</span></span><br><span class="line">    self.load_arg(argv)</span><br><span class="line">    self.init_environment()</span><br><span class="line">    self.load_model()</span><br><span class="line">    self.load_weights()</span><br><span class="line">    self.gpu()</span><br><span class="line">    self.load_data()</span><br><span class="line">    self.load_optimizer()</span><br></pre></td></tr></table></figure></p>
+<p>调用处：<code>p = Processor(sys.argv[2:])</code>传入了<code>argv</code><br>这里的<code>Processor</code>是<code>recognition</code>类中的<code>REC——Processor</code><br>在该类中没有构造函数，会调用父类的构造函数。</p>
+<h4 id="sys-argv"><a href="#sys-argv" class="headerlink" title="sys.argv"></a><code>sys.argv</code></h4><p>列表，包含了执行文件的路径+所有输入的参数。以空格分开。<br><code>[&#39;/media/joey/document/[3]_Master/DL/8_ActionRecognize/GCN_ACTION_R/st-gcn_code/st-gcn-master/main.py&#39;, &#39;recognition&#39;, &#39;-c&#39;, &#39;config/st_gcn/kinetics-skeleton/test.yaml&#39;]</code></p>
+<p>在实例化中只传入了下标2-end的参数：</p>
+<ol>
+<li><code>&#39;-c&#39;</code></li>
+<li><code>&#39;config/st_gcn/kinetics-skeleton/test.yaml&#39;</code></li>
+</ol>
+<h4 id="执行load-arg-argv"><a href="#执行load-arg-argv" class="headerlink" title="执行load_arg(argv)"></a>执行<code>load_arg(argv)</code></h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">load_arg</span><span class="params">(self, argv=None)</span>:</span></span><br><span class="line">    parser = self.get_parser()</span><br><span class="line"></span><br><span class="line">    <span class="comment"># load arg form config file</span></span><br><span class="line">    p = parser.parse_args(argv)</span><br><span class="line">    <span class="keyword">if</span> p.config <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span>:</span><br><span class="line">        <span class="comment"># load config file</span></span><br><span class="line">        <span class="keyword">with</span> open(p.config, <span class="string">'r'</span>) <span class="keyword">as</span> f:</span><br><span class="line">            default_arg = yaml.load(f)</span><br><span class="line"></span><br><span class="line">        <span class="comment"># update parser from config file</span></span><br><span class="line">        key = vars(p).keys()</span><br><span class="line">        <span class="keyword">for</span> k <span class="keyword">in</span> default_arg.keys():</span><br><span class="line">            <span class="keyword">if</span> k <span class="keyword">not</span> <span class="keyword">in</span> key:</span><br><span class="line">                print(<span class="string">'Unknown Arguments: &#123;&#125;'</span>.format(k))</span><br><span class="line">                <span class="keyword">assert</span> k <span class="keyword">in</span> key</span><br><span class="line"></span><br><span class="line">        parser.set_defaults(**default_arg)</span><br><span class="line"></span><br><span class="line">    self.arg = parser.parse_args(argv)</span><br></pre></td></tr></table></figure>
+<p><strong>需要指出的是</strong>在这里如果直接用argv来获取参数，是获取不了默认填充的参数的，除非用户将所有参数填写完，那些可选的，有默认值的参数，通过sys.argv，是获取不了的，其只能获取实实在在输入的参数。</p>
+<p>所有如果要获取arg所有的参数，必须要通过已经填充好的parser来获得。</p>
+<h4 id="执行init-environment-："><a href="#执行init-environment-：" class="headerlink" title="执行init_environment()："></a>执行<code>init_environment()</code>：</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">init_environment</span><span class="params">(self)</span>:</span></span><br><span class="line">    self.io = torchlight.IO(</span><br><span class="line">        self.arg.work_dir,</span><br><span class="line">        save_log=self.arg.save_log,</span><br><span class="line">        print_log=self.arg.print_log)</span><br><span class="line">    self.io.save_arg(self.arg)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># gpu</span></span><br><span class="line">    <span class="keyword">if</span> self.arg.use_gpu:</span><br><span class="line">        gpus = torchlight.visible_gpu(self.arg.device)</span><br><span class="line">        torchlight.occupy_gpu(gpus)</span><br><span class="line">        self.gpus = gpus</span><br><span class="line">        self.dev = <span class="string">"cuda:0"</span></span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        self.dev = <span class="string">"cpu"</span></span><br></pre></td></tr></table></figure>
+<p>配置环境，以及实例化IO类，IO类主要负责了模型的读取存储等操作。</p>
+<h4 id="执行self-load-model-："><a href="#执行self-load-model-：" class="headerlink" title="执行self.load_model()："></a>执行<code>self.load_model()</code>：</h4><p>先执行父类的load_model():<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">load_model</span><span class="params">(self)</span>:</span></span><br><span class="line">    self.model = self.io.load_model(self.arg.model,</span><br><span class="line">                                    **(self.arg.model_args))</span><br></pre></td></tr></table></figure></p>
+<p>其中io是在init_environment中定义的。</p>
+<p><code>io.load_model():</code><br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">load_model</span><span class="params">(self, model, **model_args)</span>:</span></span><br><span class="line">    Model = import_class(model)</span><br><span class="line">    model = Model(**model_args)</span><br><span class="line">    self.model_text += <span class="string">'\n\n'</span> + str(model)</span><br><span class="line">    <span class="keyword">return</span> model</span><br></pre></td></tr></table></figure></p>
+<p>可以看出io中的load_model()才是真正的加载模型。<br>在<code>recognition</code>中</p>
+<ol>
+<li><code>model</code> = <code>&#39;net.st_gcn.Model&#39;</code> {str}</li>
+<li><code>model_args</code> = 网络参数 {dict}</li>
+</ol>
+<p>导入类后在实例化。</p>
+<h3 id="net-st-gcn-Model"><a href="#net-st-gcn-Model" class="headerlink" title="net.st_gcn.Model"></a>net.st_gcn.Model</h3><p>真正的网络模型：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Model</span><span class="params">(nn.Module)</span>:</span></span><br><span class="line">    <span class="string">r"""Spatial temporal graph convolutional networks.</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    Args:</span></span><br><span class="line"><span class="string">        in_channels (int): Number of channels in the input data</span></span><br><span class="line"><span class="string">        num_class (int): Number of classes for the classification task</span></span><br><span class="line"><span class="string">        graph_args (dict): The arguments for building the graph</span></span><br><span class="line"><span class="string">        edge_importance_weighting (bool): If ``True``, adds a learnable</span></span><br><span class="line"><span class="string">            importance weighting to the edges of the graph</span></span><br><span class="line"><span class="string">        **kwargs (optional): Other parameters for graph convolution units</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    Shape:</span></span><br><span class="line"><span class="string">        - Input: :math:`(N, in_channels, T_&#123;in&#125;, V_&#123;in&#125;, M_&#123;in&#125;)`</span></span><br><span class="line"><span class="string">        - Output: :math:`(N, num_class)` where</span></span><br><span class="line"><span class="string">            :math:`N` is a batch size,</span></span><br><span class="line"><span class="string">            :math:`T_&#123;in&#125;` is a length of input sequence,</span></span><br><span class="line"><span class="string">            :math:`V_&#123;in&#125;` is the number of graph nodes,</span></span><br><span class="line"><span class="string">            :math:`M_&#123;in&#125;` is the number of instance in a frame.</span></span><br><span class="line"><span class="string">    """</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, in_channels, num_class, graph_args,</span></span></span><br><span class="line"><span class="function"><span class="params">                 edge_importance_weighting, **kwargs)</span>:</span></span><br><span class="line">        super().__init__()</span><br><span class="line"></span><br><span class="line">        <span class="comment"># load graph</span></span><br><span class="line">        self.graph = Graph(**graph_args)</span><br><span class="line">        A = torch.tensor(self.graph.A, dtype=torch.float32, requires_grad=<span class="literal">False</span>)</span><br><span class="line">        self.register_buffer(<span class="string">'A'</span>, A)</span><br><span class="line"></span><br><span class="line">        <span class="comment"># build networks</span></span><br><span class="line">        spatial_kernel_size = A.size(<span class="number">0</span>)</span><br><span class="line">        temporal_kernel_size = <span class="number">9</span></span><br><span class="line">        kernel_size = (temporal_kernel_size, spatial_kernel_size)</span><br><span class="line">        self.data_bn = nn.BatchNorm1d(in_channels * A.size(<span class="number">1</span>))</span><br><span class="line">        kwargs0 = &#123;k: v <span class="keyword">for</span> k, v <span class="keyword">in</span> kwargs.items() <span class="keyword">if</span> k != <span class="string">'dropout'</span>&#125;</span><br><span class="line">        self.st_gcn_networks = nn.ModuleList((</span><br><span class="line">            st_gcn(in_channels, <span class="number">64</span>, kernel_size, <span class="number">1</span>, residual=<span class="literal">False</span>, **kwargs0),</span><br><span class="line">            st_gcn(<span class="number">64</span>, <span class="number">64</span>, kernel_size, <span class="number">1</span>, **kwargs),</span><br><span class="line">            st_gcn(<span class="number">64</span>, <span class="number">64</span>, kernel_size, <span class="number">1</span>, **kwargs),</span><br><span class="line">            st_gcn(<span class="number">64</span>, <span class="number">64</span>, kernel_size, <span class="number">1</span>, **kwargs),</span><br><span class="line">            st_gcn(<span class="number">64</span>, <span class="number">128</span>, kernel_size, <span class="number">2</span>, **kwargs),</span><br><span class="line">            st_gcn(<span class="number">128</span>, <span class="number">128</span>, kernel_size, <span class="number">1</span>, **kwargs),</span><br><span class="line">            st_gcn(<span class="number">128</span>, <span class="number">128</span>, kernel_size, <span class="number">1</span>, **kwargs),</span><br><span class="line">            st_gcn(<span class="number">128</span>, <span class="number">256</span>, kernel_size, <span class="number">2</span>, **kwargs),</span><br><span class="line">            st_gcn(<span class="number">256</span>, <span class="number">256</span>, kernel_size, <span class="number">1</span>, **kwargs),</span><br><span class="line">            st_gcn(<span class="number">256</span>, <span class="number">256</span>, kernel_size, <span class="number">1</span>, **kwargs),</span><br><span class="line">        ))</span><br><span class="line"></span><br><span class="line">        <span class="comment"># initialize parameters for edge importance weighting</span></span><br><span class="line">        <span class="keyword">if</span> edge_importance_weighting:</span><br><span class="line">            self.edge_importance = nn.ParameterList([</span><br><span class="line">                nn.Parameter(torch.ones(self.A.size()))</span><br><span class="line">                <span class="keyword">for</span> i <span class="keyword">in</span> self.st_gcn_networks</span><br><span class="line">            ])</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            self.edge_importance = [<span class="number">1</span>] * len(self.st_gcn_networks)</span><br><span class="line"></span><br><span class="line">        <span class="comment"># fcn for prediction</span></span><br><span class="line">        self.fcn = nn.Conv2d(<span class="number">256</span>, num_class, kernel_size=<span class="number">1</span>)</span><br></pre></td></tr></table></figure>
+<h2 id="Graph类："><a href="#Graph类：" class="headerlink" title="Graph类："></a>Graph类：</h2><p><img src="/2019/07/11/4_Python+Pytorch学习记录/Screenshot from 2019-07-30 16-31-35.png" alt="St-Gcn"><center>GCN原理示意图</center><br>有了这个原理示意图就可以很好的理解这篇paper在graph的操作了。</p>
+<p><strong>输入</strong>多帧数据很好理解。中间得到skeleon输入到网络中</p>
+<p>ST-GCNS的处理过程在图中表达的很清楚。留意红点的位置</p>
+<table>
+    <tr>
+        <td>
+            <img width="150px" src="/2019/07/11/4_Python+Pytorch学习记录/Screenshot from 2019-07-30 16-37-43.png">    
+        </td>
+        <td>
+            <img width="150px" src="/2019/07/11/4_Python+Pytorch学习记录/Screenshot from 2019-07-30 16-39-05.png">        
+        </td>
+    </tr>
+    <tr>
+    <td><font size="1">Graph的构建 1<font></font></font></td>
+    <td><font size="1">Graph的构建 2<font></font></font></td>
+  </tr>
+</table>
+
+<p>论文中类比了2D CNN，个人觉得很形象，在这里解释下：<br><img src="/2019/07/11/4_Python+Pytorch学习记录/Screenshot from 2019-07-30 16-45-33.png" alt="St-Gcn"><center>CNN卷积公式</center></p>
+<p>其中P是抽样函数，将原图中的像素抽取出来进行操作，w是对应的权重，即所谓的核。</p>
+<p>两个加权则是卷积了，将抽出来的每个像素值与对应的w做积然后相加，最后就可以得到该位置的卷积后的值。</p>
+<p>当然这和我们之前所见的卷积公式有所不同，作者是为了抽象得到更高层相同的架构而这样写的，方便读者之后理解GCN</p>
+<p>上面的公式表明，只要知道了抽样函数、寻找对应的权重的方法，我们就可以实现广义的卷积了。图卷积正是这样产生的：</p>
+<h3 id="定义抽样函数："><a href="#定义抽样函数：" class="headerlink" title="定义抽样函数："></a>定义抽样函数：</h3><p>在CNN中，抽样函数可以看作是一个矩阵抽样，依次按照卷积核的大小，以任意顺序跑完核对应的Pixel的积运算。</p>
+<p>不难想到在图这种数据结构下，利用最短路径来抽样是首选方法。</p>
+<center> `{vtj |d(vtj , vti) ≤ D}`</center>
+
+<p>定义B(vti)邻接点的集合： $(v_tj) 当点与中心点的最短距离小于D时可以视作抽样点。<em>在论文中作者D取的1</em></p>
+<p>中心点可以类比与卷积的中心点，其他邻接点可以看作卷积核作用的其他点，以3×3的卷积核为例，中间点就是vti，其他8个点就是vtj。(数量可能不同因为小于1的图中的点集可能少于8个)</p>
+<p>但是可以发现的是，随着D的确定，Graph卷积核只有一维，但是CNN中卷积核是2维的矩阵。</p>
+<p>所以作者将graph的第二维放在了时间上。对于相邻帧的点作者也给予抽样，这样既满足了action recognition的视频流训练，也满足了二维核的缺失。</p>
+<p><img src="/2019/07/11/4_Python+Pytorch学习记录/Screenshot from 2019-07-30 17-06-52.png" alt="St-Gcn"><center>时间抽样 1</center></p>
+<p>对于相邻帧也给予抽样，这个公式还算好理解，<code>q</code>的范围是<code>t+-r/2</code>，所以可以看出在<code>tao</code>的区间中进行抽样，抽取q帧中，每一个在t帧的邻接点的投影。</p>
+<p><img src="/2019/07/11/4_Python+Pytorch学习记录/Screenshot from 2019-07-30 17-09-49.png" alt="St-Gcn"><center>时间抽样 2</center></p>
+<p>其子集名称则是 原来子集名称的 <code>0K - rK</code> 偏移得到的值。关于子集名称再之后会解释。</p>
+<h3 id="定义权重函数："><a href="#定义权重函数：" class="headerlink" title="定义权重函数："></a>定义权重函数：</h3><p>Instead of giving every neighbor node a unique labeling, we simplify the process by partitioning the neighbor set B(vti ) of a joint node vti into a fixed number of K subsets, where each subset has a numeric label.</p>
+<p>文章中说到不给每一个节点单独的labeling，而是将邻接点s归为不同的sub，然后每一个sub含有其自己的数字label。一共有K类。，lti返回的是t帧i号节点的subset的label。</p>
+<p>所以综上，GCN可以表达为：<br><img src="/2019/07/11/4_Python+Pytorch学习记录/Screenshot from 2019-07-30 17-19-34.png" alt="St-Gcn"><center>时间抽样 2</center></p>
+<p><code>w(lit(vtj))</code>表明了不是每一个点都会有weight，而是一个subset一个weight。与CNN有所不同。</p>
+<h4 id="subset的定义："><a href="#subset的定义：" class="headerlink" title="subset的定义："></a>subset的定义：</h4><p>文章中提出了3中分点的方法：</p>
+<ol>
+<li><p><code>Uni-labeling</code>，全部<code>B(vti)</code>分为一个<code>subset</code>，但是这样会失去局部的特点属性。只需要将<code>K = 1</code>，且<code>lti(vtj) = 0</code>即可，这就表明了只有1个类，且所有<code>vti</code>的<code>subset</code>序号为0。</p>
+</li>
+<li><p><code>Distance partitioning</code> 安装距离来分子集，分为root点和其他点。只需要将<code>K = 2</code>，且<code>lti(vtj) = d(vtj,vti)</code>即可，因为D=1,所以d()只能为0-1之间的两个值。</p>
+</li>
+<li><p><code>Spatial configuration partitioning</code> 根据空间的分区。</p>
+</li>
+</ol>
+<p>作者基于body motion 可以被大致的分为近重心运动以及偏重心运动。所以将远离中心的节点分为一类，将近心的分为一类，根分为一类，一共三类。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">l_ti(v_tj) = 0 if rj = ri</span><br><span class="line">		   = 1 if rj &lt; ri </span><br><span class="line">		   = 2 if rj &gt; ri</span><br></pre></td></tr></table></figure></p>
+<p><strong><code>r_i</code></strong> is the <strong>average distance</strong> from gravity center to joint i over <strong>all frames</strong> in the training set.</p>
+<p>注意是该点所有帧的距离重心平均距离。</p>
+<h3 id="np-linalg-matrix-power-matrix-expo"><a href="#np-linalg-matrix-power-matrix-expo" class="headerlink" title="np.linalg.matrix_power(matrix, expo)"></a>np.linalg.matrix_power(matrix, expo)</h3><p>方矩阵乘法.</p>
+<ol>
+<li>expo &gt; 0 进行matrix的连成。</li>
+<li>exp0 = 0 对角矩阵</li>
+<li>expo =-1 逆矩阵，</li>
+<li>expo &lt; 0 matrix(-expo),即 matrix × matrix × np.linalg.matrix_power(matrix, 2) = eyes()</li>
+</ol>
+<h3 id="range"><a href="#range" class="headerlink" title="range:"></a>range:</h3><p>range(2) -&gt; [0,1]产生两个数，即range(n) 产生n个数，从0开始<br>range(2,-1,-1): start，end，step -&gt; [start,end)</p>
+<h3 id="pytorch-中-register-buffer"><a href="#pytorch-中-register-buffer" class="headerlink" title="pytorch 中 register_buffer"></a>pytorch 中 register_buffer</h3><p>注册变量,<code>A</code>是<code>tensor</code>变量。在之后的调用只用<code>self.A_</code>即可调用<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">self.register_buffer(<span class="string">'A_'</span>,A)</span><br></pre></td></tr></table></figure></p>
+<p><code>Pytorch</code>参数其实包括2种。一种是模型中各种 <code>module</code>含的参数，即<code>nn.Parameter</code>，我们当然可以在网络中定义其他的<code>nn.Parameter</code>参数;另外一种是<code>buffer</code>。前者<code>nn.Parameter</code>中的参数每次<code>optim.step</code>会得到更新，而不会更新后者<code>buffer</code>。<br><code>buffer</code>的更新在<code>forward</code>中，<code>optim.step</code>只能更新<code>nn.Parameter</code>类型的参数。</p>
+<h3 id="python-中-三元表达式："><a href="#python-中-三元表达式：" class="headerlink" title="python 中 三元表达式："></a>python 中 三元表达式：</h3><p>如果 i = 0 a为1,否则a = 10<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">i = <span class="number">1</span></span><br><span class="line">a = <span class="number">1</span> <span class="keyword">if</span> i == <span class="number">0</span> <span class="keyword">else</span> <span class="number">10</span> </span><br><span class="line">print(a)</span><br></pre></td></tr></table></figure></p>
+<h3 id="Pytorch中的模型层的搭建："><a href="#Pytorch中的模型层的搭建：" class="headerlink" title="Pytorch中的模型层的搭建："></a>Pytorch中的模型层的搭建：</h3><ul>
+<li>使用<code>nn.Sequential()</code>来搭建<br>一个时序容器。Modules 会以他们传入的顺序被添加到容器中。当然，也可以传入一个OrderedDict。<br><code>nn.Sequential()</code>的输入参数可以是多个torch.nn.对象。<br>为了更容易的理解如何使用Sequential, 下面给出了一个例子:<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></span><br><span class="line">    super(Models, self).__init__()</span><br><span class="line">    self.Conv = torch.nn.Sequential(</span><br><span class="line">        torch.nn.Conv2d(<span class="number">3</span>, <span class="number">32</span>, kernel_size=<span class="number">3</span>, stride=<span class="number">1</span>, padding=<span class="number">1</span>),</span><br><span class="line">        torch.nn.ReLU(),</span><br><span class="line">        torch.nn.Conv2d(<span class="number">32</span>, <span class="number">32</span>, kernel_size=<span class="number">3</span>, stride=<span class="number">1</span>, padding=<span class="number">1</span>),</span><br><span class="line">        torch.nn.ReLU(),</span><br><span class="line">        torch.nn.MaxPool2d(kernel_size=<span class="number">2</span>, stride=<span class="number">2</span>),</span><br><span class="line">        torch.nn.Conv2d(<span class="number">32</span>, <span class="number">64</span>, kernel_size=<span class="number">3</span>, stride=<span class="number">1</span>, padding=<span class="number">1</span>),</span><br><span class="line">        torch.nn.ReLU(),</span><br><span class="line">        torch.nn.Conv2d(<span class="number">64</span>, <span class="number">64</span>, kernel_size=<span class="number">3</span>, stride=<span class="number">1</span>, padding=<span class="number">1</span>),</span><br><span class="line">        torch.nn.ReLU(),</span><br><span class="line">        torch.nn.MaxPool2d(kernel_size=<span class="number">2</span>, stride=<span class="number">2</span>)</span><br><span class="line">    )</span><br><span class="line">    self.Classes = torch.nn.Sequential(</span><br><span class="line">        torch.nn.Linear(<span class="number">9</span> * <span class="number">9</span> * <span class="number">64</span>, <span class="number">1024</span>),</span><br><span class="line">        torch.nn.ReLU(), torch.nn.Dropout(p=<span class="number">0.5</span>),</span><br><span class="line">        torch.nn.Linear(<span class="number">1024</span>, <span class="number">1024</span>),</span><br><span class="line">        torch.nn.ReLU(),</span><br><span class="line">        torch.nn.Dropout(p=<span class="number">0.5</span>),</span><br><span class="line">        torch.nn.Linear(<span class="number">1024</span>, <span class="number">45</span>)</span><br><span class="line">    )</span><br><span class="line"></span><br><span class="line">    <span class="comment"># Example of using Sequential</span></span><br><span class="line"></span><br><span class="line">	model = nn.Sequential(</span><br><span class="line">	          nn.Conv2d(<span class="number">1</span>,<span class="number">20</span>,<span class="number">5</span>),</span><br><span class="line">	          nn.ReLU(),</span><br><span class="line">	          nn.Conv2d(<span class="number">20</span>,<span class="number">64</span>,<span class="number">5</span>),</span><br><span class="line">	          nn.ReLU()</span><br><span class="line">	        )</span><br><span class="line">	<span class="comment"># Example of using Sequential with OrderedDict</span></span><br><span class="line">	model = nn.Sequential(OrderedDict([</span><br><span class="line">	          (<span class="string">'conv1'</span>, nn.Conv2d(<span class="number">1</span>,<span class="number">20</span>,<span class="number">5</span>)),</span><br><span class="line">	          (<span class="string">'relu1'</span>, nn.ReLU()),</span><br><span class="line">	          (<span class="string">'conv2'</span>, nn.Conv2d(<span class="number">20</span>,<span class="number">64</span>,<span class="number">5</span>)),</span><br><span class="line">	          (<span class="string">'relu2'</span>, nn.ReLU())</span><br><span class="line">	        ]))</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p><code>OrderedDict</code>可以存储层的名字，输出是这样的<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">(ta): Sequential(</span><br><span class="line">    (conv1): Conv2d(1, 20, kernel_size=(5, 5), stride=(1, 1))</span><br><span class="line">    (relu1): ReLU()</span><br><span class="line">    (conv2): Conv2d(20, 64, kernel_size=(5, 5), stride=(1, 1))</span><br><span class="line">    (relu2): ReLU()</span><br><span class="line">  )</span><br></pre></td></tr></table></figure></p>
+<p>而直接使用Sequential输出是这样的：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">(Classes): Sequential(</span><br><span class="line">    (0): Linear(in_features=5184, out_features=1024, bias=True)</span><br><span class="line">    (1): ReLU()</span><br><span class="line">    (2): Dropout(p=0.5)</span><br><span class="line">    (3): Linear(in_features=1024, out_features=1024, bias=True)</span><br><span class="line">    (4): ReLU()</span><br><span class="line">    (5): Dropout(p=0.5)</span><br><span class="line">    (6): Linear(in_features=1024, out_features=45, bias=True)</span><br><span class="line">  )</span><br></pre></td></tr></table></figure></p>
+<p>默认从0开始的标号作为其层的名字</p>
+<ul>
+<li><p>使用<code>nn.ModuleList()</code>来搭建<br><code>nn.ModuleList()</code>的输入参数是一个元组，包含了所有的<code>Module</code><br>而<code>st-gcn</code>中正是使用<code>ModuleList</code>来wrap <code>st_gcn</code>这个自定义层的。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">self.st_gcn_networks = nn.ModuleList((</span><br><span class="line">            st_gcn(in_channels, <span class="number">64</span>, kernel_size, <span class="number">1</span>, residual=<span class="literal">False</span>, **kwargs0),</span><br><span class="line">            st_gcn(<span class="number">64</span>, <span class="number">64</span>, kernel_size, <span class="number">1</span>, **kwargs),</span><br><span class="line">            st_gcn(<span class="number">64</span>, <span class="number">64</span>, kernel_size, <span class="number">1</span>, **kwargs),</span><br><span class="line">            st_gcn(<span class="number">64</span>, <span class="number">64</span>, kernel_size, <span class="number">1</span>, **kwargs),</span><br><span class="line">            st_gcn(<span class="number">64</span>, <span class="number">128</span>, kernel_size, <span class="number">2</span>, **kwargs),</span><br><span class="line">            st_gcn(<span class="number">128</span>, <span class="number">128</span>, kernel_size, <span class="number">1</span>, **kwargs),</span><br><span class="line">            st_gcn(<span class="number">128</span>, <span class="number">128</span>, kernel_size, <span class="number">1</span>, **kwargs),</span><br><span class="line">            st_gcn(<span class="number">128</span>, <span class="number">256</span>, kernel_size, <span class="number">2</span>, **kwargs),</span><br><span class="line">            st_gcn(<span class="number">256</span>, <span class="number">256</span>, kernel_size, <span class="number">1</span>, **kwargs),</span><br><span class="line">            st_gcn(<span class="number">256</span>, <span class="number">256</span>, kernel_size, <span class="number">1</span>, **kwargs),</span><br><span class="line">        ))</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>使用类属性注册搭建：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> id <span class="keyword">in</span> range(self.hiden_Num):</span><br><span class="line">    inSize = <span class="number">1</span> <span class="keyword">if</span> id ==<span class="number">0</span> <span class="keyword">else</span> <span class="number">10</span></span><br><span class="line">    fc = nn.Linear(inSize,<span class="number">10</span>)</span><br><span class="line">    self.feature.add_module(<span class="string">'fc_%i'</span> % id, fc)</span><br><span class="line">    <span class="comment"># setattr(self.feature, 'fc_%i' % id, fc)  # 注意! pytorch 一定要你将层信息变成 class 的属性! 我在这里花了2天时间发现了这个 bug</span></span><br><span class="line">    self._set_init(fc)  <span class="comment"># 参数初始化</span></span><br><span class="line">    self.fcs.append(fc)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> use_Bn:</span><br><span class="line">        bn = nn.BatchNorm1d(<span class="number">10</span>,momentum=<span class="number">0.5</span>)</span><br><span class="line">        setattr(self.feature,<span class="string">'bn_%i'</span>%id,bn)</span><br><span class="line">        self.bns.append(bn)</span><br><span class="line"></span><br><span class="line">    re = nn.ReLU()</span><br><span class="line">    self.feature.add_module(<span class="string">'relu_%i'</span> % id, re)</span><br><span class="line"></span><br><span class="line">self.predict = nn.Linear(<span class="number">10</span>, <span class="number">1</span>)  <span class="comment"># output layer</span></span><br><span class="line">self._set_init(self.predict)  <span class="comment"># 参数初始化</span></span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p><strong>setattr(self.feature, ‘fc_%i’ % id, fc)</strong> 也可以在序列中添加层，以达到类似于Sequential(OrderDict[])的效果。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">self.feature = nn.Sequential() <span class="comment"># 新建一个序列对象。</span></span><br><span class="line"></span><br><span class="line">inSize = <span class="number">1</span> <span class="keyword">if</span> id ==<span class="number">0</span> <span class="keyword">else</span> <span class="number">10</span></span><br><span class="line">fc = nn.Linear(inSize,<span class="number">10</span>)</span><br><span class="line">setattr(self.feature, <span class="string">'fc_%i'</span> % id, fc) <span class="comment">#向序列中添加层</span></span><br><span class="line">re = nn.ReLU()</span><br></pre></td></tr></table></figure></p>
+<p><strong>self.feature.add<em>module(‘fc</em>%i’ % id, fc)</strong><br>也可以调用<code>Sequential</code>的<code>add_module()</code>函数添加层</p>
+<h3 id="Pytorch中的BatchNom1d"><a href="#Pytorch中的BatchNom1d" class="headerlink" title="Pytorch中的BatchNom1d():"></a>Pytorch中的BatchNom1d():</h3><p>这里将把一次训练过程进行剖析，获得其中的中间数据，然后展现<code>BatchNom</code>的效果，<code>BatchNom</code>的作用主要是防止数据在进入激活函数<code>activation</code>时其分部大多在未激活区，如<code>ReLU</code>的负数区域，<code>sigmoid</code>的趋近于1的区域，这些区域在计算梯度时都为0,无法达到后向传播的功能。并且如果核的权重初始化不正确(大概率)，以<code>ReLU</code>为例：输入数据在第一层与核函数进行计算后，数据很可能有大部分处于负数区域，一旦数据处于负数区域，其激活值是0,那么之后的该点的激活值都是0,WX+B，<strong>B未正确初始化(大多为负数，这样WX=0+B必小于0)</strong>，之后的所有ReLU层都会小于0,那样网络就死掉了，其他的激活函数类比ReLU。</p>
+<p>所以大多时候如果我们的代码是正确的，但是老是train不起来，浅层的梯度很小或等于0,那么这时很有可能是我们的初始化不对，且没有进行BN。</p>
+<p>这个情况很常见，在我之前<code>train</code>那篇东南大学的手势估计文章时(毕设)就没有考虑到这个问题，网络中的梯度流老是在0附近，并且我的代码应该是正确的，<code>caffe</code>训练本来就不需要什么代码。但是我没有使用<code>pycaffe</code>接口，没有对每一层进行权重的初始化，那么框架就会自动进行初始化，很可能我们的核权值就会让数据处于ReLU的负数区域，那么之后再怎么<code>train</code>都是徒劳的。</p>
+<p>添加BN的位置也需要注意，<code>input_data</code> -&gt; <code>BN_for_data</code> -&gt; 核 -&gt; <code>BN</code> -&gt; <code>action</code> -&gt; 核 -&gt; <code>BN</code> -&gt; <code>action</code> …<br>其位置是在进入激活函数之前，将上一个核函数计算得到的数据进行BN，然后输入进激活函数中。如果在激活函数之后，那么核产生的<strong>非激活数据仍然会进入核函数</strong>，其输出就是0,或者梯度回播就是0,那么之后再输入BN也无济于事。所以<strong>BN的位置是在核函数之后，激活函数之前</strong></p>
+<p>BN的对比图如下:</p>
+<p><img src="/2019/07/11/4_Python+Pytorch学习记录/BN-1.png" alt="BN"><center>BN对比图</center></p>
+<p>橘黄色的是有BN处理的，蓝色的是没有BN处理的。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">forward</span><span class="params">(self,x)</span>:</span></span><br><span class="line">    x2 = x</span><br><span class="line">    <span class="keyword">for</span> id <span class="keyword">in</span> range(<span class="number">2</span>):</span><br><span class="line">       <span class="keyword">if</span> self.use_Bn:</span><br><span class="line">           x = self.input_layer(x)</span><br><span class="line">       <span class="keyword">for</span> layer <span class="keyword">in</span> self.feature:</span><br><span class="line">           layer_name = layer.__str__()</span><br><span class="line">           <span class="keyword">if</span>(layer_name.find(<span class="string">"Linear"</span>) <span class="keyword">is</span> <span class="keyword">not</span> <span class="number">-1</span>):</span><br><span class="line">               x = layer(x)</span><br><span class="line">           <span class="keyword">elif</span> (layer_name.find(<span class="string">"BatchNorm1d"</span>) <span class="keyword">is</span> <span class="keyword">not</span> <span class="number">-1</span> <span class="keyword">and</span> self.use_Bn):  <span class="comment"># batchnorm1d</span></span><br><span class="line">               x = layer(x)</span><br><span class="line">           <span class="keyword">elif</span>(layer_name.find(<span class="string">"ReLU"</span>) <span class="keyword">is</span> <span class="keyword">not</span> <span class="number">-1</span>):</span><br><span class="line">               self.befAction.append(x)</span><br><span class="line">               x = layer(x)</span><br><span class="line">               self.aftAction.append(x)</span><br><span class="line">    	x = x2</span><br><span class="line">    <span class="keyword">for</span> n,l <span class="keyword">in</span> enumerate(self.aftAction,<span class="number">1</span>):</span><br><span class="line">        plt.subplot(<span class="number">2</span>,<span class="number">5</span>,n)</span><br><span class="line">        a = l.cpu().flatten()</span><br><span class="line">        a = a.detach().numpy()</span><br><span class="line">        plt.hist(a,bins = <span class="number">20</span>)</span><br><span class="line">    plt.show()</span><br><span class="line">    self.use_Bn = <span class="literal">False</span></span><br><span class="line">    x = x2</span><br></pre></td></tr></table></figure>
+<p>代码中的<code>befAction</code> 与 <code>aftAction</code> 只是记录了输入激活之前之后的x的数值，不是BN的位置，不要和之前的搞混了。</p>
+<p>pytorch的forward函数即是前向计算的函数，可以将每一层的计算和联系体现出来。具体针对每一层的操作我目前想到的方法只是从layer.str来区分，是否存在其他方法可以直接提出层的属性？比如提出conv、pool、BN等类别？</p>
+<p>可以在forward函数中做很多工作，在一个模型中的forward采取另一个模型进行forward也未尝不可。但是其backward会出现问题…这时题外话了，没有人会这样骚操作。</p>
+<h3 id="从PyTorch中取出数据进行numpy操作："><a href="#从PyTorch中取出数据进行numpy操作：" class="headerlink" title="从PyTorch中取出数据进行numpy操作："></a>从PyTorch中取出数据进行numpy操作：</h3><p>如果对象是Variable类型，取出其数据需要注意以下几点：</p>
+<ul>
+<li>如果是有grad_requires = True的，那么需要with torch.no_grad()申明</li>
+<li>如果不使用with torch.no_grad，也可以使用x.cpu().detach().numpy()来获得</li>
+<li>如果在gpu上的数据，需要使用data_x.cpu放在cpu上</li>
+<li>数据得到后Tensor 2 numpy只需要执行 tesnor.numpy即可</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">x,y = next(iter(dataloader[<span class="string">"test"</span>]))</span><br><span class="line">        <span class="keyword">with</span> torch.no_grad():</span><br><span class="line">            x, y = Variable(x).cuda(), Variable(y).cuda()</span><br><span class="line">            pre = self.model.forward(x)</span><br><span class="line">            plt.plot(x.cpu().numpy(),pre.cpu().numpy(),<span class="string">'x'</span>)</span><br><span class="line">            plt.plot(x.cpu().detach().numpy(),y.cpu().detach().numpy(),<span class="string">'o'</span>)</span><br><span class="line">            plt.show()</span><br></pre></td></tr></table></figure>
+<p>一个拟合2次曲线的例子：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">train</span><span class="params">(self,dataloader)</span>:</span></span><br><span class="line">    self.model.cuda()</span><br><span class="line">    opt = torch.optim.SGD(self.model.parameters(),lr=<span class="number">0.001</span>)</span><br><span class="line">    loss_f = torch.nn.MSELoss()</span><br><span class="line">    <span class="keyword">for</span> epoch <span class="keyword">in</span> range(self.EPOCH):</span><br><span class="line">        <span class="keyword">for</span> phase <span class="keyword">in</span> [<span class="string">"train"</span>, <span class="string">"test"</span>]:</span><br><span class="line">            loss_epoch = <span class="number">0.0</span></span><br><span class="line">            acc_epoch = <span class="number">0.0</span></span><br><span class="line">            <span class="keyword">for</span> batch_n, data <span class="keyword">in</span> enumerate(dataloader[phase],<span class="number">1</span>):</span><br><span class="line">                x,y = data</span><br><span class="line">                x,y = Variable(x).cuda(),Variable(y).cuda()</span><br><span class="line">                pre = self.model.forward(x)</span><br><span class="line">                opt.zero_grad()</span><br><span class="line">                loss = loss_f(pre,y)</span><br><span class="line">                <span class="keyword">if</span> phase == <span class="string">"train"</span>:</span><br><span class="line">                    loss.backward()</span><br><span class="line">                    opt.step()</span><br><span class="line">                loss_epoch += loss</span><br><span class="line">                <span class="keyword">if</span> phase == <span class="string">"train"</span> <span class="keyword">and</span> batch_n % <span class="number">10</span> ==<span class="number">0</span>:</span><br><span class="line">                    print(<span class="string">"+"</span> * <span class="number">30</span>)</span><br><span class="line">                    loss_batch_ave = loss_epoch.__float__()/(batch_n.__float__())</span><br><span class="line">                    print(<span class="string">"loss = %.2f"</span>%loss_batch_ave)</span><br><span class="line">            <span class="keyword">if</span> (phase == <span class="string">"train"</span>):</span><br><span class="line">                print(<span class="string">"+"</span>*<span class="number">30</span>)</span><br><span class="line">                print(<span class="string">"train"</span>)</span><br><span class="line">                print(<span class="string">"epoch:&#123;&#125;/&#123;&#125; loss = &#123;&#125;"</span>.format(epoch + <span class="number">1</span>,self.EPOCH,loss_epoch.__float__()/batch_n.__float__()))</span><br><span class="line">            <span class="keyword">if</span>(phase == <span class="string">"test"</span>):</span><br><span class="line">                print(<span class="string">"+"</span>*<span class="number">30</span>)</span><br><span class="line">                print(<span class="string">"Test:"</span>)</span><br><span class="line">                print(<span class="string">"epoch:&#123;&#125;/&#123;&#125; loss = &#123;&#125;"</span>.format(epoch + <span class="number">1</span>, self.EPOCH, loss_epoch.__float__() / batch_n.__float__()))</span><br><span class="line">    x,y = next(iter(dataloader[<span class="string">"test"</span>]))</span><br><span class="line">    <span class="keyword">with</span> torch.no_grad():</span><br><span class="line">        x, y = Variable(x).cuda(), Variable(y).cuda()</span><br><span class="line">        pre = self.model.forward(x)</span><br><span class="line">        plt.plot(x.cpu().numpy(),pre.cpu().detach().numpy(),<span class="string">'x'</span>)</span><br><span class="line">        plt.plot(x.cpu().detach().numpy(),y.cpu().detach().numpy(),<span class="string">'o'</span>)</span><br><span class="line">        plt.show()</span><br></pre></td></tr></table></figure></p>
+<h3 id="各个框架之间conv2d的区别："><a href="#各个框架之间conv2d的区别：" class="headerlink" title="各个框架之间conv2d的区别："></a>各个框架之间conv2d的区别：</h3><p>这里也可视化了<code>dilated conv</code>的作用</p>
+<p>疑问的产生处是这里，在之前没有遇见过<code>conv2d()</code>中的<code>kernel_size</code>、<code>stride</code>是元组的情况</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">torch.nn.Conv2d(</span><br><span class="line">                out_channels,</span><br><span class="line">                out_channels,</span><br><span class="line">                (kernel_size[<span class="number">0</span>], <span class="number">1</span>),</span><br><span class="line">                (stride, <span class="number">1</span>),</span><br><span class="line">                padding,</span><br><span class="line">            )</span><br></pre></td></tr></table></figure>
+<p>参考pytorch中文文档的解释：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">torch</span>.<span class="title">nn</span>.<span class="title">Conv2d</span><span class="params">(in_channels, out_channels, kernel_size, stride=<span class="number">1</span>, padding=<span class="number">0</span>, dilation=<span class="number">1</span>, groups=<span class="number">1</span>, bias=True)</span></span></span><br></pre></td></tr></table></figure></p>
+<ul>
+<li><code>bigotimes</code>: 表示二维的相关系数计算 <code>stride</code>: 控制相关系数的计算步长</li>
+<li><code>dilation</code>: 用于控制内核点之间的距离，详细描述在这里</li>
+<li><code>groups</code>: 控制输入和输出之间的连接： <code>group = 1</code>，输出是所有的输入的卷积；<code>group=2</code>，此时相当于有并排的两个卷积层，每个卷积层计算输入通道的一半，并且产生的输出是输出通道的一半，随后将这两个输出连接起来。</li>
+<li>参数<code>kernel_size</code>，<code>stride</code>,<code>padding</code>，<code>dilation</code>也可以是一个int的数据，此时卷积<code>height</code>和<code>width</code>值相同;也可以是一个<code>tuple</code>数组，<code>tuple</code>的第一维度表示<code>height</code>的数值，<code>tuple</code>的第二维度表示<code>width</code>的数值</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#with square kernels and equal_stride</span></span><br><span class="line">m = nn.Conv2d(<span class="number">16</span>,<span class="number">33</span>,<span class="number">3</span>,stride = <span class="number">2</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># non-square kernels and unequal stride and with padding</span></span><br><span class="line">m = nn.Conv2d(<span class="number">16</span>,<span class="number">33</span>,(<span class="number">3</span>,<span class="number">5</span>),stride = (<span class="number">2</span>,<span class="number">1</span>),padding = (<span class="number">4</span>,<span class="number">2</span>))</span><br><span class="line"></span><br><span class="line"><span class="comment"># non-square kernels and unequal stride and with padding and dilation</span></span><br><span class="line">m = nn.Conv2d(<span class="number">16</span>,<span class="number">33</span>,(<span class="number">3</span>,<span class="number">5</span>),stride = (<span class="number">2</span>,<span class="number">1</span>), padding = (<span class="number">4</span>,<span class="number">2</span>), dilation = (<span class="number">3</span>,<span class="number">1</span>))</span><br></pre></td></tr></table></figure>
+<p>如果Conv传入的是元组，即两个方向上的参数，而不是之前默认的正方形的核、或者移动了。</p>
+<h3 id="Pytorch-中的-view"><a href="#Pytorch-中的-view" class="headerlink" title="Pytorch 中的 view()"></a>Pytorch 中的 view()</h3><p>把原先<code>tensor</code>中的数据按照行优先的顺序排成一个一维的数据（这里应该是因为要求地址是连续存储的），然后按照参数组合成其他维度的<code>tensor</code>。比如说是不管你原先的数据是<code>[[[1,2,3],[4,5,6]]]</code>还是<code>[1,2,3,4,5,6]</code>，因为它们排成一维向量都是6个元素，所以只要view后面的参数一致，得到的结果都是一样的。</p>
+<p>总之一句话: <strong>行优先的视图排列</strong><br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">t = torch.randn(<span class="number">2</span>,<span class="number">1</span>,<span class="number">3</span>,<span class="number">4</span>)</span><br><span class="line">print(t)</span><br><span class="line">y = t.view(<span class="number">4</span>,<span class="number">6</span>)</span><br><span class="line">y[<span class="number">0</span>] = <span class="number">1</span></span><br><span class="line">print(y)</span><br><span class="line">print(t)</span><br></pre></td></tr></table></figure></p>
+<p>视图的操作可以对原来的数据进行抽象的修改，从不同视图来修改数据。<code>view()</code> 得到的数据不会分配内存。</p>
+<p>而<code>tensor</code>的<code>view()</code>操作依赖于内存是整块的，如果当前的tensor并不是占用一整块内存，而是由不同的数据块组成，那么<code>view()</code>将报错。</p>
+<p>而为了使得<code>view</code>能操作这些非同块内存的数据，<code>Pytorch</code>提供了一个<code>contiguous</code>函数来将分散的数据块整合成一块。<br>给一个例子方便理解：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> torch</span><br><span class="line">x = torch.ones(<span class="number">5</span>, <span class="number">10</span>)</span><br><span class="line">x.is_contiguous()  <span class="comment"># True</span></span><br><span class="line">x.transpose(<span class="number">0</span>, <span class="number">1</span>).is_contiguous()  <span class="comment"># False</span></span><br><span class="line">x.permute(<span class="number">1</span>,<span class="number">0</span>).is_contiguous() <span class="comment"># False</span></span><br><span class="line"></span><br><span class="line">x.permute(<span class="number">1</span>,<span class="number">0</span>).view(<span class="number">10</span>,<span class="number">5</span>)  <span class="comment"># 报错！</span></span><br><span class="line"></span><br><span class="line">x.transpose(<span class="number">0</span>, <span class="number">1</span>).contiguous().is_contiguous()  <span class="comment"># True</span></span><br></pre></td></tr></table></figure></p>
+<h3 id="zip的用法："><a href="#zip的用法：" class="headerlink" title="zip的用法："></a>zip的用法：</h3><p>将两个list横向组合，每一个小组和为一个元组，放进list中。<br>也可以解压，但是解压是在解压target前面加一个<code>*</code>号<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">a = [<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>]</span><br><span class="line">b = [<span class="number">4</span>,<span class="number">5</span>,<span class="number">6</span>]</span><br><span class="line">c = [<span class="number">4</span>,<span class="number">5</span>,<span class="number">6</span>,<span class="number">7</span>,<span class="number">8</span>]</span><br><span class="line">zipped = zip(a,b)     <span class="comment"># 打包为元组的列表</span></span><br><span class="line"></span><br><span class="line"><span class="comment">## [(1, 4), (2, 5), (3, 6)]</span></span><br><span class="line">zip(a,c)              <span class="comment"># 元素个数与最短的列表一致</span></span><br><span class="line"><span class="comment">## [(1, 4), (2, 5), (3, 6)]</span></span><br><span class="line">zip(*zipped)          <span class="comment"># 与 zip 相反，*zipped 可理解为解压，返回二维矩阵式</span></span><br><span class="line"></span><br><span class="line"><span class="comment">## [(1, 2, 3), (4, 5, 6)]</span></span><br><span class="line"></span><br><span class="line">nums = [<span class="string">'flower'</span>,<span class="string">'flow'</span>,<span class="string">'flight'</span>]</span><br><span class="line">print(list(zip(*nums)))</span><br><span class="line"><span class="comment"># [('f', 'f', 'f'), ('l', 'l', 'l'), ('o', 'o', 'i'), ('w', 'w', 'g')]</span></span><br></pre></td></tr></table></figure></p>
+<h3 id="numpy中concatenate函数："><a href="#numpy中concatenate函数：" class="headerlink" title="numpy中concatenate函数："></a>numpy中concatenate函数：</h3><p>将两个数组进行连接，前提是两个array，在拼接方向上满足形状一致即可。</p>
+<h3 id="切片操作："><a href="#切片操作：" class="headerlink" title="切片操作："></a>切片操作：</h3><p>通常一个切片操作要提供三个参数 <code>[start_index:  stop_index:  step]</code> </p>
+<ul>
+<li><p>可以省略<code>start_index</code>：[:5:2]意思为从数组头开始，到下标5结束每隔2个单位取一个，[5]不包括。</p>
+</li>
+<li><p>可以省略<code>stop_index</code>：[1::2]意思为从1开始到数组结尾，每隔两个取一个。</p>
+</li>
+<li><p>可以省略<code>step</code>:[1:6:] step = 1</p>
+</li>
+<li><p>可以[::1] -&gt; 从头到尾步长为1遍历</p>
+</li>
+<li><p>可以[::-1] -&gt; 步长为-1时，当步长&lt;0时，<code>start_index</code> 默认值为-1,<code>stop_index</code>为<code>-len(a)</code></p>
+</li>
+<li><p>可以[:-1:] -&gt; 从头到最后一个元素依次遍历</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">data_numpy[<span class="number">0</span>, frame_index, :, m] = pose[<span class="number">0</span>::<span class="number">2</span>] <span class="comment">#pose的偶数index的值</span></span><br><span class="line">data_numpy[<span class="number">1</span>, frame_index, :, m] = pose[<span class="number">1</span>::<span class="number">2</span>] <span class="comment">#pose的奇数index的值</span></span><br><span class="line">data_numpy[<span class="number">2</span>, frame_index, :, m] = score</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h1 id="python-OpenCV"><a href="#python-OpenCV" class="headerlink" title="python OpenCV"></a>python OpenCV</h1><h2 id="video的读取操作："><a href="#video的读取操作：" class="headerlink" title="video的读取操作："></a>video的读取操作：</h2><h3 id="cv2-VideoCapture-函数："><a href="#cv2-VideoCapture-函数：" class="headerlink" title="cv2.VideoCapture()函数："></a><code>cv2.VideoCapture()</code>函数：</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">cap = cv2.VideoCapture(<span class="number">0</span>)</span><br><span class="line">VideoCapture()中参数是<span class="number">0</span>，表示打开笔记本的内置摄像头。</span><br><span class="line">cap = cv2.VideoCapture(<span class="string">"…/1.avi"</span>)</span><br><span class="line">VideoCapture(<span class="string">"…/1.avi"</span>)，表示参数是视频文件路径则打开视频。</span><br></pre></td></tr></table></figure>
+<h3 id="cap-isOpened-函数："><a href="#cap-isOpened-函数：" class="headerlink" title="cap.isOpened()函数："></a><code>cap.isOpened()</code>函数：</h3><p>返回true表示成功，false表示不成功</p>
+<h3 id="ret-frame-cap-read-函数："><a href="#ret-frame-cap-read-函数：" class="headerlink" title="ret,frame = cap.read()函数："></a><code>ret,frame = cap.read()</code>函数：</h3><p><code>cap.read()</code>按帧读取视频，其中<code>ret</code>是布尔值，如果读取帧是正确的则返回True，如果文件读取到结尾，它的返回值就为False。<code>frame</code>就是每一帧的图像<code>numpy_array</code>类型</p>
+<h2 id="resize"><a href="#resize" class="headerlink" title="resize"></a>resize</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">frame = cv2.resize(frame,(<span class="number">360</span>,<span class="number">256</span>))</span><br></pre></td></tr></table></figure>
+<h2 id="circle"><a href="#circle" class="headerlink" title="circle"></a>circle</h2><p>it 是元组类型(x,y)<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cv2.circle(frame,it,<span class="number">3</span>,(<span class="number">0</span>,<span class="number">0</span>,<span class="number">255</span>),<span class="number">3</span>)</span><br></pre></td></tr></table></figure></p>
+<h2 id="json文件加载："><a href="#json文件加载：" class="headerlink" title="json文件加载："></a>json文件加载：</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">output_path = <span class="string">"/home/joey/datasets/hmdb/hmdb51_sta/pullup_json/50_pull_ups_made_in_germany_pullup_f_nm_np1_le_med_2.json"</span></span><br><span class="line"><span class="keyword">with</span> open(output_path, <span class="string">'r'</span>) <span class="keyword">as</span> f:</span><br><span class="line">    video_info = json.load(f)</span><br></pre></td></tr></table></figure>
+<p>读出来后，对json的操作就和字典的操作一模一样。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/DL/" rel="tag"># DL</a>
+          
+            <a href="/tags/Pytorch/" rel="tag"># Pytorch</a>
+          
+            <a href="/tags/Python/" rel="tag"># Python</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/07/11/2_Python+Caffe学习记录/" rel="next" title="Python+Caffe学习记录">
+                <i class="fa fa-chevron-left"></i> Python+Caffe学习记录
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/07/25/17_Pytorch_入门_Mnist/" rel="prev" title="Pytorch入门以Mnist为例">
+                Pytorch入门以Mnist为例 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/avatar.gif" alt="JoeyF">
+            
+              <p class="site-author-name" itemprop="name">JoeyF</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">21</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">17</span>
+                  <span class="site-state-item-name">tags</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/ZhouYiiFeng" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:joeyf.z.y.wen@gmail.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#T20190704"><span class="nav-number">1.</span> <span class="nav-text">T20190704:</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-使用pip3-换源："><span class="nav-number">1.1.</span> <span class="nav-text">1.使用pip3 换源：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ubuntu中python-site-package-的位置："><span class="nav-number">1.2.</span> <span class="nav-text">ubuntu中python site-package 的位置：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-pychram-中没有opencv的智能提示：（linux）"><span class="nav-number">1.3.</span> <span class="nav-text">2.pychram 中没有opencv的智能提示：（linux）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-pychram-中没有opencv的智能提示："><span class="nav-number">1.4.</span> <span class="nav-text">3.pychram 中没有opencv的智能提示：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-python-继承"><span class="nav-number">1.5.</span> <span class="nav-text">4.python 继承</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-重写Model-类"><span class="nav-number">1.6.</span> <span class="nav-text">5.重写Model 类</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#训练模型MNIST模型："><span class="nav-number">1.7.</span> <span class="nav-text">训练模型MNIST模型：</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#损失函数"><span class="nav-number">1.7.1.</span> <span class="nav-text">损失函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#优化算法"><span class="nav-number">1.7.2.</span> <span class="nav-text">优化算法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#关于data-loader-train、data的说明："><span class="nav-number">1.7.3.</span> <span class="nav-text">关于data_loader_train、data的说明：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Model的forward"><span class="nav-number">1.7.4.</span> <span class="nav-text">Model的forward()</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#torch-max"><span class="nav-number">1.7.5.</span> <span class="nav-text">torch.max()</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#T20190705"><span class="nav-number">2.</span> <span class="nav-text">T20190705:</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#GPU训练MNIST"><span class="nav-number">2.1.</span> <span class="nav-text">GPU训练MNIST</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#数据的载入："><span class="nav-number">2.1.1.</span> <span class="nav-text">数据的载入：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#从Dataloader中读出数据："><span class="nav-number">2.1.2.</span> <span class="nav-text">从Dataloader中读出数据：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Transforms"><span class="nav-number">2.1.3.</span> <span class="nav-text">Transforms</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Pytorch读入数据时需要的步骤："><span class="nav-number">2.1.4.</span> <span class="nav-text">Pytorch读入数据时需要的步骤：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#样例："><span class="nav-number">2.1.5.</span> <span class="nav-text">样例：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#使用GPU处理数据："><span class="nav-number">2.1.6.</span> <span class="nav-text">使用GPU处理数据：</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#需要转换的地方："><span class="nav-number">2.1.6.1.</span> <span class="nav-text">需要转换的地方：</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#T20190707"><span class="nav-number">3.</span> <span class="nav-text">T20190707</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Pytorch-数据结构："><span class="nav-number">3.1.</span> <span class="nav-text">Pytorch 数据结构：</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Model"><span class="nav-number">3.1.1.</span> <span class="nav-text">Model</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-datasets"><span class="nav-number">3.1.2.</span> <span class="nav-text">2. datasets:</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-DataLoader"><span class="nav-number">3.1.3.</span> <span class="nav-text">3. DataLoader:</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-Model类："><span class="nav-number">3.1.4.</span> <span class="nav-text">4. Model类：</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-试例代码1"><span class="nav-number">3.1.4.1.</span> <span class="nav-text">1. 试例代码1</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-试例代码2"><span class="nav-number">3.1.4.2.</span> <span class="nav-text">2. 试例代码2</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#样例：-1"><span class="nav-number">3.1.5.</span> <span class="nav-text">样例：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Parameters"><span class="nav-number">3.1.6.</span> <span class="nav-text">Parameters():</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#T20190711"><span class="nav-number">4.</span> <span class="nav-text">T20190711:</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#loadModel"><span class="nav-number">4.1.</span> <span class="nav-text">loadModel</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#显存的节约"><span class="nav-number">4.2.</span> <span class="nav-text">显存的节约</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#T20190726："><span class="nav-number">5.</span> <span class="nav-text">T20190726：</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#optim"><span class="nav-number">5.1.</span> <span class="nav-text">optim</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#T20190729"><span class="nav-number">6.</span> <span class="nav-text">T20190729:</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#st-gcn-Code-Analyze"><span class="nav-number">6.1.</span> <span class="nav-text">st-gcn Code Analyze:</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#实例："><span class="nav-number">6.1.1.</span> <span class="nav-text">实例：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#import："><span class="nav-number">6.1.2.</span> <span class="nav-text">import：</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#import-的一个小实例："><span class="nav-number">6.1.2.1.</span> <span class="nav-text">import()的一个小实例：</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#parse-以及-subparsers："><span class="nav-number">6.1.3.</span> <span class="nav-text">parse 以及 subparsers：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#argparse-add-argument-dest参数的意义："><span class="nav-number">6.1.4.</span> <span class="nav-text">argparse.add_argument() dest参数的意义：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#得到类对象："><span class="nav-number">6.1.5.</span> <span class="nav-text">得到类对象：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#recognition构造函数"><span class="nav-number">6.1.6.</span> <span class="nav-text">recognition构造函数:</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#sys-argv"><span class="nav-number">6.1.6.1.</span> <span class="nav-text">sys.argv</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#执行load-arg-argv"><span class="nav-number">6.1.6.2.</span> <span class="nav-text">执行load_arg(argv)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#执行init-environment-："><span class="nav-number">6.1.6.3.</span> <span class="nav-text">执行init_environment()：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#执行self-load-model-："><span class="nav-number">6.1.6.4.</span> <span class="nav-text">执行self.load_model()：</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#net-st-gcn-Model"><span class="nav-number">6.1.7.</span> <span class="nav-text">net.st_gcn.Model</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Graph类："><span class="nav-number">6.2.</span> <span class="nav-text">Graph类：</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#定义抽样函数："><span class="nav-number">6.2.1.</span> <span class="nav-text">定义抽样函数：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#定义权重函数："><span class="nav-number">6.2.2.</span> <span class="nav-text">定义权重函数：</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#subset的定义："><span class="nav-number">6.2.2.1.</span> <span class="nav-text">subset的定义：</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#np-linalg-matrix-power-matrix-expo"><span class="nav-number">6.2.3.</span> <span class="nav-text">np.linalg.matrix_power(matrix, expo)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#range"><span class="nav-number">6.2.4.</span> <span class="nav-text">range:</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#pytorch-中-register-buffer"><span class="nav-number">6.2.5.</span> <span class="nav-text">pytorch 中 register_buffer</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#python-中-三元表达式："><span class="nav-number">6.2.6.</span> <span class="nav-text">python 中 三元表达式：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Pytorch中的模型层的搭建："><span class="nav-number">6.2.7.</span> <span class="nav-text">Pytorch中的模型层的搭建：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Pytorch中的BatchNom1d"><span class="nav-number">6.2.8.</span> <span class="nav-text">Pytorch中的BatchNom1d():</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#从PyTorch中取出数据进行numpy操作："><span class="nav-number">6.2.9.</span> <span class="nav-text">从PyTorch中取出数据进行numpy操作：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#各个框架之间conv2d的区别："><span class="nav-number">6.2.10.</span> <span class="nav-text">各个框架之间conv2d的区别：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Pytorch-中的-view"><span class="nav-number">6.2.11.</span> <span class="nav-text">Pytorch 中的 view()</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#zip的用法："><span class="nav-number">6.2.12.</span> <span class="nav-text">zip的用法：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#numpy中concatenate函数："><span class="nav-number">6.2.13.</span> <span class="nav-text">numpy中concatenate函数：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#切片操作："><span class="nav-number">6.2.14.</span> <span class="nav-text">切片操作：</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#python-OpenCV"><span class="nav-number">7.</span> <span class="nav-text">python OpenCV</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#video的读取操作："><span class="nav-number">7.1.</span> <span class="nav-text">video的读取操作：</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#cv2-VideoCapture-函数："><span class="nav-number">7.1.1.</span> <span class="nav-text">cv2.VideoCapture()函数：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#cap-isOpened-函数："><span class="nav-number">7.1.2.</span> <span class="nav-text">cap.isOpened()函数：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ret-frame-cap-read-函数："><span class="nav-number">7.1.3.</span> <span class="nav-text">ret,frame = cap.read()函数：</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#resize"><span class="nav-number">7.2.</span> <span class="nav-text">resize</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#circle"><span class="nav-number">7.3.</span> <span class="nav-text">circle</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#json文件加载："><span class="nav-number">7.4.</span> <span class="nav-text">json文件加载：</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">JoeyF</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Gemini</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+
+
+  
+
+  
+
+</body>
+</html>

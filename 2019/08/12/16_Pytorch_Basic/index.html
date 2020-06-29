@@ -1,0 +1,818 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="DL,Pytorch,Python,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="导言：之前将所有东西都揉捏在一个文件中显得很冗长，故分类将这些知识点做整理。 库pytorch 给了我们很多的库，这些库都有不同的功能，在使用时需要落实：  torch  torch.autograd torchvision torch.utils.data  变量以及其操作 tensor variable  variable可以装载tensor的数据，并且可以拥有自动求导机制:123456789">
+<meta name="keywords" content="DL,Pytorch,Python">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Pytorch 基础">
+<meta property="og:url" content="http://zhoef.com/2019/08/12/16_Pytorch_Basic/index.html">
+<meta property="og:site_name" content="JoeyF&#39;s Home">
+<meta property="og:description" content="导言：之前将所有东西都揉捏在一个文件中显得很冗长，故分类将这些知识点做整理。 库pytorch 给了我们很多的库，这些库都有不同的功能，在使用时需要落实：  torch  torch.autograd torchvision torch.utils.data  变量以及其操作 tensor variable  variable可以装载tensor的数据，并且可以拥有自动求导机制:123456789">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2019-08-25T02:43:31.365Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Pytorch 基础">
+<meta name="twitter:description" content="导言：之前将所有东西都揉捏在一个文件中显得很冗长，故分类将这些知识点做整理。 库pytorch 给了我们很多的库，这些库都有不同的功能，在使用时需要落实：  torch  torch.autograd torchvision torch.utils.data  变量以及其操作 tensor variable  variable可以装载tensor的数据，并且可以拥有自动求导机制:123456789">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://zhoef.com/2019/08/12/16_Pytorch_Basic/">
+
+
+
+
+
+  <title>Pytorch 基础 | JoeyF's Home</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="default">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">JoeyF's Home</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            About
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://zhoef.com/2019/08/12/16_Pytorch_Basic/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="JoeyF">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="JoeyF's Home">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Pytorch 基础</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-08-12T11:02:25+08:00">
+                2019-08-12
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>导言：之前将所有东西都揉捏在一个文件中显得很冗长，故分类将这些知识点做整理。</p>
+<h1 id="库"><a href="#库" class="headerlink" title="库"></a>库</h1><p>pytorch 给了我们很多的库，这些库都有不同的功能，在使用时需要落实：</p>
+<ul>
+<li>torch </li>
+<li>torch.autograd</li>
+<li>torchvision</li>
+<li>torch.utils.data</li>
+</ul>
+<h1 id="变量以及其操作"><a href="#变量以及其操作" class="headerlink" title="变量以及其操作"></a>变量以及其操作</h1><ul>
+<li>tensor</li>
+<li>variable</li>
+</ul>
+<p>variable可以装载tensor的数据，并且可以拥有自动求导机制:<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"><span class="keyword">from</span> torch.autograd <span class="keyword">import</span> Variable</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> mp</span><br><span class="line"></span><br><span class="line">tensor = torch.FloatTensor([[<span class="number">1</span>,<span class="number">2</span>],[<span class="number">3</span>,<span class="number">4</span>]]) <span class="comment"># 注意model中默认所有数据必是float类型</span></span><br><span class="line">variable = Variable(tensor,requires_grad = <span class="literal">True</span>)</span><br><span class="line"></span><br><span class="line">t_out = torch.mean(tensor*tensor)</span><br><span class="line">v_out = torch.mean(variable*variable)</span><br><span class="line"></span><br><span class="line">v_out.backward()</span><br><span class="line"></span><br><span class="line"><span class="comment"># d(v_out)/d(variavble) = 1/4 * 2 * variable</span></span><br><span class="line">print(variable.grad)</span><br></pre></td></tr></table></figure></p>
+<h2 id="Variable和Parameter的区别"><a href="#Variable和Parameter的区别" class="headerlink" title="Variable和Parameter的区别"></a>Variable和Parameter的区别</h2><p>Parameter是torch.autograd.Variable的一个字类，常被用于Module的参数。例如权重和偏置。</p>
+<p>Parameters和Modules一起使用的时候会有一些特殊的属性。parameters赋值给Module的属性的时候，它会被自动加到Module的参数列表中，即会出现在Parameter()迭代器中。将Varaible赋给Module的时候没有这样的属性。这可以在nn.Module的实现中详细看一下。这样做是为了保存模型的时候只保存权重偏置参数，不保存节点值。所以复写Variable加以区分。</p>
+<p>另外一个不同是parameter不能设置volatile，而且require_grad默认设置为true。Varaible默认设置为False.</p>
+<p><code>parameter.data</code> 得到tensor数据<br><code>parameter.requires_grad</code> 默认为 <strong>True</strong>， BP过程中会求导<br>Parameter一般是在Modules中作为权重和偏置，自动加入参数列表，可以进行保存恢复。和Variable具有相同的运算。</p>
+<p>我们可以这样简单区分，在计算图中，数据（包括输入数据和计算过程中产生的feature map等）时 variable 类型，该类型不会被保存到模型中。 网络的权重是 parameter 类型，在计算过程中会被更新，将会被保存到模型中。</p>
+<h1 id="优化函数"><a href="#优化函数" class="headerlink" title="优化函数"></a>优化函数</h1><p>优化函数可以只传入模型的部分参数：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">optimizer = torch.optim.Adam(model.Classifier.parameters(),lr = lr)</span><br></pre></td></tr></table></figure></p>
+<p>仅仅传入最后全连接层的参数，<strong>存疑</strong>这样是否就可以不用设置冻结之前层？<br>《pytorch-cv》是既设置了冻结，又只传入了部分参数</p>
+<h1 id="显存的节约"><a href="#显存的节约" class="headerlink" title="显存的节约"></a>显存的节约</h1><p>在测试或验证集的预测中，不要带有梯度可以省去一大步分的cuda，GPU显存。可以一定程度上缓解CUDA.memery的问题。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> phrase == <span class="string">"valid"</span>:</span><br><span class="line">    <span class="keyword">with</span> torch.no_grad():</span><br><span class="line">        x,y = Variable(x).cuda(),Variable(y).cuda()</span><br><span class="line">        y_pred = model(x)</span><br><span class="line">        _,y_pred_class = torch.max(y_pred,<span class="number">1</span>)</span><br><span class="line">        loss = loss_f(y_pred,y)</span><br></pre></td></tr></table></figure></p>
+<h1 id="模型中参数理解"><a href="#模型中参数理解" class="headerlink" title="模型中参数理解"></a>模型中参数理解</h1><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> torchvision.models <span class="keyword">as</span> models</span><br><span class="line"></span><br><span class="line">model = models.vgg16(pretrained =<span class="literal">True</span>)</span><br><span class="line"></span><br><span class="line">model_modules = model._modules</span><br><span class="line"></span><br><span class="line">feature_layers = model._modules[<span class="string">"feature"</span>]</span><br><span class="line"></span><br><span class="line">conv1_2 = feature_layers[<span class="number">2</span>] <span class="comment"># layer 也可以通过下标访问</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> layer <span class="keyword">in</span> feature_layers:</span><br><span class="line">	<span class="keyword">pass</span></span><br></pre></td></tr></table></figure>
+<p><strong><code>models.vgg16(pretrained =True)</code></strong> <code>pretrained =True</code>表示不下载模型</p>
+<p><strong><code>model</code></strong>:包含了所有参数</p>
+<p><strong><code>model_modules</code></strong>:  <strong><code>OrderedDict</code></strong>类型，字典类的派生，键值为模型中定义的网络块(<strong><code>Sequential</code></strong>定义的名称就为定义的名字，其值为<strong><code>Sequential</code></strong>类型包含了定义的所有层)</p>
+<p><strong><code>feature_layers</code></strong>: <strong><code>Sequential</code></strong>类型包含了各种层，<strong>也可以直接model.feature访问，因为其feature相当于是model的一个公变量</strong></p>
+<p><strong><code>layer</code></strong>: 层的定义类型，conv层是conv层类型，pool层是pool层类型，包含各自的参数，也可以通过 <strong><code>feature_layers</code></strong> 下标访问。其中比较重要的有：</p>
+<ol>
+<li>weight : parameter类型</li>
+<li>bias    : parameter类型</li>
+</ol>
+<h2 id="样例："><a href="#样例：" class="headerlink" title="样例："></a>样例：</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#全冻</span></span><br><span class="line"><span class="keyword">for</span> parma <span class="keyword">in</span> model.parameters():</span><br><span class="line">	parma.require_grad = <span class="literal">False</span></span><br><span class="line"><span class="comment">#只部分冻</span></span><br><span class="line">list_freeze_idx = [<span class="number">0</span>,<span class="number">1</span>,<span class="number">3</span>,<span class="number">5</span>,<span class="number">7</span>]</span><br><span class="line"><span class="keyword">for</span> num,param <span class="keyword">in</span> enumerate(model.parameters(),<span class="number">0</span>):</span><br><span class="line">    <span class="keyword">if</span> num <span class="keyword">in</span> list_freeze_idx:</span><br><span class="line">	    param.requires_grad = <span class="literal">False</span></span><br><span class="line">model.Classifier = torch.nn.Sequential(</span><br><span class="line">		torch.nn.Linear()</span><br><span class="line">		torch.nn.ReLU()</span><br><span class="line">		torch.nn.Dropout(p=<span class="number">0.5</span>)</span><br><span class="line">		torch.nn.Linear()</span><br><span class="line">		torch.nn.ReLU()</span><br><span class="line">		torch.nn.Dropout(p=<span class="number">0.5</span>)</span><br><span class="line">		torch.nn.Linear()</span><br><span class="line">	)</span><br></pre></td></tr></table></figure>
+<h2 id="Parameters"><a href="#Parameters" class="headerlink" title="Parameters():"></a>Parameters():</h2><p>凡是关于参数的，都使用Parameters()来进行操作</p>
+<p><strong><code>model.parameters()</code></strong>: 返回的是所有参数的生成器，每个item是parameter类型，包含Tensor，requires_grad等类型。无法下标访问  <strong>注意的是requires_grad 是有s的</strong></p>
+<p><strong><code>parame</code></strong> 即生成器的返回变量，拥有data参数，可以访问到该的数据，有grad,shape，等。</p>
+<p>新建的Sequential是默认可以更新的。</p>
+<p><strong><code>model.Classifier</code></strong> 可以直接操作整个Squential</p>
+<h2 id="从PyTorch中取出数据进行numpy操作："><a href="#从PyTorch中取出数据进行numpy操作：" class="headerlink" title="从PyTorch中取出数据进行numpy操作："></a>从PyTorch中取出数据进行numpy操作：</h2><p>如果对象是Variable类型，取出其数据需要注意以下几点：</p>
+<ul>
+<li>如果是有grad_requires = True的，那么需要with torch.no_grad()申明</li>
+<li>如果不使用with torch.no_grad，也可以使用x.cpu().detach().numpy()来获得</li>
+<li>如果在gpu上的数据，需要使用data_x.cpu放在cpu上</li>
+<li>数据得到后Tensor 2 numpy只需要执行 tesnor.numpy即可</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">x,y = next(iter(dataloader[<span class="string">"test"</span>]))</span><br><span class="line">        <span class="keyword">with</span> torch.no_grad():</span><br><span class="line">            x, y = Variable(x).cuda(), Variable(y).cuda()</span><br><span class="line">            pre = self.model.forward(x)</span><br><span class="line">            plt.plot(x.cpu().numpy(),pre.cpu().numpy(),<span class="string">'x'</span>)</span><br><span class="line">            plt.plot(x.cpu().detach().numpy(),y.cpu().detach().numpy(),<span class="string">'o'</span>)</span><br><span class="line">            plt.show()</span><br></pre></td></tr></table></figure>
+<p>一个拟合2次曲线的例子：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">train</span><span class="params">(self,dataloader)</span>:</span></span><br><span class="line">    self.model.cuda()</span><br><span class="line">    opt = torch.optim.SGD(self.model.parameters(),lr=<span class="number">0.001</span>)</span><br><span class="line">    loss_f = torch.nn.MSELoss()</span><br><span class="line">    <span class="keyword">for</span> epoch <span class="keyword">in</span> range(self.EPOCH):</span><br><span class="line">        <span class="keyword">for</span> phase <span class="keyword">in</span> [<span class="string">"train"</span>, <span class="string">"test"</span>]:</span><br><span class="line">            loss_epoch = <span class="number">0.0</span></span><br><span class="line">            acc_epoch = <span class="number">0.0</span></span><br><span class="line">            <span class="keyword">for</span> batch_n, data <span class="keyword">in</span> enumerate(dataloader[phase],<span class="number">1</span>):</span><br><span class="line">                x,y = data</span><br><span class="line">                x,y = Variable(x).cuda(),Variable(y).cuda()</span><br><span class="line">                pre = self.model.forward(x)</span><br><span class="line">                opt.zero_grad()</span><br><span class="line">                loss = loss_f(pre,y)</span><br><span class="line">                <span class="keyword">if</span> phase == <span class="string">"train"</span>:</span><br><span class="line">                    loss.backward()</span><br><span class="line">                    opt.step()</span><br><span class="line">                loss_epoch += loss</span><br><span class="line">                <span class="keyword">if</span> phase == <span class="string">"train"</span> <span class="keyword">and</span> batch_n % <span class="number">10</span> ==<span class="number">0</span>:</span><br><span class="line">                    print(<span class="string">"+"</span> * <span class="number">30</span>)</span><br><span class="line">                    loss_batch_ave = loss_epoch.__float__()/(batch_n.__float__())</span><br><span class="line">                    print(<span class="string">"loss = %.2f"</span>%loss_batch_ave)</span><br><span class="line">            <span class="keyword">if</span> (phase == <span class="string">"train"</span>):</span><br><span class="line">                print(<span class="string">"+"</span>*<span class="number">30</span>)</span><br><span class="line">                print(<span class="string">"train"</span>)</span><br><span class="line">                print(<span class="string">"epoch:&#123;&#125;/&#123;&#125; loss = &#123;&#125;"</span>.format(epoch + <span class="number">1</span>,self.EPOCH,loss_epoch.__float__()/batch_n.__float__()))</span><br><span class="line">            <span class="keyword">if</span>(phase == <span class="string">"test"</span>):</span><br><span class="line">                print(<span class="string">"+"</span>*<span class="number">30</span>)</span><br><span class="line">                print(<span class="string">"Test:"</span>)</span><br><span class="line">                print(<span class="string">"epoch:&#123;&#125;/&#123;&#125; loss = &#123;&#125;"</span>.format(epoch + <span class="number">1</span>, self.EPOCH, loss_epoch.__float__() / batch_n.__float__()))</span><br><span class="line">    x,y = next(iter(dataloader[<span class="string">"test"</span>]))</span><br><span class="line">    <span class="keyword">with</span> torch.no_grad():</span><br><span class="line">        x, y = Variable(x).cuda(), Variable(y).cuda()</span><br><span class="line">        pre = self.model.forward(x)</span><br><span class="line">        plt.plot(x.cpu().numpy(),pre.cpu().detach().numpy(),<span class="string">'x'</span>)</span><br><span class="line">        plt.plot(x.cpu().detach().numpy(),y.cpu().detach().numpy(),<span class="string">'o'</span>)</span><br><span class="line">        plt.show()</span><br></pre></td></tr></table></figure></p>
+<h1 id="Pytorch-中的-view"><a href="#Pytorch-中的-view" class="headerlink" title="Pytorch 中的 view()"></a>Pytorch 中的 view()</h1><p>把原先<code>tensor</code>中的数据按照行优先的顺序排成一个一维的数据（这里应该是因为要求地址是连续存储的），然后按照参数组合成其他维度的<code>tensor</code>。比如说是不管你原先的数据是<code>[[[1,2,3],[4,5,6]]]</code>还是<code>[1,2,3,4,5,6]</code>，因为它们排成一维向量都是6个元素，所以只要view后面的参数一致，得到的结果都是一样的。</p>
+<p>总之一句话: <strong>行优先的视图排列</strong><br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">t = torch.randn(<span class="number">2</span>,<span class="number">1</span>,<span class="number">3</span>,<span class="number">4</span>)</span><br><span class="line">print(t)</span><br><span class="line">y = t.view(<span class="number">4</span>,<span class="number">6</span>)</span><br><span class="line">y[<span class="number">0</span>] = <span class="number">1</span></span><br><span class="line">print(y)</span><br><span class="line">print(t)</span><br></pre></td></tr></table></figure></p>
+<p>视图的操作可以对原来的数据进行抽象的修改，从不同视图来修改数据。<code>view()</code> 得到的数据不会分配内存。</p>
+<p>而<code>tensor</code>的<code>view()</code>操作依赖于内存是整块的，如果当前的tensor并不是占用一整块内存，而是由不同的数据块组成，那么<code>view()</code>将报错。</p>
+<p>而为了使得<code>view</code>能操作这些非同块内存的数据，<code>Pytorch</code>提供了一个<code>contiguous</code>函数来将分散的数据块整合成一块。<br>给一个例子方便理解：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> torch</span><br><span class="line">x = torch.ones(<span class="number">5</span>, <span class="number">10</span>)</span><br><span class="line">x.is_contiguous()  <span class="comment"># True</span></span><br><span class="line">x.transpose(<span class="number">0</span>, <span class="number">1</span>).is_contiguous()  <span class="comment"># False</span></span><br><span class="line">x.permute(<span class="number">1</span>,<span class="number">0</span>).is_contiguous() <span class="comment"># False</span></span><br><span class="line"></span><br><span class="line">x.permute(<span class="number">1</span>,<span class="number">0</span>).view(<span class="number">10</span>,<span class="number">5</span>)  <span class="comment"># 报错！</span></span><br><span class="line"></span><br><span class="line">x.transpose(<span class="number">0</span>, <span class="number">1</span>).contiguous().is_contiguous()  <span class="comment"># True</span></span><br></pre></td></tr></table></figure></p>
+<h1 id="各个框架之间conv2d的区别："><a href="#各个框架之间conv2d的区别：" class="headerlink" title="各个框架之间conv2d的区别："></a>各个框架之间conv2d的区别：</h1><p>这里也可视化了<code>dilated conv</code>的作用</p>
+<p>疑问的产生处是这里，在之前没有遇见过<code>conv2d()</code>中的<code>kernel_size</code>、<code>stride</code>是元组的情况</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">torch.nn.Conv2d(</span><br><span class="line">                out_channels,</span><br><span class="line">                out_channels,</span><br><span class="line">                (kernel_size[<span class="number">0</span>], <span class="number">1</span>),</span><br><span class="line">                (stride, <span class="number">1</span>),</span><br><span class="line">                padding,</span><br><span class="line">            )</span><br></pre></td></tr></table></figure>
+<p>参考pytorch中文文档的解释：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">torch</span>.<span class="title">nn</span>.<span class="title">Conv2d</span><span class="params">(in_channels, out_channels, kernel_size, stride=<span class="number">1</span>, padding=<span class="number">0</span>, dilation=<span class="number">1</span>, groups=<span class="number">1</span>, bias=True)</span></span></span><br></pre></td></tr></table></figure></p>
+<ul>
+<li><code>bigotimes</code>: 表示二维的相关系数计算 <code>stride</code>: 控制相关系数的计算步长</li>
+<li><code>dilation</code>: 用于控制内核点之间的距离，详细描述在这里</li>
+<li><code>groups</code>: 控制输入和输出之间的连接： <code>group = 1</code>，输出是所有的输入的卷积；<code>group=2</code>，此时相当于有并排的两个卷积层，每个卷积层计算输入通道的一半，并且产生的输出是输出通道的一半，随后将这两个输出连接起来。</li>
+<li>参数<code>kernel_size</code>，<code>stride</code>,<code>padding</code>，<code>dilation</code>也可以是一个int的数据，此时卷积<code>height</code>和<code>width</code>值相同;也可以是一个<code>tuple</code>数组，<code>tuple</code>的第一维度表示<code>height</code>的数值，<code>tuple</code>的第二维度表示<code>width</code>的数值</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#with square kernels and equal_stride</span></span><br><span class="line">m = nn.Conv2d(<span class="number">16</span>,<span class="number">33</span>,<span class="number">3</span>,stride = <span class="number">2</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># non-square kernels and unequal stride and with padding</span></span><br><span class="line">m = nn.Conv2d(<span class="number">16</span>,<span class="number">33</span>,(<span class="number">3</span>,<span class="number">5</span>),stride = (<span class="number">2</span>,<span class="number">1</span>),padding = (<span class="number">4</span>,<span class="number">2</span>))</span><br><span class="line"></span><br><span class="line"><span class="comment"># non-square kernels and unequal stride and with padding and dilation</span></span><br><span class="line">m = nn.Conv2d(<span class="number">16</span>,<span class="number">33</span>,(<span class="number">3</span>,<span class="number">5</span>),stride = (<span class="number">2</span>,<span class="number">1</span>), padding = (<span class="number">4</span>,<span class="number">2</span>), dilation = (<span class="number">3</span>,<span class="number">1</span>))</span><br></pre></td></tr></table></figure>
+<p>如果Conv传入的是元组，即两个方向上的参数，而不是之前默认的正方形的核、或者移动了。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/DL/" rel="tag"># DL</a>
+          
+            <a href="/tags/Pytorch/" rel="tag"># Pytorch</a>
+          
+            <a href="/tags/Python/" rel="tag"># Python</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/08/11/8_Pytorch_BatchNorm/" rel="next" title="BatchNorm 层">
+                <i class="fa fa-chevron-left"></i> BatchNorm 层
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/08/12/10_Pytorch_layer_Model/" rel="prev" title="Pytorch 层的介绍以及网络的搭建">
+                Pytorch 层的介绍以及网络的搭建 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/avatar.gif" alt="JoeyF">
+            
+              <p class="site-author-name" itemprop="name">JoeyF</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">21</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">17</span>
+                  <span class="site-state-item-name">tags</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/ZhouYiiFeng" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:joeyf.z.y.wen@gmail.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#库"><span class="nav-number">1.</span> <span class="nav-text">库</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#变量以及其操作"><span class="nav-number">2.</span> <span class="nav-text">变量以及其操作</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Variable和Parameter的区别"><span class="nav-number">2.1.</span> <span class="nav-text">Variable和Parameter的区别</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#优化函数"><span class="nav-number">3.</span> <span class="nav-text">优化函数</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#显存的节约"><span class="nav-number">4.</span> <span class="nav-text">显存的节约</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#模型中参数理解"><span class="nav-number">5.</span> <span class="nav-text">模型中参数理解</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#样例："><span class="nav-number">5.1.</span> <span class="nav-text">样例：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Parameters"><span class="nav-number">5.2.</span> <span class="nav-text">Parameters():</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#从PyTorch中取出数据进行numpy操作："><span class="nav-number">5.3.</span> <span class="nav-text">从PyTorch中取出数据进行numpy操作：</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Pytorch-中的-view"><span class="nav-number">6.</span> <span class="nav-text">Pytorch 中的 view()</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#各个框架之间conv2d的区别："><span class="nav-number">7.</span> <span class="nav-text">各个框架之间conv2d的区别：</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">JoeyF</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Gemini</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Python,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="导言：对于一些功能相仿，但是其输入参数并不相同的程序，我们往往在进入main函数时使用同一个parser进行参数的解析。当然可以针对不同的.py文件写出不同的参数读取的入口，但是往往那样并不优雅。使用subparser可以重用接口。 1. parse 以及 subparsers：parse大家都很熟悉了，用来读取输入main函数的数据。所以本文的重点不是parse，主要落于subparsers每一">
+<meta name="keywords" content="Python">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Pyhton Parse">
+<meta property="og:url" content="http://zhoef.com/2019/09/30/18_Python_Parser设计/index.html">
+<meta property="og:site_name" content="JoeyF&#39;s Home">
+<meta property="og:description" content="导言：对于一些功能相仿，但是其输入参数并不相同的程序，我们往往在进入main函数时使用同一个parser进行参数的解析。当然可以针对不同的.py文件写出不同的参数读取的入口，但是往往那样并不优雅。使用subparser可以重用接口。 1. parse 以及 subparsers：parse大家都很熟悉了，用来读取输入main函数的数据。所以本文的重点不是parse，主要落于subparsers每一">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2019-09-30T15:03:15.267Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Pyhton Parse">
+<meta name="twitter:description" content="导言：对于一些功能相仿，但是其输入参数并不相同的程序，我们往往在进入main函数时使用同一个parser进行参数的解析。当然可以针对不同的.py文件写出不同的参数读取的入口，但是往往那样并不优雅。使用subparser可以重用接口。 1. parse 以及 subparsers：parse大家都很熟悉了，用来读取输入main函数的数据。所以本文的重点不是parse，主要落于subparsers每一">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://zhoef.com/2019/09/30/18_Python_Parser设计/">
+
+
+
+
+
+  <title>Pyhton Parse | JoeyF's Home</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="default">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">JoeyF's Home</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            About
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://zhoef.com/2019/09/30/18_Python_Parser设计/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="JoeyF">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="JoeyF's Home">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Pyhton Parse</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-09-30T17:08:32+08:00">
+                2019-09-30
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>导言：对于一些功能相仿，但是其输入参数并不相同的程序，我们往往在进入main函数时使用同一个parser进行参数的解析。当然可以针对不同的.py文件写出不同的参数读取的入口，但是往往那样并不优雅。使用subparser可以重用接口。</p>
+<h1 id="1-parse-以及-subparsers："><a href="#1-parse-以及-subparsers：" class="headerlink" title="1. parse 以及 subparsers："></a>1. parse 以及 subparsers：</h1><p>parse大家都很熟悉了，用来读取输入main函数的数据。所以本文的重点不是parse，主要落于subparsers<br>每一个subparser可以继承父类的parse,并使用其参数接口。</p>
+<h2 id="1-1-例子"><a href="#1-1-例子" class="headerlink" title="1.1 例子"></a>1.1 例子</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># add sub-parser</span></span><br><span class="line"><span class="comment"># 新建一个父parser</span></span><br><span class="line">parser = argparse.ArgumentParser(add_help=add_help, description=<span class="string">'IO Processor'</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 在之后向其中添加子parser</span></span><br><span class="line"><span class="comment"># 这个subparser只是一个句柄，可以向其中添加多个子parser.</span></span><br><span class="line"><span class="comment"># 其中dest 属性是可以让uer在之后能够获得到subparser的当前子parser的名字，相当于别名。</span></span><br><span class="line">subparsers = parser.add_subparsers(dest=<span class="string">'processor'</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 这里的processor是一个dict，装了各种之后会用的不同功能的类。但只是import,并未实例化。节约了内存资源</span></span><br><span class="line"><span class="comment"># subparsers.add_parser(k, parents=[p.get_parser()]) 向子parser句柄中添加parser成员，k是parser的名字，而parents参数是让其获得和之相同的参数接口。</span></span><br><span class="line"><span class="keyword">for</span> k, p <span class="keyword">in</span> processors.items():</span><br><span class="line">    subparsers.add_parser(k, parents=[p.get_parser()])</span><br></pre></td></tr></table></figure>
+<p><code>k</code>是键，<code>{&quot;recognition&quot; &quot;demo&quot;}</code>，即parser的名称，注意后面使用parse_args()时所输入的子parser器名称必须要和其一样。不然会报错。详细见下面例子<br>实例：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">python3 main.py recognition -h <span class="comment">#正确调用，因为parser有名为recognition的parse</span></span><br><span class="line"></span><br><span class="line">python3 main.py sdeqds -h <span class="comment">#错误，找不到名为sdeqds子parse。</span></span><br></pre></td></tr></table></figure></p>
+<p><strong>在terminal使用python进行程序的运行的时候先要指定子解释器的名字，在输入参数。</strong></p>
+<p><code>p</code>是值，包含了两个类。</p>
+<p><code>p.get_parser()</code>可以进入到该类的<code>get_parser</code>方法中</p>
+<p>在对应的类中，<code>get_parser</code>都会执行，每一个<code>get_parser</code>都会返回一个parser类，赋值给add_parser中的<em>parents</em>参数。</p>
+<p><code>subparsers = parser.add_subparsers(dest=&#39;processor&#39;)</code>得到的<code>subparsers</code>可以有多个<code>parser</code>，相当于<code>parser</code>的<code>子parsers</code>的<strong>句柄</strong>。向其中加入<code>parser</code>使用<code>add_parser</code>即可</p>
+<p><strong>parser.add_subparsers(dest=’processor’)返回的是子parser的句柄！！</strong></p>
+<p><strong>使用add_parser()向subparsers中加入parser</strong></p>
+<p>add_parser(“名字”，parent = “parser”)。</p>
+<h2 id="子类中的parser的构造"><a href="#子类中的parser的构造" class="headerlink" title="子类中的parser的构造"></a>子类中的parser的构造</h2><p><code>recognition</code>类的<code>get_parser</code><br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_parser</span><span class="params">(add_help=False)</span>:</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># parameter priority: command line &gt; config &gt; default</span></span><br><span class="line">    parent_parser = Processor.get_parser(add_help=<span class="literal">False</span>)</span><br><span class="line">    parser = argparse.ArgumentParser(</span><br><span class="line">        add_help=add_help,</span><br><span class="line">        parents=[parent_parser],</span><br><span class="line">        description=<span class="string">'Spatial Temporal Graph Convolution Network'</span>)</span><br><span class="line">    <span class="comment"># parents=[parent_parser]有点类似与克隆。</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># region arguments yapf: disable</span></span><br><span class="line">    <span class="comment"># evaluation</span></span><br><span class="line">    parser.add_argument(<span class="string">'--show_topk'</span>, type=int, default=[<span class="number">1</span>, <span class="number">5</span>], nargs=<span class="string">'+'</span>, help=<span class="string">'which Top K accuracy will be shown'</span>)</span><br><span class="line">    <span class="comment"># optim</span></span><br><span class="line">    parser.add_argument(<span class="string">'--base_lr'</span>, type=float, default=<span class="number">0.01</span>, help=<span class="string">'initial learning rate'</span>)</span><br><span class="line">    parser.add_argument(<span class="string">'--step'</span>, type=int, default=[], nargs=<span class="string">'+'</span>, help=<span class="string">'the epoch where optimizer reduce the learning rate'</span>)</span><br><span class="line">    parser.add_argument(<span class="string">'--optimizer'</span>, default=<span class="string">'SGD'</span>, help=<span class="string">'type of optimizer'</span>)</span><br><span class="line">    parser.add_argument(<span class="string">'--nesterov'</span>, type=str2bool, default=<span class="literal">True</span>, help=<span class="string">'use nesterov or not'</span>)</span><br><span class="line">    parser.add_argument(<span class="string">'--weight_decay'</span>, type=float, default=<span class="number">0.0001</span>, help=<span class="string">'weight decay for optimizer'</span>)</span><br><span class="line">    <span class="comment"># endregion yapf: enable</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> parser</span><br></pre></td></tr></table></figure></p>
+<p>调用处：<code>subparsers.add_parser(k, parents=[p.get_parser()])</code><br>返回了一个<code>parser</code><br>这个<code>parser</code>继承了Processor的parser，并且添加了自己的参数。</p>
+<p>各个类的父子关系：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">|IO----|----demo</span><br><span class="line">	   |</span><br><span class="line">	   |----processor----|----REC_Processor</span><br></pre></td></tr></table></figure></p>
+<p><code>subparser</code>的作用可以复用相同的参数接口</p>
+<p>所有<code>parser写完后</code>调用根parse进行解析：</p>
+<ol>
+<li><p><code>parser = argparse.ArgumentParser(description=&#39;Processor collection&#39;)</code></p>
+</li>
+<li><p><code>subparsers = parser.add_subparsers(dest=&#39;processor&#39;)</code>，添加子解析器<br>…</p>
+</li>
+<li><p><code>arg = parser.parse_args()</code>，开启解析，定义了所有参数之后，你就可以给 <code>parse_args()</code> 传递一组参数字符串来解析命令行。默认情况下，参数是从 sys.argv[1:] 中获取，但你也可以传递自己的参数列表。选项是使用<code>GNU/POSIX</code>语法来处理的，所以在序列中选项和参数值可以混合。</p>
+</li>
+</ol>
+<p>parse_args() 的返回值是一个命名空间，包含传递给命令的参数。该对象将参数保存其属性，因此如果你的参数 <code>dest</code> 是 <code>myoption</code>，那么你就可以<code>args.myoption</code>来访问该值。</p>
+<ol>
+<li>可以自己向parse_args中传递参数：<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">parser.parse_args([<span class="string">'-a'</span>, <span class="string">'-bval'</span>, <span class="string">'-c'</span>, <span class="string">'3'</span>])</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>如果不<code>parse_args()</code>不加参数则是默认从<code>sys.argv[1:]</code>来传入</p>
+<h1 id="argparse-add-argument-dest参数的意义："><a href="#argparse-add-argument-dest参数的意义：" class="headerlink" title="argparse.add_argument() dest参数的意义："></a>argparse.add_argument() dest参数的意义：</h1><p><code>subparsers = parser.add_subparsers(dest=&#39;processor&#39;)</code><br><code>dest</code>指定的值用作<code>key</code>值，从解析后的对象中取出用户输入的第一个参数<br>所以上述的parser拥有一个arg.processor的属性。而这个属性对应了cmd中第一个输入值，也等于sys.argv[1]</p>
+<h1 id="add-argument-函数中参数的定义以及作用："><a href="#add-argument-函数中参数的定义以及作用：" class="headerlink" title="add_argument()函数中参数的定义以及作用："></a>add_argument()函数中参数的定义以及作用：</h1><h2 id="参数名称："><a href="#参数名称：" class="headerlink" title="参数名称："></a>参数名称：</h2><p>add_argument()必须知道参数是可选的还是必须的位置参数，第一个传递给add_arguments的参数必须是可选参数或者是位置参数，例如，下面是可选参数。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">...</span><br><span class="line">parser.add_argument(<span class="string">'--use_gpu'</span>, type=str2bool, default=<span class="literal">True</span>, help=<span class="string">'use GPUs or not'</span>)</span><br><span class="line">parser.add_argument(<span class="string">'bar'</span>) <span class="comment">#位置参数，必须给出</span></span><br><span class="line">...</span><br></pre></td></tr></table></figure></p>
+<ul>
+<li>其中双横线<code>--</code>代表不能省略，单横线<code>-</code>代表简写名字，<strong>别名</strong></li>
+</ul>
+<h2 id="type参数："><a href="#type参数：" class="headerlink" title="type参数："></a>type参数：</h2><ul>
+<li><code>type</code>表明该参数的类型，可以使用函数进行自定义类型的搭建：<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">str2bool</span><span class="params">(v)</span>:</span></span><br><span class="line">    <span class="keyword">if</span> v.lower() <span class="keyword">in</span> (<span class="string">'yes'</span>, <span class="string">'true'</span>, <span class="string">'t'</span>, <span class="string">'y'</span>, <span class="string">'1'</span>):</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">True</span></span><br><span class="line">    <span class="keyword">elif</span> v.lower() <span class="keyword">in</span> (<span class="string">'no'</span>, <span class="string">'false'</span>, <span class="string">'f'</span>, <span class="string">'n'</span>, <span class="string">'0'</span>):</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="keyword">raise</span> argparse.ArgumentTypeError(<span class="string">'Boolean value expected.'</span>)</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>其中的返回值如果有限制必须要返回到限制域中，不在限制里的其他输入需要进行异常处理。</p>
+<h2 id="action参数："><a href="#action参数：" class="headerlink" title="action参数："></a>action参数：</h2><p>当输入参数需要输入列表、字典类型时可以使用action进行传递：</p>
+<h3 id="store-const"><a href="#store-const" class="headerlink" title="store_const:"></a>store_const:</h3><p>store_const:存储const指定的值。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">parser=argparse.ArgumentParser()</span><br><span class="line">parser.add_argument(<span class="string">'--foo'</span>,action=<span class="string">'store_const'</span>,const=<span class="number">42</span>)</span><br><span class="line">parser.parse_args(<span class="string">'--foo'</span>.split())</span><br><span class="line"></span><br><span class="line"><span class="comment"># Namespace(foo=42)</span></span><br></pre></td></tr></table></figure></p>
+<h3 id="append"><a href="#append" class="headerlink" title="append"></a>append</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">parser = argparse.ArgumentParser()</span><br><span class="line">parser.add_argument(<span class="string">'--foo'</span>, action=<span class="string">'append'</span>)</span><br><span class="line">parser.parse_args(<span class="string">'--foo 1 --foo 2'</span>.split())</span><br><span class="line">Namespace(foo=[<span class="string">'1'</span>,<span class="string">'2'</span>])</span><br></pre></td></tr></table></figure>
+<p>append：保存为列表格式，将每个参数的值添加到这个列表。</p>
+<h3 id="自定义Action类："><a href="#自定义Action类：" class="headerlink" title="自定义Action类："></a>自定义Action类：</h3><p>在argparse中使用Action自定义类是为了可以让输入参数的类型自定义化，可以让其输入列表、字典等参数。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># /processor.py get_parser()</span></span><br><span class="line">parser.add_argument(<span class="string">'--model_args'</span>, action=DictAction, default=dict(), help=<span class="string">'the arguments of model'</span>)</span><br><span class="line">...</span><br><span class="line"></span><br><span class="line"><span class="comment"># /torchlight/io.py</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">DictAction</span><span class="params">(argparse.Action)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, option_strings, dest, nargs=None, **kwargs)</span>:</span></span><br><span class="line">        <span class="keyword">if</span> nargs <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span>:</span><br><span class="line">            <span class="keyword">raise</span> ValueError(<span class="string">"nargs not allowed"</span>)</span><br><span class="line">        super(DictAction, self).__init__(option_strings, dest, **kwargs)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__call__</span><span class="params">(self, parser, namespace, values, option_string=None)</span>:</span></span><br><span class="line">        input_dict = eval(<span class="string">'dict(&#123;&#125;)'</span>.format(values))  <span class="comment">#pylint: disable=W0123</span></span><br><span class="line">        output_dict = getattr(namespace, self.dest)</span><br><span class="line">        <span class="keyword">for</span> k <span class="keyword">in</span> input_dict:</span><br><span class="line">            output_dict[k] = input_dict[k]</span><br><span class="line">        setattr(namespace, self.dest, output_dict)</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+<p>可以通过继承Action类来实现自定义action类型，通过继承argparse.action，并提供<strong>call</strong>()方法，提供四个参数。</p>
+<ul>
+<li>parser：ArgumentParser对象。</li>
+<li>namespace：parse_args()返回的命名空间。</li>
+<li>values：相关联的命令行参数</li>
+<li>option_string:可选字符串，用来触发action，如果没有指定，就通过位置参数来关联。</li>
+</ul>
+<p>在<code>__call__(self, parser, namespace, values, option_string=None)</code> 中使用<code>setattr(namespace, self.dest, output_dict)</code>来进行赋值。<code>self.dest</code>指代的是调用<strong>call</strong>的那个parser。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Python/" rel="tag"># Python</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/08/25/15_Python_Basic/" rel="next" title="Python CV基础">
+                <i class="fa fa-chevron-left"></i> Python CV基础
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/01/11/19_2020/" rel="prev" title="2020">
+                2020 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/avatar.gif" alt="JoeyF">
+            
+              <p class="site-author-name" itemprop="name">JoeyF</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">21</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">17</span>
+                  <span class="site-state-item-name">tags</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/ZhouYiiFeng" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:joeyf.z.y.wen@gmail.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-parse-以及-subparsers："><span class="nav-number">1.</span> <span class="nav-text">1. parse 以及 subparsers：</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-1-例子"><span class="nav-number">1.1.</span> <span class="nav-text">1.1 例子</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#子类中的parser的构造"><span class="nav-number">1.2.</span> <span class="nav-text">子类中的parser的构造</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#argparse-add-argument-dest参数的意义："><span class="nav-number">2.</span> <span class="nav-text">argparse.add_argument() dest参数的意义：</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#add-argument-函数中参数的定义以及作用："><span class="nav-number">3.</span> <span class="nav-text">add_argument()函数中参数的定义以及作用：</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#参数名称："><span class="nav-number">3.1.</span> <span class="nav-text">参数名称：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#type参数："><span class="nav-number">3.2.</span> <span class="nav-text">type参数：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#action参数："><span class="nav-number">3.3.</span> <span class="nav-text">action参数：</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#store-const"><span class="nav-number">3.3.1.</span> <span class="nav-text">store_const:</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#append"><span class="nav-number">3.3.2.</span> <span class="nav-text">append</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#自定义Action类："><span class="nav-number">3.3.3.</span> <span class="nav-text">自定义Action类：</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">JoeyF</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Gemini</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+
+
+  
+
+  
+
+</body>
+</html>

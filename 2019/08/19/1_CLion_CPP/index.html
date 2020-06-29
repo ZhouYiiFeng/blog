@@ -1,0 +1,861 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="C++,OpenCV,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="导言：这篇文章主要讲述了一些C++地基础知识。供以后不时之需 Ubuntu jsoncpp的安装：apt-get install 的库：  头文件在：/usr/include/ lib目录在：/usr/lib/x86_64-linux-gnu12link_directories(/usr/lib/x86_64-linux-gnu)target_link_libraries(C_test $&amp;#12">
+<meta name="keywords" content="C++,OpenCV">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Clion 与 C++基础">
+<meta property="og:url" content="http://zhoef.com/2019/08/19/1_CLion_CPP/index.html">
+<meta property="og:site_name" content="JoeyF&#39;s Home">
+<meta property="og:description" content="导言：这篇文章主要讲述了一些C++地基础知识。供以后不时之需 Ubuntu jsoncpp的安装：apt-get install 的库：  头文件在：/usr/include/ lib目录在：/usr/lib/x86_64-linux-gnu12link_directories(/usr/lib/x86_64-linux-gnu)target_link_libraries(C_test $&amp;#12">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2019-08-25T02:49:59.191Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Clion 与 C++基础">
+<meta name="twitter:description" content="导言：这篇文章主要讲述了一些C++地基础知识。供以后不时之需 Ubuntu jsoncpp的安装：apt-get install 的库：  头文件在：/usr/include/ lib目录在：/usr/lib/x86_64-linux-gnu12link_directories(/usr/lib/x86_64-linux-gnu)target_link_libraries(C_test $&amp;#12">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://zhoef.com/2019/08/19/1_CLion_CPP/">
+
+
+
+
+
+  <title>Clion 与 C++基础 | JoeyF's Home</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="default">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">JoeyF's Home</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            About
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://zhoef.com/2019/08/19/1_CLion_CPP/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="JoeyF">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="JoeyF's Home">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Clion 与 C++基础</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-08-19T12:39:39+08:00">
+                2019-08-19
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>导言：这篇文章主要讲述了一些C++地基础知识。供以后不时之需</p>
+<h1 id="Ubuntu-jsoncpp的安装："><a href="#Ubuntu-jsoncpp的安装：" class="headerlink" title="Ubuntu jsoncpp的安装："></a>Ubuntu jsoncpp的安装：</h1><p>apt-get install 的库：</p>
+<ul>
+<li>头文件在：<code>/usr/include/</code></li>
+<li>lib目录在：<code>/usr/lib/x86_64-linux-gnu</code><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">link_directories(/usr/lib/x86_64-linux-gnu)</span><br><span class="line">target_link_libraries(C_test $&#123;OpenCV_LIBS&#125; jsoncpp)</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>将lib目录添加进link中，然后再在目标lib中添加库的名字(lib/中libjsoncpp，只取库的名称)。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line">Json::Value json_temp;      <span class="comment">// 临时对象，供如下代码使用</span></span><br><span class="line"></span><br><span class="line">    json_temp[<span class="string">"name"</span>] = <span class="string">"huchao"</span>;</span><br><span class="line"></span><br><span class="line">    json_temp[<span class="string">"age"</span>] = <span class="number">26</span>;</span><br><span class="line">    Json::Value root;  <span class="comment">// 表示整个 json 对象</span></span><br><span class="line"></span><br><span class="line">    root[<span class="string">"key_string"</span>] = Json::Value(<span class="string">"value_string"</span>);         <span class="comment">// 新建一个 Key（名为：key_string），赋予字符串值："value_string"。</span></span><br><span class="line"></span><br><span class="line">    root[<span class="string">"key_number"</span>] = Json::Value(<span class="number">12345</span>);            <span class="comment">// 新建一个 Key（名为：key_number），赋予数值：12345。</span></span><br><span class="line"></span><br><span class="line">    root[<span class="string">"key_boolean"</span>] = Json::Value(<span class="literal">false</span>);              <span class="comment">// 新建一个 Key（名为：key_boolean），赋予bool值：false。</span></span><br><span class="line"></span><br><span class="line">    root[<span class="string">"key_double"</span>] = Json::Value(<span class="number">12.345</span>);            <span class="comment">// 新建一个 Key（名为：key_double），赋予 double 值：12.345。</span></span><br><span class="line"></span><br><span class="line">    root[<span class="string">"key_object"</span>] = json_temp;                           <span class="comment">// 新建一个 Key（名为：key_object），赋予 json::Value 对象值。</span></span><br><span class="line"></span><br><span class="line">    root[<span class="string">"key_array"</span>].append(<span class="string">"array_string"</span>);             <span class="comment">// 新建一个 Key（名为：key_array），类型为数组，对第一个元素赋值为字符串："array_string"。</span></span><br><span class="line"></span><br><span class="line">    root[<span class="string">"key_array"</span>].append(<span class="number">1234</span>);                           <span class="comment">// 为数组 key_array 赋值，对第二个元素赋值为：1234。</span></span><br><span class="line"></span><br><span class="line">    Json::ValueType type = root.type();                       <span class="comment">// 获得 root 的类型，此处为 objectValue 类型。</span></span><br><span class="line">    Json::StyledWriter writer;</span><br><span class="line"></span><br><span class="line">    <span class="function">ofstream <span class="title">outfile</span><span class="params">(<span class="string">"../test.json"</span>, ios::out)</span></span>;</span><br><span class="line">    <span class="keyword">if</span> (!outfile)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">cerr</span> &lt;&lt; <span class="string">"Failed to open the file!"</span>;</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    outfile &lt;&lt; writer.write(root) &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>;</span><br><span class="line">    outfile.close();</span><br><span class="line"></span><br><span class="line">    <span class="comment">/* output</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">&#123;</span></span><br><span class="line"><span class="comment">   "key_array" : [ "array_string", 1234 ],</span></span><br><span class="line"><span class="comment">   "key_boolean" : false,</span></span><br><span class="line"><span class="comment">   "key_double" : 12.345000000000001,</span></span><br><span class="line"><span class="comment">   "key_number" : 12345,</span></span><br><span class="line"><span class="comment">   "key_object" : &#123;</span></span><br><span class="line"><span class="comment">      "age" : 26,</span></span><br><span class="line"><span class="comment">      "name" : "huchao"</span></span><br><span class="line"><span class="comment">   &#125;,</span></span><br><span class="line"><span class="comment">   "key_string" : "value_string"</span></span><br><span class="line"><span class="comment">&#125;</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">    */</span></span><br></pre></td></tr></table></figure>
+<h1 id="构建复杂json文件："><a href="#构建复杂json文件：" class="headerlink" title="构建复杂json文件："></a>构建复杂json文件：</h1><p>先构建json树，再写代码会更明确一点：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">&quot;data&quot;|</span><br><span class="line">      |--frame_info x 300|--&quot;frame_index&quot;</span><br><span class="line">      |                  |</span><br><span class="line">      |                  |</span><br><span class="line">      |                  |</span><br><span class="line">      |                  |--&quot;skeleton&quot;|--skeleton_info x m|</span><br><span class="line">      |                  |            |                   |</span><br><span class="line">      |                  |            |                   |--&quot;pose&quot;[1,36]</span><br><span class="line">      |                  |            |                   |</span><br><span class="line">      |                  |            |                   |--&quot;score&quot;[1,18]</span><br></pre></td></tr></table></figure></p>
+<ul>
+<li>“”扩起来的是键值，未加””的是数组元素，包含了 x号后面的多少个元素，每一个元素包含了后面的键值对。</li>
+<li>构建json数据时，需要从树的最深处开始回溯，先将最后一层的叶子节点构造号，然后加入进去。</li>
+<li>数组使用append()函数，元素可以不同类型。</li>
+<li>临时变量使用完毕后使用clear()进行清除。</li>
+</ul>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">void</span> VideoIO::saveInfo2json(<span class="built_in">vector</span>&lt;<span class="built_in">vector</span>&lt;<span class="keyword">float</span>&gt; &gt; bodyInfo_frames) &#123;</span><br><span class="line">    <span class="built_in">string</span> tag[]=</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="string">"Nose"</span>,<span class="string">"Neck"</span>,<span class="string">"RShoulder"</span>,<span class="string">"RElbow"</span>,<span class="string">"RWrist"</span>,</span><br><span class="line">                <span class="string">"LShoulder"</span>,<span class="string">"LElbow"</span>,<span class="string">"LWrist"</span>,<span class="string">"RHip"</span>,<span class="string">"RKnee"</span>,</span><br><span class="line">                <span class="string">"RAnkle"</span>,<span class="string">"LHip"</span>,<span class="string">"LKnee"</span>,<span class="string">"LAnkle"</span>,<span class="string">"REye"</span>,</span><br><span class="line">                <span class="string">"LEye"</span>,<span class="string">"REar"</span>,<span class="string">"LEar"</span></span><br><span class="line">            &#125;;</span><br><span class="line"><span class="comment">//    for(int i = 0 ;i &lt; bodyInfo_frames.size(); i++ )&#123;</span></span><br><span class="line"><span class="comment">//        vector&lt;float&gt; bodyInfo = bodyInfo_frames[i];</span></span><br><span class="line"><span class="comment">//</span></span><br><span class="line"><span class="comment">//        bodys[0] =</span></span><br><span class="line"><span class="comment">//</span></span><br><span class="line"><span class="comment">//    &#125;</span></span><br><span class="line"></span><br><span class="line">    <span class="built_in">vector</span>&lt;<span class="keyword">float</span>&gt; person1_predict_pose = &#123;<span class="number">0.2</span>,<span class="number">0.3</span>,<span class="number">.5</span>,<span class="number">0.3</span>,<span class="number">0.3</span>,<span class="number">0.1</span>,<span class="number">0.2</span>,<span class="number">0.3</span>,<span class="number">.5</span>,<span class="number">0.3</span>,<span class="number">0.3</span>,<span class="number">0.1</span>,<span class="number">0.2</span>,<span class="number">0.3</span>,<span class="number">.5</span>,<span class="number">0.3</span>,<span class="number">0.3</span>,<span class="number">0.1</span>,<span class="number">0.2</span>,<span class="number">0.3</span>,<span class="number">.5</span>,<span class="number">0.3</span>,<span class="number">0.3</span>,<span class="number">0.1</span>,<span class="number">0.2</span>,<span class="number">0.3</span>,<span class="number">.5</span>,<span class="number">0.3</span>,<span class="number">0.3</span>,<span class="number">0.1</span>,<span class="number">0.2</span>,<span class="number">0.3</span>,<span class="number">.5</span>,<span class="number">0.3</span>,<span class="number">0.3</span>,<span class="number">0.1</span>&#125;;</span><br><span class="line">    <span class="built_in">vector</span>&lt;<span class="keyword">float</span>&gt; person1_predict_score = &#123;<span class="number">-0.1</span>,<span class="number">0.5</span>,<span class="number">-0.5</span>,<span class="number">-0.3</span>,<span class="number">0.9</span>,<span class="number">0.1</span>,<span class="number">-0.1</span>,<span class="number">0.5</span>,<span class="number">-0.5</span>,<span class="number">-0.3</span>,<span class="number">0.9</span>,<span class="number">0.1</span>,<span class="number">0.1</span>,<span class="number">0.5</span>,<span class="number">-0.5</span>,<span class="number">-0.3</span>,<span class="number">0.9</span>,<span class="number">0.1</span>&#125;;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">vector</span>&lt;<span class="keyword">float</span>&gt; person2_predict_pose = &#123;<span class="number">0.3</span>,<span class="number">0.1</span>,<span class="number">.002</span>,<span class="number">0.8</span>,<span class="number">0.6</span>,<span class="number">0.2</span>,<span class="number">0.1</span>,<span class="number">0.3</span>,<span class="number">.5</span>,<span class="number">0.3</span>,<span class="number">0.3</span>,<span class="number">0.1</span>,<span class="number">0.2</span>,<span class="number">0.3</span>,<span class="number">.5</span>,<span class="number">0.3</span>,<span class="number">0.3</span>,<span class="number">0.1</span>,<span class="number">0.3</span>,<span class="number">0.1</span>,<span class="number">.002</span>,<span class="number">0.8</span>,<span class="number">0.6</span>,<span class="number">0.2</span>,<span class="number">0.1</span>,<span class="number">0.3</span>,<span class="number">.5</span>,<span class="number">0.3</span>,<span class="number">0.3</span>,<span class="number">0.1</span>,<span class="number">0.2</span>,<span class="number">0.3</span>,<span class="number">.5</span>,<span class="number">0.3</span>,<span class="number">0.3</span>,<span class="number">0.1</span>&#125;;</span><br><span class="line">    <span class="built_in">vector</span>&lt;<span class="keyword">float</span>&gt; person2_predict_score = &#123;<span class="number">-0.5231</span>,<span class="number">0.823</span>,<span class="number">-0.321</span>,<span class="number">-0.3332</span>,<span class="number">0.9231</span>,<span class="number">0.554</span>,<span class="number">-0.5231</span>,<span class="number">0.823</span>,<span class="number">-0.321</span>,<span class="number">-0.3332</span>,<span class="number">0.9231</span>,<span class="number">0.554</span>,<span class="number">-0.5231</span>,<span class="number">0.823</span>,<span class="number">-0.321</span>,<span class="number">-0.3332</span>,<span class="number">0.9231</span>,<span class="number">0.554</span>&#125;;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">vector</span>&lt;<span class="built_in">vector</span>&lt;<span class="keyword">float</span>&gt; &gt; vec_predictions = &#123;person1_predict_pose,person2_predict_pose&#125;;</span><br><span class="line">    <span class="built_in">vector</span>&lt;<span class="built_in">vector</span>&lt;<span class="keyword">float</span>&gt; &gt; vec_scores = &#123;person1_predict_score, person2_predict_score&#125;;</span><br><span class="line"></span><br><span class="line">    Json::Value root;</span><br><span class="line">    Json::Value frame_info;</span><br><span class="line">    Json::Value skeleton;</span><br><span class="line">    Json::Value skeleton_info;</span><br><span class="line">    Json::Value data;</span><br><span class="line">    Json::Value pose;</span><br><span class="line">    Json::Value score;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> frame_index = <span class="number">0</span>;frame_index &lt; <span class="number">5</span>; frame_index++)&#123;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> k =<span class="number">0</span>;k &lt; vec_predictions.size(); k++)&#123;</span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>;i &lt; vec_predictions[k].size(); i++)&#123;</span><br><span class="line">                pose.append(vec_predictions[k][i]);</span><br><span class="line">            &#125;</span><br><span class="line">            skeleton_info[<span class="string">"pose"</span>] = pose;</span><br><span class="line">            pose.clear();</span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>;i &lt; vec_scores[k].size(); i++)&#123;</span><br><span class="line">                score.append(vec_scores[k][i]);</span><br><span class="line">            &#125;</span><br><span class="line">            skeleton_info[<span class="string">"score"</span>] = score;</span><br><span class="line">            score.clear();</span><br><span class="line"></span><br><span class="line">            skeleton.append(skeleton_info);</span><br><span class="line">            skeleton_info.clear();</span><br><span class="line">        &#125;</span><br><span class="line">        frame_info[<span class="string">"skeleton"</span>] = skeleton;</span><br><span class="line">        frame_info[<span class="string">"frame_index"</span>] = frame_index;</span><br><span class="line">        data.append(frame_info);</span><br><span class="line">        frame_info.clear();</span><br><span class="line">    &#125;</span><br><span class="line">    root[<span class="string">"data"</span>] = data;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    Json::StyledWriter writer;</span><br><span class="line">    <span class="function">ofstream <span class="title">outfile</span><span class="params">(<span class="string">"../test.json"</span>, ios::out)</span></span>;</span><br><span class="line">    <span class="keyword">if</span> (!outfile)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">cerr</span> &lt;&lt; <span class="string">"Failed to open the file!"</span>;</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    outfile &lt;&lt; writer.write(root) &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>;</span><br><span class="line">    outfile.close();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="Clion中相对路径失效："><a href="#Clion中相对路径失效：" class="headerlink" title="Clion中相对路径失效："></a>Clion中相对路径失效：</h1><p>使用父级目录，原因：在CLion工程中，编译文件放在/home/djw931017/dup/cmake-build-debug文件夹中,此时使用相对路径./a.txt是在cmake-build-debug文件夹下寻找文件。因此，需要回到代码文件同目录下的相对路径。</p>
+<h1 id="C-获取文件下的所有文件名："><a href="#C-获取文件下的所有文件名：" class="headerlink" title="C++获取文件下的所有文件名："></a>C++获取文件下的所有文件名：</h1><p>该功能类似于python中<code>os.listdir(path)</code>的功能。</p>
+<h2 id="以在linux下面为例："><a href="#以在linux下面为例：" class="headerlink" title="以在linux下面为例："></a>以在linux下面为例：</h2><ul>
+<li>DIR *dir 类型的指针只想了目录文件</li>
+<li>dirent *ptr 可以得到文件的属性信息</li>
+<li>readdir(dir) 函数可以将目录文件下的所有文件依次读入</li>
+<li>d_type: 区分文件的标志，ldx文件。<ul>
+<li>d_type = 4 为目录文件</li>
+<li>d_type = 8 为文件</li>
+<li>d_type = 10 为连接文件<br>这里为了之后读取.avi文件也能使用该接口，所以将文件和目录等同对待。<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">else</span> <span class="keyword">if</span>(ptr-&gt;d_type == <span class="number">8</span>)    <span class="comment">///file</span></span><br><span class="line">            <span class="comment">//printf("d_name:%s/%s\n",basePath,ptr-&gt;d_name);</span></span><br><span class="line">            files.push_back(ptr-&gt;d_name);</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+</ul>
+<p>当然，如果之后遇到文件和目录在同一级中，那么需要将二者分开然后递归。<br>下面是源码：<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">ifdef</span> linux</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;dirent.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">ifdef</span> WIN32</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;direct.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;io.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br><span class="line"><span class="built_in">vector</span>&lt;<span class="built_in">string</span>&gt; VideoIO::getFilesName(<span class="built_in">string</span> path) &#123;</span><br><span class="line">    <span class="built_in">vector</span>&lt;<span class="built_in">string</span>&gt; files;<span class="comment">//存放文件名</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">ifdef</span> WIN32</span></span><br><span class="line">    <span class="keyword">_finddata_t</span> file;</span><br><span class="line">  <span class="keyword">long</span> lf;</span><br><span class="line">  <span class="comment">//输入文件夹路径</span></span><br><span class="line">  <span class="keyword">if</span> ((lf=_findfirst(path.c_str(), &amp;file)) == <span class="number">-1</span>) &#123;</span><br><span class="line">    <span class="built_in">cout</span>&lt;&lt;cate_dir&lt;&lt;<span class="string">" not found!!!"</span>&lt;&lt;<span class="built_in">endl</span>;</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="keyword">while</span>(_findnext(lf, &amp;file) == <span class="number">0</span>) &#123;</span><br><span class="line">      <span class="comment">//输出文件名</span></span><br><span class="line">      <span class="comment">//cout&lt;&lt;file.name&lt;&lt;endl;</span></span><br><span class="line">      <span class="keyword">if</span> (<span class="built_in">strcmp</span>(file.name, <span class="string">"."</span>) == <span class="number">0</span> || <span class="built_in">strcmp</span>(file.name, <span class="string">".."</span>) == <span class="number">0</span>)</span><br><span class="line">        <span class="keyword">continue</span>;</span><br><span class="line">      files.push_back(file.name);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  _findclose(lf);</span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">ifdef</span> linux</span></span><br><span class="line">    DIR *dir;</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">dirent</span> *<span class="title">ptr</span>;</span></span><br><span class="line">    <span class="keyword">char</span> base[<span class="number">1000</span>];</span><br><span class="line">    <span class="keyword">if</span> ((dir=opendir(path.c_str())) == <span class="literal">NULL</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        perror(<span class="string">"Open dir error..."</span>);</span><br><span class="line">        <span class="built_in">exit</span>(<span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">while</span> ((ptr=readdir(dir)) != <span class="literal">NULL</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span>(<span class="built_in">strcmp</span>(ptr-&gt;d_name,<span class="string">"."</span>)==<span class="number">0</span> || <span class="built_in">strcmp</span>(ptr-&gt;d_name,<span class="string">".."</span>)==<span class="number">0</span>)    <span class="comment">///current dir OR parrent dir</span></span><br><span class="line">            <span class="keyword">continue</span>;</span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span>(ptr-&gt;d_type == <span class="number">8</span>)    <span class="comment">///file</span></span><br><span class="line">            <span class="comment">//printf("d_name:%s/%s\n",basePath,ptr-&gt;d_name);</span></span><br><span class="line">            files.push_back(ptr-&gt;d_name);</span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span>(ptr-&gt;d_type == <span class="number">10</span>)    <span class="comment">///link file</span></span><br><span class="line">            <span class="comment">//printf("d_name:%s/%s\n",basePath,ptr-&gt;d_name);</span></span><br><span class="line">            <span class="keyword">continue</span>;</span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span>(ptr-&gt;d_type == <span class="number">4</span>)    <span class="comment">///dir</span></span><br><span class="line">        &#123;</span><br><span class="line">            files.push_back(ptr-&gt;d_name);</span><br><span class="line">            <span class="comment">/*</span></span><br><span class="line"><span class="comment">                memset(base,'\0',sizeof(base));</span></span><br><span class="line"><span class="comment">                strcpy(base,basePath);</span></span><br><span class="line"><span class="comment">                strcat(base,"/");</span></span><br><span class="line"><span class="comment">                strcat(base,ptr-&gt;d_nSame);</span></span><br><span class="line"><span class="comment">                readFileList(base);</span></span><br><span class="line"><span class="comment">            */</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    closedir(dir);</span><br><span class="line">    sort(files.begin(),files.end());</span><br><span class="line">    <span class="keyword">return</span> files;</span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>返回的文件名是无序的，可以排列后返回。</p>
+<h1 id="Clion中使用g-11"><a href="#Clion中使用g-11" class="headerlink" title="Clion中使用g++11:"></a>Clion中使用g++11:</h1><p>在cmake中添加：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">set(CMAKE_CXX_STANDARD 14)</span><br></pre></td></tr></table></figure></p>
+<h1 id="Opencv读取视频信息："><a href="#Opencv读取视频信息：" class="headerlink" title="Opencv读取视频信息："></a>Opencv读取视频信息：</h1><p><code>opencv</code> 中的 <code>capture</code>类是可以获得视频很多信息的。<br>使用<code>capture.get()</code>获取数据</p>
+<ul>
+<li><code>CV_CAP_PROP_FRAME_COUNT</code> ： 总帧数.</li>
+<li><code>CV_CAP_PROP_FRAME_HEIGHT</code>: 视频分辨率高度</li>
+<li><code>CV_CAP_PROP_FRAME_WIDTH</code>: 视频分辨率宽度</li>
+<li><code>CV_CAP_PROP_FRAME_FPS</code> : 视频fps<br>样例：<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">void</span> VideoIO::loadVideo(<span class="built_in">string</span> path,<span class="built_in">string</span> videoName)&#123;</span><br><span class="line">    <span class="built_in">cout</span>&lt;&lt;<span class="string">"正在处理视频: "</span></span><br><span class="line">        &lt;&lt; path</span><br><span class="line">        &lt;&lt; <span class="string">" 视频名："</span></span><br><span class="line">        &lt;&lt; videoName</span><br><span class="line">        &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line"></span><br><span class="line">    cv::VideoCapture capture;</span><br><span class="line">    <span class="comment">//读取视频文件</span></span><br><span class="line">    capture.open(path);</span><br><span class="line">    <span class="comment">//判断是否出错</span></span><br><span class="line">    <span class="keyword">if</span> (!capture.isOpened())&#123;</span><br><span class="line">        <span class="built_in">cout</span> &lt;&lt; <span class="string">"Load Video Failed"</span> &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">        system(<span class="string">"pause"</span>);</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//获取视频文件相关信息----总帧数</span></span><br><span class="line">    <span class="keyword">long</span> nTotalFrame = capture.get(CV_CAP_PROP_FRAME_COUNT);</span><br><span class="line">    <span class="built_in">cout</span> &lt;&lt; <span class="string">"This video framesNum are:"</span> &lt;&lt; nTotalFrame &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">    <span class="comment">//获取视频相关信息---分辨率（宽、高）</span></span><br><span class="line">    <span class="keyword">int</span>  frameHeight = capture.get(CV_CAP_PROP_FRAME_HEIGHT);</span><br><span class="line">    <span class="keyword">int</span> frameWidth = capture.get(CV_CAP_PROP_FRAME_WIDTH);</span><br><span class="line">    <span class="built_in">cout</span> &lt;&lt; <span class="string">"This video is :"</span> &lt;&lt; frameWidth &lt;&lt; <span class="string">"*"</span> &lt;&lt; frameHeight&lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">    <span class="comment">//获取视频帧率</span></span><br><span class="line">    <span class="keyword">double</span> FrameRate = capture.get(CV_CAP_PROP_FPS);</span><br><span class="line">    <span class="built_in">cout</span> &lt;&lt; <span class="string">"The frame rate is:"</span> &lt;&lt; FrameRate &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">    capture.release();</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h1 id="cv-waitkey-深度解析："><a href="#cv-waitkey-深度解析：" class="headerlink" title="cv::waitkey()深度解析："></a>cv::waitkey()深度解析：</h1><p>很多时候发现对于<code>waitkey()</code>这个函数的理解并不到位，刚开始学习时只是简单的以为这个是显示图片必须的一行代码，必须紧跟在cv::imshow(“”,)后面，但是后面随着应用的加深，发现waitkey好像和本来理解的不一样。</p>
+<p>首先来看官方的解释：</p>
+<blockquote>
+<p>This function should be followed by cv::waitKey function which displays the image for specified milliseconds. Otherwise, it won’t display the image. For example, waitKey(0) will display the window infinitely until any keypress (it is suitable for image display). waitKey(25) will display a frame for 25 ms, after which display will be automatically closed. (If you put it in a loop to read videos, it will display the video frame-by-frame)</p>
+</blockquote>
+<p>意思是：</p>
+<ul>
+<li><code>waitKey(0)</code>会永久等待，直到任意键被按下。</li>
+<li><code>waitKey(25)</code>会等待25ms，单位是ms计算。<br>另外：</li>
+<li><code>waitKey()</code>可以返回按下的键的信息使得下面逻辑成立：<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (<span class="keyword">char</span>(cv::waitKey(<span class="number">1000</span> / FrameRate)) == <span class="string">'q'</span>)</span><br><span class="line">  <span class="keyword">break</span>;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>每帧停留的时间中判断是否按键为<code>q</code>，FrameRate可以由<code>capture.get(CV_CAP_PROP_FPS)</code>得到，<strong>每<code>s/fps</code>帧</strong>-&gt; 每帧保持<strong><code>1000/fps ms</code></strong>，所以在<strong><code>1000/FrameRate</code></strong>的时间中判断按键并且<strong>显示该帧的内容</strong>，这样帧率会和源视频中一样，这也解释了之前使用opencv加载摄像头存储为新的<code>.avi</code>视频帧率不同的问题，因为没有修改帧率。</p>
+<h1 id="C-中类与类之间的关系："><a href="#C-中类与类之间的关系：" class="headerlink" title="C++中类与类之间的关系："></a>C++中类与类之间的关系：</h1><p>类要在真正要使用时才实例化，比如在一个类的构造函数中实例化其他类是没有必要且会出错的，变量的实例化是在生命周期中才有的，在构造函数执行完后，类中的(其他)类成员将会释放，这时如果是指针访问会出现野指针或者内存泄漏。</p>
+<p>所以只有在真正要使用某个类的时候再实例化之，不必过早的将其实例化出来，尽管使用对象(不使用指针，因为对象的话其成员类也是会分配内存的)，也会造成内存的浪费。</p>
+<h1 id="类的debug函数："><a href="#类的debug函数：" class="headerlink" title="类的debug函数："></a>类的debug函数：</h1><p>在类中构造一个debug函数会有意想不到的好处，debug函数很简单只用将内部变量_debug开关打开即可，然后每次需要调试的逻辑处利用debug分流，这样会很棒。</p>
+<h1 id="C-传参数："><a href="#C-传参数：" class="headerlink" title="C++传参数："></a>C++传参数：</h1><p>对于某些参数，类似于<code>Opencv</code>中<code>Mat</code>这样的参数一定要注意是否需要new一个出来，这种情况经常发生在vector<mat> vecMat.push_back()的地方，push_back进去的仅是一个引用指针，如果push进去的Mat正在迭代，那么迭代结束后，vecMat里面的东西将会全部相同且等于最后一个push的Mat。<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">cv::Mat frame;</span><br><span class="line"><span class="built_in">vector</span>&lt;Mat&gt; vecMat;</span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; count; ++i)</span><br><span class="line">&#123;</span><br><span class="line">    frame = cv::imread(path);</span><br><span class="line">    vecMat.push_back(frame);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></mat></p>
+<p>上面的代码运行后会发现vecMat全部是最后一个，如果想要将每一帧都加入vec中则需要每次都new一个对象出来，然后将其加入进去。如下：<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">vector</span>&lt;Mat&gt; vecMat;</span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; count; ++i)</span><br><span class="line">&#123;</span><br><span class="line">    cv::Mat frame;</span><br><span class="line">    frame = cv::imread(path);</span><br><span class="line">    vecMat.push_back(frame);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>这类问题就类似于向vec中push_back指针，虽然说push_back是复制操作，但是对于每一个新的指针(在值上等于被push进去的指针)都指向了同一个内存单元，而每次迭代修改的就是这个内存单元的值，所以遍历vec时输出的都是这个内存单元最后改变的值。</p>
+<h1 id="C-内存管理："><a href="#C-内存管理：" class="headerlink" title="C++内存管理："></a>C++内存管理：</h1><p>当项目处理数据较大且运行时间长时一定要格外注意内存泄漏的问题。</p>
+<ul>
+<li>灵活使用变量的生命周期，{}在大括号内部的变量会随着代码块执行完毕而释放。</li>
+<li>函数执行完后会将内存释放</li>
+</ul>
+<p>当{}内部使用{}外的变量时一定要格外注意，对于该变量的修改将是持久性的。<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">vector</span>&lt;Mat&gt; frames;</span><br><span class="line">    vio-&gt;loadDatasetFile();</span><br><span class="line">    <span class="keyword">int</span> videoNums = vio-&gt;PathFilesName_map[<span class="string">"videoName"</span>].size();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span>(_debug)</span><br><span class="line">        videoNums = <span class="number">2</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">int</span> k_init = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span>(_debug)</span><br><span class="line">        k_init = <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> k = k_init; k &lt; videoNums; k++)&#123;</span><br><span class="line">        <span class="keyword">int</span> current_frame_index = <span class="number">0</span>;</span><br><span class="line">        <span class="built_in">vector</span>&lt;Skeleton_Info&gt; skeletons;</span><br><span class="line">        vio-&gt;loadVideoFrames(vio-&gt;PathFilesName_map[<span class="string">"subVideoPath"</span>][k], vio-&gt;PathFilesName_map[<span class="string">"videoName"</span>][k], frames);</span><br><span class="line">        <span class="keyword">int</span> framesNum = frames.size();</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Transform the size of frames to the 340x256.</span></span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt; framesNum;i++)&#123;</span><br><span class="line">            cv::resize(frames[i],frames[i],cv::Size(<span class="number">360</span>,<span class="number">256</span>));</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></p>
+<p>函数原型：<br><code>void VideoIO::loadVideoFrames(string path,string videoName,vector&lt;Mat&gt; &amp; frames)</code></p>
+<p>这段代码中frames泄漏了，因为每一次对于frames的操作都在它原本的基础上进行操作，本身没有释放，所以会一直累加直到内存不足。</p>
+<p>这段代码本身是想得到300帧视频帧然后对这300帧迭代进行预测，有一个count记录0-300，count==300时停止循环，所以如果frames在迭代中没有得到释放，那么每次处理的都是frames中的前300帧，即第一个视频中的300帧，出错！</p>
+<p>时刻使用frames.clear(),frameMat.clear()等函数来清除内存，并且使用del来释放new出来的对象。</p>
+<h2 id="在使用jsoncpp时也需要注意内存："><a href="#在使用jsoncpp时也需要注意内存：" class="headerlink" title="在使用jsoncpp时也需要注意内存："></a>在使用jsoncpp时也需要注意内存：</h2><p>循环中的json::value对象也需要及时的处理掉：<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> maxTemporalLength = bodyInfo_frames.size();</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> frame_index = <span class="number">0</span>;frame_index &lt; maxTemporalLength; frame_index++)&#123;</span><br><span class="line">        <span class="built_in">vector</span>&lt;<span class="built_in">vector</span>&lt;<span class="keyword">float</span>&gt; &gt; vec_predictions = bodyInfo_frames[frame_index][<span class="string">"pose"</span>];</span><br><span class="line">        <span class="built_in">vector</span>&lt;<span class="built_in">vector</span>&lt;<span class="keyword">float</span>&gt; &gt; vec_scores = bodyInfo_frames[frame_index][<span class="string">"score"</span>];</span><br><span class="line">        <span class="keyword">int</span> peopelNum = vec_predictions.size();</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> k =<span class="number">0</span>;k &lt; peopelNum; k++)&#123;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>;i &lt; vec_predictions[k].size(); i++)&#123;</span><br><span class="line">                pose.append(vec_predictions[k][i]);</span><br><span class="line">            &#125;</span><br><span class="line">            skeleton_info[<span class="string">"pose"</span>] = pose;</span><br><span class="line">            pose.clear();</span><br><span class="line"></span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>;i &lt; vec_scores[k].size(); i++)&#123;</span><br><span class="line">                score.append(vec_scores[k][i]);</span><br><span class="line">            &#125;</span><br><span class="line">            skeleton_info[<span class="string">"score"</span>] = score;</span><br><span class="line">            score.clear();</span><br><span class="line"></span><br><span class="line">            skeleton.append(skeleton_info);</span><br><span class="line">            skeleton_info.clear();</span><br><span class="line">        &#125;</span><br><span class="line">        frame_info[<span class="string">"skeleton"</span>] = skeleton;</span><br><span class="line">        <span class="comment">//skeleton.clear(); !bug 必须处理掉！需要添加这一行代码！</span></span><br><span class="line"></span><br><span class="line">        frame_info[<span class="string">"frame_index"</span>] = frame_index;</span><br><span class="line"></span><br><span class="line">        data.append(frame_info);</span><br><span class="line">        frame_info.clear();</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></p>
+<p>上面代码skeleton没有clear()掉，造成了数据指数增加。使用完了就要清零，使用完了就要删除的思想！如果下一次循环是需要一个新的无污染的同名迭代变量，那么一定要清除。</p>
+<h1 id="opencv-Mat-reshape"><a href="#opencv-Mat-reshape" class="headerlink" title="opencv Mat.reshape():"></a>opencv Mat.reshape():</h1><p>函数原型：<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Mat Mat::reshape(<span class="keyword">int</span> cn, <span class="keyword">int</span> rows=<span class="number">0</span>) <span class="keyword">const</span></span><br></pre></td></tr></table></figure></p>
+<p>cn: 表示通道数(channels), 如果设为0，则表示保持通道数不变，否则则变为设置的通道数。</p>
+<p>rows: 表示矩阵行数。 如果设为0，则表示保持原有的行数不变，否则则变为设置的行数。</p>
+<p>reshape()可以将Mat转为指定的shape，但是其本身的存储是按照row来组织，本身看不出chanl的排列，这点可以从下面看出：<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt; <span class="number">36</span>;i++)&#123;</span><br><span class="line">        vec2.push_back(i);</span><br><span class="line">    &#125;</span><br><span class="line">img = img.reshape(<span class="number">4</span>,<span class="number">3</span>);</span><br><span class="line"><span class="built_in">cout</span>&lt;&lt;<span class="string">"img"</span>&lt;&lt;<span class="built_in">endl</span>&lt;&lt;img;</span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11;</span></span><br><span class="line"><span class="comment"> 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23;</span></span><br><span class="line"><span class="comment"> 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35]</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line">img = img.reshape(<span class="number">0</span>,<span class="number">3</span>);</span><br><span class="line"><span class="built_in">cout</span>&lt;&lt;<span class="string">"img"</span>&lt;&lt;<span class="built_in">endl</span>&lt;&lt;img;</span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11;</span></span><br><span class="line"><span class="comment"> 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23;</span></span><br><span class="line"><span class="comment"> 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35]</span></span><br><span class="line"><span class="comment">*/</span></span><br></pre></td></tr></table></figure></p>
+<p>内部的chanl看不出来，其本身的存储与<code>reshape(\*,3)</code>是一样的。但其<code>step</code>是不同的，<code>step</code>的解释参照</p>
+<p>总结reshape：以cn为步长在原Mat中按行依次的顺序取数据，按照row进行排列组织。[[0,1],[2,3],[4,5]…]，而<code>split();</code>函数正是按照reshape好的数据格式进行切分通道的，即每隔cn个数据取一个。</p>
+<p>所以下面两个方式取得的数据是不同的：<code>probMat</code>是一个<code>(46 x 2622)</code>的<code>Mat</code></p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">probMat = probMat.reshape(<span class="number">57</span>,<span class="number">46</span>);</span><br><span class="line"><span class="built_in">std</span>::<span class="built_in">vector</span>&lt;Mat&gt; chs;</span><br><span class="line">split(probMat, chs);</span><br><span class="line">Mat nose_Mat = chs[<span class="number">1</span>];</span><br></pre></td></tr></table></figure>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">1</span>; i++) &#123;</span><br><span class="line">    hmg = probMat(cv::Rect(Point(<span class="number">0</span>, i * <span class="number">46</span>), Point(<span class="number">46</span>, (i + <span class="number">1</span>) * <span class="number">46</span>)));</span><br><span class="line">    resize(hmg, hmg, cv::Size(<span class="number">368</span>, <span class="number">368</span>));</span><br><span class="line">    <span class="keyword">double</span> minVal, maxVal;</span><br><span class="line">    Point minP, maxP;</span><br><span class="line">    minMaxLoc(hmg, &amp;minVal, &amp;maxVal, &amp;minP, &amp;maxP);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>第一个代码将其分为57通道的数据，第二个代码也是将其分为57块数据，这两种方法有很大的不同：</p>
+<ul>
+<li>第一个是将数据看成了[[[0,1,2,..56],[57,58…113],[…]]]，然后每隔通道数取一个组成46x46x57的blob。</li>
+<li>第二个是将数据[[0…46x46-1],[46x46…46x46x2-1]…]来组成的。</li>
+</ul>
+<p>那么怎么才能使<code>reshape</code>出来的<code>Mat</code>是按顺序的呢？</p>
+<ol>
+<li>img = img.reshape(0,cn); 得到每一行为一个通道的值，换句话说，整个通道的值都在一行中</li>
+<li>img = img.t();  转置，使得每一列是同一个通道，每一个通道中的邻接的值下标相差正好为cn个。</li>
+<li>img = img.reshape(cn,row); 每隔cn正好得到同一个通道的值。</li>
+</ol>
+<h1 id="C-函数重载"><a href="#C-函数重载" class="headerlink" title="C++函数重载"></a>C++函数重载</h1><p>在结构体、类中的重载可以不给本身参数：<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">person</span>&#123;</span></span><br><span class="line">    <span class="keyword">unsigned</span> <span class="keyword">int</span> age;</span><br><span class="line">    <span class="built_in">string</span> name;</span><br><span class="line">    <span class="keyword">bool</span> <span class="keyword">operator</span> &gt; (person &amp; B) <span class="keyword">const</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">this</span>-&gt;age &gt; B.age;</span><br><span class="line">    &#125;</span><br><span class="line">    person(<span class="keyword">int</span> ag,<span class="built_in">string</span> name):age(ag),name(name)&#123;&#125;;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+<p>本来<code>&gt;</code>需要两个参数，但是由于本身在结构体中，可以不用传入自身。</p>
+<h2 id="运算符的重载："><a href="#运算符的重载：" class="headerlink" title="运算符的重载："></a>运算符的重载：</h2><h3 id="、-、×、"><a href="#、-、×、" class="headerlink" title="+、-、×、/"></a>+、-、×、/</h3><p><code>+</code>号一般来说返回的是同一类的数据<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Box</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    Box <span class="keyword">operator</span>+(<span class="keyword">const</span> Box&amp; b)</span><br><span class="line">          &#123;</span><br><span class="line">             Box box;</span><br><span class="line">             box.length = <span class="keyword">this</span>-&gt;length + b.length;</span><br><span class="line">             box.breadth = <span class="keyword">this</span>-&gt;breadth + b.breadth;</span><br><span class="line">             box.height = <span class="keyword">this</span>-&gt;height + b.height;</span><br><span class="line">             <span class="keyword">return</span> box;</span><br><span class="line">          &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="gt-、-lt-、"><a href="#gt-、-lt-、" class="headerlink" title="&gt;、&lt;、=="></a>&gt;、&lt;、==</h3><p>比较运算符返回的则是bool类型，使条件成立的返回true，注意这种重载可以和algorithm中的sort函数结合使用达到很好的效果。<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">person</span>&#123;</span></span><br><span class="line">    <span class="keyword">unsigned</span> <span class="keyword">int</span> age;</span><br><span class="line">    <span class="built_in">string</span> name;</span><br><span class="line">    <span class="keyword">bool</span> <span class="keyword">operator</span> &gt; (person &amp; B) <span class="keyword">const</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">this</span>-&gt;age &gt; B.age;</span><br><span class="line">    &#125;</span><br><span class="line">    person(<span class="keyword">int</span> ag,<span class="built_in">string</span> name):age(ag),name(name)&#123;&#125;;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+<h3 id="流的重载-lt-lt-、-gt-gt"><a href="#流的重载-lt-lt-、-gt-gt" class="headerlink" title="流的重载&lt;&lt;、&gt;&gt;"></a>流的重载&lt;&lt;、&gt;&gt;</h3><p>流操作的重载一般不写在结构体或这类中，因为这类操作通常是在外部进行的，如果写在内部调用时较麻烦，需要A.operator&gt;&gt;()来使用，不能直接使用cout&lt;&lt;A。所以要将其写在全局中。</p>
+<pre><code class="lang-c++">ostream&amp; operator &lt;&lt; (ostream&amp; os, person a){
+    os &lt;&lt; a.name &lt;&lt; &quot;&#39;s age is &quot;&lt;&lt;a.age &lt;&lt; endl;
+    return os;
+}
+int main(){
+    person a = person(1,&quot;Liu&quot;);
+    cout&lt;&lt;a;
+    return 0;
+}
+</code></pre>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/C/" rel="tag"># C++</a>
+          
+            <a href="/tags/OpenCV/" rel="tag"># OpenCV</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/08/15/9_Pytorch_Data/" rel="next" title="Pytorch Data">
+                <i class="fa fa-chevron-left"></i> Pytorch Data
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/08/24/14_ST-Gcn/" rel="prev" title="St-gcn 动作识别 理论+源码分析(Pytorch)">
+                St-gcn 动作识别 理论+源码分析(Pytorch) <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/avatar.gif" alt="JoeyF">
+            
+              <p class="site-author-name" itemprop="name">JoeyF</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">21</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">17</span>
+                  <span class="site-state-item-name">tags</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/ZhouYiiFeng" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:joeyf.z.y.wen@gmail.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Ubuntu-jsoncpp的安装："><span class="nav-number">1.</span> <span class="nav-text">Ubuntu jsoncpp的安装：</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#构建复杂json文件："><span class="nav-number">2.</span> <span class="nav-text">构建复杂json文件：</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Clion中相对路径失效："><span class="nav-number">3.</span> <span class="nav-text">Clion中相对路径失效：</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#C-获取文件下的所有文件名："><span class="nav-number">4.</span> <span class="nav-text">C++获取文件下的所有文件名：</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#以在linux下面为例："><span class="nav-number">4.1.</span> <span class="nav-text">以在linux下面为例：</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Clion中使用g-11"><span class="nav-number">5.</span> <span class="nav-text">Clion中使用g++11:</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Opencv读取视频信息："><span class="nav-number">6.</span> <span class="nav-text">Opencv读取视频信息：</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#cv-waitkey-深度解析："><span class="nav-number">7.</span> <span class="nav-text">cv::waitkey()深度解析：</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#C-中类与类之间的关系："><span class="nav-number">8.</span> <span class="nav-text">C++中类与类之间的关系：</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#类的debug函数："><span class="nav-number">9.</span> <span class="nav-text">类的debug函数：</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#C-传参数："><span class="nav-number">10.</span> <span class="nav-text">C++传参数：</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#C-内存管理："><span class="nav-number">11.</span> <span class="nav-text">C++内存管理：</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#在使用jsoncpp时也需要注意内存："><span class="nav-number">11.1.</span> <span class="nav-text">在使用jsoncpp时也需要注意内存：</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#opencv-Mat-reshape"><span class="nav-number">12.</span> <span class="nav-text">opencv Mat.reshape():</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#C-函数重载"><span class="nav-number">13.</span> <span class="nav-text">C++函数重载</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#运算符的重载："><span class="nav-number">13.1.</span> <span class="nav-text">运算符的重载：</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#、-、×、"><span class="nav-number">13.1.1.</span> <span class="nav-text">+、-、×、/</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#gt-、-lt-、"><span class="nav-number">13.1.2.</span> <span class="nav-text">&gt;、&lt;、==</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#流的重载-lt-lt-、-gt-gt"><span class="nav-number">13.1.3.</span> <span class="nav-text">流的重载&lt;&lt;、&gt;&gt;</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">JoeyF</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Gemini</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+
+
+  
+
+  
+
+</body>
+</html>

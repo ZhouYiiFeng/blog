@@ -1,0 +1,835 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Python,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="导言：在这篇文章中讲了一些经常在CV会经常用到的一些python中的工具。 迭代器 __iter__():迭代器，生成迭代对象时调用，返回值必须是对象自己,然后for可以循环调用next方法 next():每一次for循环都调用该方法（必须存在）  疑问：为什么list类型不是迭代器，但是其能放入for循环中遍历呢？解答：迭代环境会优先使用迭代协议（也就是调用next方法），如果对象不支持迭代协议">
+<meta name="keywords" content="Python">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Python CV基础">
+<meta property="og:url" content="http://zhoef.com/2019/08/25/15_Python_Basic/index.html">
+<meta property="og:site_name" content="JoeyF&#39;s Home">
+<meta property="og:description" content="导言：在这篇文章中讲了一些经常在CV会经常用到的一些python中的工具。 迭代器 __iter__():迭代器，生成迭代对象时调用，返回值必须是对象自己,然后for可以循环调用next方法 next():每一次for循环都调用该方法（必须存在）  疑问：为什么list类型不是迭代器，但是其能放入for循环中遍历呢？解答：迭代环境会优先使用迭代协议（也就是调用next方法），如果对象不支持迭代协议">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2019-08-25T02:47:12.976Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Python CV基础">
+<meta name="twitter:description" content="导言：在这篇文章中讲了一些经常在CV会经常用到的一些python中的工具。 迭代器 __iter__():迭代器，生成迭代对象时调用，返回值必须是对象自己,然后for可以循环调用next方法 next():每一次for循环都调用该方法（必须存在）  疑问：为什么list类型不是迭代器，但是其能放入for循环中遍历呢？解答：迭代环境会优先使用迭代协议（也就是调用next方法），如果对象不支持迭代协议">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://zhoef.com/2019/08/25/15_Python_Basic/">
+
+
+
+
+
+  <title>Python CV基础 | JoeyF's Home</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="default">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">JoeyF's Home</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            About
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://zhoef.com/2019/08/25/15_Python_Basic/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="JoeyF">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="JoeyF's Home">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Python CV基础</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-08-25T10:42:39+08:00">
+                2019-08-25
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>导言：在这篇文章中讲了一些经常在CV会经常用到的一些python中的工具。</p>
+<h1 id="迭代器"><a href="#迭代器" class="headerlink" title="迭代器"></a>迭代器</h1><ul>
+<li><code>__iter__()</code>:迭代器，生成迭代对象时调用，返回值必须是对象自己,然后for可以循环调用next方法</li>
+<li><code>next()</code>:每一次for循环都调用该方法（必须存在）</li>
+</ul>
+<p>疑问：为什么list类型不是迭代器，但是其能放入for循环中遍历呢？<br>解答：迭代环境会优先使用迭代协议（也就是调用<strong>next</strong>方法），如果对象不支持迭代协议，则使用索引方式进行迭代，所以list可以被遍历。</p>
+<h1 id="生成器"><a href="#生成器" class="headerlink" title="生成器"></a>生成器</h1><p>如果一个<code>def</code>的主体<strong>包含</strong><code>yield</code>，这个函数会<strong>自动变成一个生成器</strong>（即使它包含一个return）。生成器函数返回<strong>生成器的迭代器</strong>。<strong>“生成器的迭代器”</strong>通常就被称作<strong>“生成器”</strong>。要注意的是生成器就是一类特殊的<strong>迭代器</strong>。作为一个迭代器，生成器必须要定义一些方法(method)，其中一个就是<strong>next</strong>()。如同迭代器一样，我们可以使用next()函数来获取下一个值。 而yield就是自带的next()函数：</p>
+<p>外面调用生成器-&gt;调用该对象的next()函数-&gt;找到上一次yield出去的地方-&gt;继续执行yield后面的代码</p>
+<h1 id="lambda"><a href="#lambda" class="headerlink" title="lambda"></a>lambda</h1><p>lambda的一般形式是关键字lambda后面跟一个或多个参数，紧跟一个冒号，以后是一个表达式。lambda是一个表达式而不是一个语句。它能够出现在Python语法不允许def出现的地方。作为表达式，lambda返回一个值（即一个新的函数）。lambda用来编写简单的函数，而def用来处理更强大的任务。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">f = <span class="keyword">lambda</span> x, y, z :x + y + z</span><br><span class="line"><span class="keyword">print</span> f(<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>) <span class="comment">#6</span></span><br></pre></td></tr></table></figure></p>
+<p>lambda后面的参数(：之前的)是从外界接受的参数，然后对其进行:后的运算。</p>
+<h1 id="4-python-继承"><a href="#4-python-继承" class="headerlink" title="4.python 继承"></a>4.python 继承</h1><p><a href="https://www.runoob.com/w3cnote/python-extends-init.html" target="_blank" rel="noopener">参考博客</a></p>
+<p><strong>在子类中必须要执行父类的构造函数</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">B</span><span class="params">(A)</span>:</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></span><br><span class="line">    self.b = <span class="number">10</span> <span class="comment">#这样就是错的因为没有执行父类的构造函数</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">B</span><span class="params">(A)</span>:</span></span><br><span class="line">	<span class="string">"""docstring for B"""</span></span><br><span class="line">	<span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, arg)</span>:</span></span><br><span class="line">		super(B, self).__init__() <span class="comment">#使用super调用父类构造 super(类名,self).__init__()</span></span><br><span class="line">		self.arg = arg</span><br><span class="line">		</span><br><span class="line">	<span class="comment">##或者使用父类名字.__init()___</span></span><br><span class="line">	<span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self,arg)</span>:</span></span><br><span class="line">		A.__init__()</span><br><span class="line">		self.arg = arg</span><br></pre></td></tr></table></figure>
+<h1 id="import："><a href="#import：" class="headerlink" title="import："></a><strong>import</strong>：</h1><p><code>__import__()</code> 函数用于动态加载类和函数</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">__import__(mod_str)</span><br></pre></td></tr></table></figure>
+<p>源码中首先使用import<em>class的方法，传入文件名以及类名。<br>然后使用`<em>_import</em></em>`来加载类。只是申明并未实例化。</p>
+<p>得到的<code>processors</code>是一个字典，包含了两个类<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">processors[<span class="string">'recognition'</span>] = import_class(<span class="string">'processor.recognition.REC_Processor'</span>)</span><br><span class="line">processors[<span class="string">'demo'</span>] = import_class(<span class="string">'processor.demo.Demo'</span>)</span><br></pre></td></tr></table></figure></p>
+<h2 id="得到类对象："><a href="#得到类对象：" class="headerlink" title="得到类对象："></a>得到类对象：</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Processor = processors[arg.processor]</span><br><span class="line">p = Processor(sys.argv[<span class="number">2</span>:])</span><br></pre></td></tr></table></figure>
+<p><code>processors</code>中存储了两个类，只不过这两个类还并未实例化。<br><code>p = Processor(sys.argv[2:])</code>实例化了此类。</p>
+<h3 id="import-的一个小实例："><a href="#import-的一个小实例：" class="headerlink" title="import()的一个小实例："></a><strong>import</strong>()的一个小实例：</h3><p>文件T20190801中：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"> <span class="function"><span class="keyword">def</span> <span class="title">import_model</span><span class="params">(self,str)</span>:</span></span><br><span class="line">        mod_str, _sep, class_str = str.rpartition(<span class="string">'.'</span>)</span><br><span class="line">        __import__(mod_str)</span><br><span class="line">        <span class="keyword">return</span> getattr(sys.modules[mod_str], class_str)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">start</span><span class="params">(self)</span>:</span></span><br><span class="line">    train_x,train_y,test_x,test_y = self.makedata()</span><br><span class="line">    Model = (self.import_model(<span class="string">"T20190801_Model.Model"</span>))</span><br><span class="line">    model = Model()</span><br><span class="line">    print(model)</span><br></pre></td></tr></table></figure></p>
+<p><code>__import__(mod_str)</code>中只有传入文件名称就可以导入该文件了.</p>
+<p><code>getattr(sys.modules[mod_str], class_str)</code> 可以得到<code>class_str</code>这个类，相当于类的申明。</p>
+<p>可以使用这个申明来实例化类对象</p>
+<p>文件T20190801_Model中：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Model</span><span class="params">(torch.nn.Module)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></span><br><span class="line">        super(Model,self).__init__()</span><br><span class="line">        self.classification = nn.Sequential(</span><br><span class="line">            nn.Conv2d(<span class="number">1</span>, <span class="number">20</span>, <span class="number">5</span>),</span><br><span class="line">            nn.ReLU(),</span><br><span class="line">            nn.Conv2d(<span class="number">20</span>, <span class="number">64</span>, <span class="number">5</span>),</span><br><span class="line">            nn.ReLU()</span><br><span class="line">        )</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">forward</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="keyword">pass</span></span><br></pre></td></tr></table></figure></p>
+<h1 id="rpartition"><a href="#rpartition" class="headerlink" title="rpartition"></a>rpartition</h1><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mod_str, _sep, class_str = import_str.rpartition(<span class="string">'.'</span>)</span><br></pre></td></tr></table></figure>
+<p><code>rpartition()</code> 方法类似于 <code>partition()</code> 方法，只是该方法是从目标字符串的末尾也就是右边开始搜索分割符。<br>如果字符串包含指定的分隔符，则返回一个<strong>3元的元组</strong>，第一个为<strong>分隔符左边的子串</strong>，第二个为<strong>分隔符本身</strong>，第三个为<strong>分隔符右边的子串</strong>。</p>
+<h3 id="实例："><a href="#实例：" class="headerlink" title="实例："></a>实例：</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">#!/usr/bin/python</span></span><br><span class="line"> </span><br><span class="line">str = <span class="string">"www.runoob.com"</span></span><br><span class="line"> </span><br><span class="line"><span class="keyword">print</span> str.rpartition(<span class="string">"."</span>)</span><br><span class="line"><span class="comment"># ('www.runoob', '.', 'com')</span></span><br></pre></td></tr></table></figure>
+<h1 id="parse-以及-subparsers："><a href="#parse-以及-subparsers：" class="headerlink" title="parse 以及 subparsers："></a>parse 以及 subparsers：</h1><p>每一个subparser可以继承父类的parse<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># add sub-parser</span></span><br><span class="line">subparsers = parser.add_subparsers(dest=<span class="string">'processor'</span>)</span><br><span class="line"><span class="keyword">for</span> k, p <span class="keyword">in</span> processors.items():</span><br><span class="line">    subparsers.add_parser(k, parents=[p.get_parser()])</span><br></pre></td></tr></table></figure></p>
+<p><code>k</code>是键，<code>{&quot;recognition&quot; &quot;demo&quot;}</code>，即parser的名称，注意后面使用parse_args()时所输入的子parser器名称必须要和其一样。不然会报错。详细见下面例子<br>实例：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">python3 main.py recognition -h <span class="comment">#正确调用，因为parser有名为recognition的parse</span></span><br><span class="line"></span><br><span class="line">python3 main.py sdeqds -h <span class="comment">#错误，找不到名为sdeqds子parse。</span></span><br></pre></td></tr></table></figure></p>
+<p><code>p</code>是值，包含了两个类。</p>
+<p><code>p.get_parser()</code>可以进入到该类的<code>get_parser</code>方法中</p>
+<p>在对应的类中，<code>get_parser</code>都会执行。</p>
+<p><code>subparsers = parser.add_subparsers(dest=&#39;processor&#39;)</code>得到的<code>subparsers</code>可以有多个<code>parser</code>，相当于<code>parser</code>的<code>子parsers</code>的<strong>句柄</strong>。向其中加入<code>parser</code>使用<code>add_parser</code>即可</p>
+<p><strong>parser.add_subparsers(dest=’processor’)返回的是子parser的句柄！！</strong></p>
+<p><strong>使用add_parser()向subparsers中加入parser</strong></p>
+<p>add_parser(“名字”，parent = “父parser”)。</p>
+<p><code>recognition</code>类的<code>get_parser</code><br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_parser</span><span class="params">(add_help=False)</span>:</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># parameter priority: command line &gt; config &gt; default</span></span><br><span class="line">    parent_parser = Processor.get_parser(add_help=<span class="literal">False</span>)</span><br><span class="line">    parser = argparse.ArgumentParser(</span><br><span class="line">        add_help=add_help,</span><br><span class="line">        parents=[parent_parser],</span><br><span class="line">        description=<span class="string">'Spatial Temporal Graph Convolution Network'</span>)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># region arguments yapf: disable</span></span><br><span class="line">    <span class="comment"># evaluation</span></span><br><span class="line">    parser.add_argument(<span class="string">'--show_topk'</span>, type=int, default=[<span class="number">1</span>, <span class="number">5</span>], nargs=<span class="string">'+'</span>, help=<span class="string">'which Top K accuracy will be shown'</span>)</span><br><span class="line">    <span class="comment"># optim</span></span><br><span class="line">    parser.add_argument(<span class="string">'--base_lr'</span>, type=float, default=<span class="number">0.01</span>, help=<span class="string">'initial learning rate'</span>)</span><br><span class="line">    parser.add_argument(<span class="string">'--step'</span>, type=int, default=[], nargs=<span class="string">'+'</span>, help=<span class="string">'the epoch where optimizer reduce the learning rate'</span>)</span><br><span class="line">    parser.add_argument(<span class="string">'--optimizer'</span>, default=<span class="string">'SGD'</span>, help=<span class="string">'type of optimizer'</span>)</span><br><span class="line">    parser.add_argument(<span class="string">'--nesterov'</span>, type=str2bool, default=<span class="literal">True</span>, help=<span class="string">'use nesterov or not'</span>)</span><br><span class="line">    parser.add_argument(<span class="string">'--weight_decay'</span>, type=float, default=<span class="number">0.0001</span>, help=<span class="string">'weight decay for optimizer'</span>)</span><br><span class="line">    <span class="comment"># endregion yapf: enable</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> parser</span><br></pre></td></tr></table></figure></p>
+<p>调用处：<code>subparsers.add_parser(k, parents=[p.get_parser()])</code><br>返回了一个<code>parser</code><br>这个<code>parser</code>继承了Processor的parser，并且添加了自己的参数。</p>
+<p>各个类的父子关系：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">|IO----|----demo</span><br><span class="line">	   |</span><br><span class="line">	   |----processor----|----REC_Processor</span><br></pre></td></tr></table></figure></p>
+<p><code>subparser</code>的作用可以复用相同的参数接口</p>
+<p>所有<code>parser写完后</code>调用根parse进行解析：</p>
+<ol>
+<li><p><code>parser = argparse.ArgumentParser(description=&#39;Processor collection&#39;)</code></p>
+</li>
+<li><p><code>subparsers = parser.add_subparsers(dest=&#39;processor&#39;)</code>，添加子解析器<br>…</p>
+</li>
+<li><p><code>arg = parser.parse_args()</code>，开启解析，定义了所有参数之后，你就可以给 <code>parse_args()</code> 传递一组参数字符串来解析命令行。默认情况下，参数是从 sys.argv[1:] 中获取，但你也可以传递自己的参数列表。选项是使用<code>GNU/POSIX</code>语法来处理的，所以在序列中选项和参数值可以混合。</p>
+</li>
+</ol>
+<p>parse_args() 的返回值是一个命名空间，包含传递给命令的参数。该对象将参数保存其属性，因此如果你的参数 <code>dest</code> 是 <code>myoption</code>，那么你就可以<code>args.myoption</code>来访问该值。</p>
+<ol>
+<li>可以自己向parse_args中传递参数：<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">parser.parse_args([<span class="string">'-a'</span>, <span class="string">'-bval'</span>, <span class="string">'-c'</span>, <span class="string">'3'</span>])</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>如果不<code>parse_args()</code>不加参数则是默认从<code>sys.argv[1:]</code>来传入</p>
+<h2 id="argparse-add-argument-dest参数的意义："><a href="#argparse-add-argument-dest参数的意义：" class="headerlink" title="argparse.add_argument() dest参数的意义："></a>argparse.add_argument() dest参数的意义：</h2><p><code>subparsers = parser.add_subparsers(dest=&#39;processor&#39;)</code></p>
+<p><code>dest</code>指定的值用作<code>key</code>值，从解析后的对象中取出用户输入的第一个参数</p>
+<p>所以上述的parser拥有一个arg.processor的属性。而这个属性对应了cmd中第一个输入值。</p>
+<h1 id="python-中-三元表达式："><a href="#python-中-三元表达式：" class="headerlink" title="python 中 三元表达式："></a>python 中 三元表达式：</h1><p>如果 i = 0 a为1,否则a = 10<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">i = <span class="number">1</span></span><br><span class="line">a = <span class="number">1</span> <span class="keyword">if</span> i == <span class="number">0</span> <span class="keyword">else</span> <span class="number">10</span> </span><br><span class="line">print(a)</span><br></pre></td></tr></table></figure></p>
+<h1 id="zip的用法："><a href="#zip的用法：" class="headerlink" title="zip的用法："></a>zip的用法：</h1><p>将两个list横向组合，每一个小组和为一个元组，放进list中。<br>也可以解压，但是解压是在解压target前面加一个<code>*</code>号<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">a = [<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>]</span><br><span class="line">b = [<span class="number">4</span>,<span class="number">5</span>,<span class="number">6</span>]</span><br><span class="line">c = [<span class="number">4</span>,<span class="number">5</span>,<span class="number">6</span>,<span class="number">7</span>,<span class="number">8</span>]</span><br><span class="line">zipped = zip(a,b)     <span class="comment"># 打包为元组的列表</span></span><br><span class="line"></span><br><span class="line"><span class="comment">## [(1, 4), (2, 5), (3, 6)]</span></span><br><span class="line">zip(a,c)              <span class="comment"># 元素个数与最短的列表一致</span></span><br><span class="line"><span class="comment">## [(1, 4), (2, 5), (3, 6)]</span></span><br><span class="line">zip(*zipped)          <span class="comment"># 与 zip 相反，*zipped 可理解为解压，返回二维矩阵式</span></span><br><span class="line"></span><br><span class="line"><span class="comment">## [(1, 2, 3), (4, 5, 6)]</span></span><br><span class="line"></span><br><span class="line">nums = [<span class="string">'flower'</span>,<span class="string">'flow'</span>,<span class="string">'flight'</span>]</span><br><span class="line">print(list(zip(*nums)))</span><br><span class="line"><span class="comment"># [('f', 'f', 'f'), ('l', 'l', 'l'), ('o', 'o', 'i'), ('w', 'w', 'g')]</span></span><br></pre></td></tr></table></figure></p>
+<h3 id="numpy中concatenate函数："><a href="#numpy中concatenate函数：" class="headerlink" title="numpy中concatenate函数："></a>numpy中concatenate函数：</h3><p>将两个数组进行连接，前提是两个array，在拼接方向上满足形状一致即可。</p>
+<h3 id="切片操作："><a href="#切片操作：" class="headerlink" title="切片操作："></a>切片操作：</h3><p>通常一个切片操作要提供三个参数 <code>[start_index:  stop_index:  step]</code> </p>
+<ul>
+<li><p>可以省略<code>start_index</code>：[:5:2]意思为从数组头开始，到下标5结束每隔2个单位取一个，[5]不包括。</p>
+</li>
+<li><p>可以省略<code>stop_index</code>：[1::2]意思为从1开始到数组结尾，每隔两个取一个。</p>
+</li>
+<li><p>可以省略<code>step</code>:[1:6:] step = 1</p>
+</li>
+<li><p>可以[::1] -&gt; 从头到尾步长为1遍历</p>
+</li>
+<li><p>可以[::-1] -&gt; 步长为-1时，当步长&lt;0时，<code>start_index</code> 默认值为-1,<code>stop_index</code>为<code>-len(a)</code></p>
+</li>
+<li><p>可以[:-1:] -&gt; 从头到最后一个元素依次遍历</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">data_numpy[<span class="number">0</span>, frame_index, :, m] = pose[<span class="number">0</span>::<span class="number">2</span>] <span class="comment">#pose的偶数index的值</span></span><br><span class="line">data_numpy[<span class="number">1</span>, frame_index, :, m] = pose[<span class="number">1</span>::<span class="number">2</span>] <span class="comment">#pose的奇数index的值</span></span><br><span class="line">data_numpy[<span class="number">2</span>, frame_index, :, m] = score</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h1 id="python-OpenCV"><a href="#python-OpenCV" class="headerlink" title="python OpenCV"></a>python OpenCV</h1><h2 id="video的读取操作："><a href="#video的读取操作：" class="headerlink" title="video的读取操作："></a>video的读取操作：</h2><h3 id="cv2-VideoCapture-函数："><a href="#cv2-VideoCapture-函数：" class="headerlink" title="cv2.VideoCapture()函数："></a><code>cv2.VideoCapture()</code>函数：</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">cap = cv2.VideoCapture(<span class="number">0</span>)</span><br><span class="line">VideoCapture()中参数是<span class="number">0</span>，表示打开笔记本的内置摄像头。</span><br><span class="line">cap = cv2.VideoCapture(<span class="string">"…/1.avi"</span>)</span><br><span class="line">VideoCapture(<span class="string">"…/1.avi"</span>)，表示参数是视频文件路径则打开视频。</span><br></pre></td></tr></table></figure>
+<h3 id="cap-isOpened-函数："><a href="#cap-isOpened-函数：" class="headerlink" title="cap.isOpened()函数："></a><code>cap.isOpened()</code>函数：</h3><p>返回true表示成功，false表示不成功</p>
+<h3 id="ret-frame-cap-read-函数："><a href="#ret-frame-cap-read-函数：" class="headerlink" title="ret,frame = cap.read()函数："></a><code>ret,frame = cap.read()</code>函数：</h3><p><code>cap.read()</code>按帧读取视频，其中<code>ret</code>是布尔值，如果读取帧是正确的则返回True，如果文件读取到结尾，它的返回值就为False。<code>frame</code>就是每一帧的图像<code>numpy_array</code>类型</p>
+<h2 id="resize"><a href="#resize" class="headerlink" title="resize"></a>resize</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">frame = cv2.resize(frame,(<span class="number">360</span>,<span class="number">256</span>))</span><br></pre></td></tr></table></figure>
+<h2 id="circle"><a href="#circle" class="headerlink" title="circle"></a>circle</h2><p>it 是元组类型(x,y)<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cv2.circle(frame,it,<span class="number">3</span>,(<span class="number">0</span>,<span class="number">0</span>,<span class="number">255</span>),<span class="number">3</span>)</span><br></pre></td></tr></table></figure></p>
+<h2 id="json文件加载："><a href="#json文件加载：" class="headerlink" title="json文件加载："></a>json文件加载：</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">output_path = <span class="string">"/home/joey/datasets/hmdb/hmdb51_sta/pullup_json/50_pull_ups_made_in_germany_pullup_f_nm_np1_le_med_2.json"</span></span><br><span class="line"><span class="keyword">with</span> open(output_path, <span class="string">'r'</span>) <span class="keyword">as</span> f:</span><br><span class="line">    video_info = json.load(f)</span><br></pre></td></tr></table></figure>
+<p>读出来后，对json的操作就和字典的操作一模一样。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Python/" rel="tag"># Python</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/08/24/14_ST-Gcn/" rel="next" title="St-gcn 动作识别 理论+源码分析(Pytorch)">
+                <i class="fa fa-chevron-left"></i> St-gcn 动作识别 理论+源码分析(Pytorch)
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/09/30/18_Python_Parser设计/" rel="prev" title="Pyhton Parse">
+                Pyhton Parse <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/avatar.gif" alt="JoeyF">
+            
+              <p class="site-author-name" itemprop="name">JoeyF</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">21</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">17</span>
+                  <span class="site-state-item-name">tags</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/ZhouYiiFeng" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:joeyf.z.y.wen@gmail.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#迭代器"><span class="nav-number">1.</span> <span class="nav-text">迭代器</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#生成器"><span class="nav-number">2.</span> <span class="nav-text">生成器</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#lambda"><span class="nav-number">3.</span> <span class="nav-text">lambda</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#4-python-继承"><span class="nav-number">4.</span> <span class="nav-text">4.python 继承</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#import："><span class="nav-number">5.</span> <span class="nav-text">import：</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#得到类对象："><span class="nav-number">5.1.</span> <span class="nav-text">得到类对象：</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#import-的一个小实例："><span class="nav-number">5.1.1.</span> <span class="nav-text">import()的一个小实例：</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#rpartition"><span class="nav-number">6.</span> <span class="nav-text">rpartition</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#实例："><span class="nav-number">6.0.1.</span> <span class="nav-text">实例：</span></a></li></ol></li></ol><li class="nav-item nav-level-1"><a class="nav-link" href="#parse-以及-subparsers："><span class="nav-number">7.</span> <span class="nav-text">parse 以及 subparsers：</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#argparse-add-argument-dest参数的意义："><span class="nav-number">7.1.</span> <span class="nav-text">argparse.add_argument() dest参数的意义：</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#python-中-三元表达式："><span class="nav-number">8.</span> <span class="nav-text">python 中 三元表达式：</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#zip的用法："><span class="nav-number">9.</span> <span class="nav-text">zip的用法：</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#numpy中concatenate函数："><span class="nav-number">9.0.1.</span> <span class="nav-text">numpy中concatenate函数：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#切片操作："><span class="nav-number">9.0.2.</span> <span class="nav-text">切片操作：</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#python-OpenCV"><span class="nav-number">10.</span> <span class="nav-text">python OpenCV</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#video的读取操作："><span class="nav-number">10.1.</span> <span class="nav-text">video的读取操作：</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#cv2-VideoCapture-函数："><span class="nav-number">10.1.1.</span> <span class="nav-text">cv2.VideoCapture()函数：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#cap-isOpened-函数："><span class="nav-number">10.1.2.</span> <span class="nav-text">cap.isOpened()函数：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ret-frame-cap-read-函数："><span class="nav-number">10.1.3.</span> <span class="nav-text">ret,frame = cap.read()函数：</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#resize"><span class="nav-number">10.2.</span> <span class="nav-text">resize</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#circle"><span class="nav-number">10.3.</span> <span class="nav-text">circle</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#json文件加载："><span class="nav-number">10.4.</span> <span class="nav-text">json文件加载：</span></a></li></ol></li></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">JoeyF</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Gemini</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+
+
+  
+
+  
+
+</body>
+</html>

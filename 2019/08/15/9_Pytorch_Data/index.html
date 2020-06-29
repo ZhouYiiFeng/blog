@@ -1,0 +1,841 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="DL,Pytorch,Python,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="导言：在进行网络的训练过程中第一步就是要读入自己的数据集，在Pytorch中提供了Dataset\DataLoader来进行数据的读取。文章着重对自定义数据层得讲解，对源码进行了剖析。 Pytorch中DNN训练的数据模块主要是：  设置，初始化dataset加载数据 使用DataLoader对dataset的数据进行加载  Dataset在datasets类中主要负责数据的读入，所以数据的增强以">
+<meta name="keywords" content="DL,Pytorch,Python">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Pytorch Data">
+<meta property="og:url" content="http://zhoef.com/2019/08/15/9_Pytorch_Data/index.html">
+<meta property="og:site_name" content="JoeyF&#39;s Home">
+<meta property="og:description" content="导言：在进行网络的训练过程中第一步就是要读入自己的数据集，在Pytorch中提供了Dataset\DataLoader来进行数据的读取。文章着重对自定义数据层得讲解，对源码进行了剖析。 Pytorch中DNN训练的数据模块主要是：  设置，初始化dataset加载数据 使用DataLoader对dataset的数据进行加载  Dataset在datasets类中主要负责数据的读入，所以数据的增强以">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="http://zhoef.com/2019/08/15/9_Pytorch_Data/dataloader1.png">
+<meta property="og:updated_time" content="2019-08-20T05:21:28.203Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Pytorch Data">
+<meta name="twitter:description" content="导言：在进行网络的训练过程中第一步就是要读入自己的数据集，在Pytorch中提供了Dataset\DataLoader来进行数据的读取。文章着重对自定义数据层得讲解，对源码进行了剖析。 Pytorch中DNN训练的数据模块主要是：  设置，初始化dataset加载数据 使用DataLoader对dataset的数据进行加载  Dataset在datasets类中主要负责数据的读入，所以数据的增强以">
+<meta name="twitter:image" content="http://zhoef.com/2019/08/15/9_Pytorch_Data/dataloader1.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://zhoef.com/2019/08/15/9_Pytorch_Data/">
+
+
+
+
+
+  <title>Pytorch Data | JoeyF's Home</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="default">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">JoeyF's Home</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            About
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://zhoef.com/2019/08/15/9_Pytorch_Data/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="JoeyF">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="JoeyF's Home">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Pytorch Data</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-08-15T19:58:52+08:00">
+                2019-08-15
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>导言：在进行网络的训练过程中第一步就是要读入自己的数据集，在Pytorch中提供了Dataset\DataLoader来进行数据的读取。文章着重对自定义数据层得讲解，对源码进行了剖析。</p>
+<p>Pytorch中DNN训练的数据模块主要是：</p>
+<ol>
+<li>设置，初始化dataset加载数据</li>
+<li>使用DataLoader对dataset的数据进行加载</li>
+</ol>
+<h1 id="Dataset"><a href="#Dataset" class="headerlink" title="Dataset"></a>Dataset</h1><p>在<strong><code>datasets</code></strong>类中主要负责<strong>数据的读入</strong>，所以数据的<strong>增强</strong>以及数据的<strong>修建</strong>放在了这里。transform参数很好的体现了这一点。</p>
+<h2 id="封装好的dataset类："><a href="#封装好的dataset类：" class="headerlink" title="封装好的dataset类："></a>封装好的dataset类：</h2><p>在package:<strong><code>torchvision.datasets</code></strong>中提供了一些已经封装好的dataset类，这些类可以有：</p>
+<ul>
+<li><p><strong><code>ImageFolder</code></strong> 每一个文件夹为一个类，加载后，同一个文件夹下的label是一致的。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">data_transform = &#123;x :transforms.Compose([transforms.Scale([<span class="number">64</span>,<span class="number">64</span>]),</span><br><span class="line">		transforms.ToTensor()</span><br><span class="line">	])</span><br><span class="line">	<span class="keyword">for</span> x <span class="keyword">in</span> [<span class="string">"train"</span>,<span class="string">"valid"</span>]</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">image_dataset = &#123; x: torchvision.datasets.ImageFolder(</span><br><span class="line">		root = os.path.join(data_dir,x),transform = data_transform[x]</span><br><span class="line">	) <span class="keyword">for</span> x <span class="keyword">in</span> [<span class="string">"train"</span>,<span class="string">"valid"</span>]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong><code>MNIST</code></strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">data_train = datasets.MNIST(</span><br><span class="line">		root = <span class="string">"./data/"</span>,</span><br><span class="line">		transform = transform_,</span><br><span class="line">		train = <span class="literal">True</span>, <span class="comment">#是训练集</span></span><br><span class="line">		download = <span class="literal">False</span> <span class="comment">#使用本地的训练集</span></span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h2 id="自定义Dataset类"><a href="#自定义Dataset类" class="headerlink" title="自定义Dataset类"></a>自定义Dataset类</h2><p><a href="https://blog.csdn.net/guyuealian/article/details/88343924" target="_blank" rel="noopener">参考博客</a><br><a href="https://pytorch.org/tutorials/beginner/data_loading_tutorial.html" target="_blank" rel="noopener">官方教程</a><br>自定义一个Dataset类必须需要一下三个函数</p>
+<ul>
+<li><code>__init__(self)</code><br>初始化dataset主要就是数据的读入，从指定的路径读入什么数据，并且进行整理。最后整理成一个目标格式的块数据。</li>
+<li><code>__getitem__(self,index)</code><br>这个函数是当DataLoader对该数据集进行加载时执行的函数，每次获得一个数据项，如果有多个返回值那么load出来的也是多个列表(batch_size大小)</li>
+<li><code>__len__(self)</code><br>返回数据的总数</li>
+</ul>
+<p>这里注意一个内存节约的问题</p>
+<blockquote>
+<p>We will read the csv in <code>__init__</code> but leave the reading of images to <code>__getitem__</code>. This is memory efficient because all the images are not stored in the memory at once but read as required.<br>在init中一般不建议将所有data全部读入，能之后读的就之后读。</p>
+</blockquote>
+<p>如果想要在自定义dataset中和datasets中的类一样使用<code>transform</code>参数，则需要在init函数的参数中加入(transform)</p>
+<p>最好在开头对Dataset的参数进行注释解释。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">FaceLandmarksDataset</span><span class="params">(Dataset)</span>:</span></span><br><span class="line">    <span class="string">"""Face Landmarks dataset."""</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, csv_file, root_dir, transform=None)</span>:</span></span><br><span class="line">        <span class="string">"""</span></span><br><span class="line"><span class="string">        Args:</span></span><br><span class="line"><span class="string">            csv_file (string): Path to the csv file with annotations.</span></span><br><span class="line"><span class="string">            root_dir (string): Directory with all the images.</span></span><br><span class="line"><span class="string">            transform (callable, optional): Optional transform to be applied</span></span><br><span class="line"><span class="string">                on a sample.</span></span><br><span class="line"><span class="string">        """</span></span><br><span class="line">        self.landmarks_frame = pd.read_csv(csv_file)</span><br><span class="line">        self.root_dir = root_dir</span><br><span class="line">        self.transform = transform</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__len__</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="keyword">return</span> len(self.landmarks_frame)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__getitem__</span><span class="params">(self, idx)</span>:</span></span><br><span class="line">        img_name = os.path.join(self.root_dir,</span><br><span class="line">                                self.landmarks_frame.iloc[idx, <span class="number">0</span>])</span><br><span class="line">        image = io.imread(img_name)</span><br><span class="line">        landmarks = self.landmarks_frame.iloc[idx, <span class="number">1</span>:]</span><br><span class="line">        landmarks = np.array([landmarks])</span><br><span class="line">        landmarks = landmarks.astype(<span class="string">'float'</span>).reshape(<span class="number">-1</span>, <span class="number">2</span>)</span><br><span class="line">        sample = &#123;<span class="string">'image'</span>: image, <span class="string">'landmarks'</span>: landmarks&#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> self.transform:</span><br><span class="line">            sample = self.transform(sample)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> sample</span><br></pre></td></tr></table></figure></p>
+<h1 id="DataLoader"><a href="#DataLoader" class="headerlink" title="DataLoader"></a>DataLoader</h1><p><a href="https://blog.csdn.net/g11d111/article/details/81504637" target="_blank" rel="noopener">参考博客</a><br><a href="https://pytorch.org/docs/master/data.html#single-and-multi-process-data-loading" target="_blank" rel="noopener">官方教程</a><br><strong>DataLoader</strong>是用来加载之前实例化好了的Dataset的函数，返回的是yield的对象，可以用来迭代输出。在DataLoader中注意有这些参数：</p>
+<ul>
+<li><code>dataset</code></li>
+<li><code>batch_size</code></li>
+<li><code>shuffle</code>:每个epoch开始的时候，对数据进行重新排序</li>
+<li><code>sampler</code>:自定义从数据集中取样本的策略函数，如果指定这个参数，那么shuffle必须为False</li>
+<li><code>batch_sampler</code>: 与sampler类似，但是一次只返回一个batch的indices（索引），需要注意的是，一旦指定了这个参数，那么batch_size,shuffle,sampler,drop_last就不能再制定了（互斥——Mutually exclusive）</li>
+<li><code>num_workers</code>:这个参数决定了有几个进程来处理data_loading。0意味着所有的数据都会被load进主进程。（默认为0）关于dataloader中的worker_num可以参考<a href="https://www.jianshu.com/p/98d3a23a2d62" target="_blank" rel="noopener">这篇文章</a></li>
+<li><code>collate_fn</code>:将一个list的sample组成一个mini-batch的函数</li>
+<li><code>pin_memory</code>:如果设置为True，那么data loader将会在返回它们之前，将tensors拷贝到CUDA中的固定内存（CUDA pinned memory）中.</li>
+<li><code>drop_last</code>：如果设置为True：这个是对最后的未完成的batch来说的，比如你的batch_size设置为64，而一个epoch只有100个样本，那么训练的时候后面的36个就被扔掉，如果为False（默认），那么会继续正常执行，只是最后的batch_size会小一点。</li>
+<li><code>worker_init_fn</code>：每个worker初始化函数</li>
+</ul>
+<p>我们先从整体来学习DataLoader的架构：下面是我精心作出的架构图：<br><img src="/2019/08/15/9_Pytorch_Data/dataloader1.png" alt="架构图"><center>架构图</center></p>
+<p>从图中我们可以清楚的直到<strong>Dataloader</strong>在干什么以及多进程是怎么发挥作用的。在这里需要指出的是只有当程序进行到<code>collate_fn()</code>时，<strong>数据才真正加载到内存中</strong>，而且<strong>仅</strong>是一个<code>batch</code>的数据。</p>
+<ol>
+<li><code>data_queue</code> 这里装得都是数据，按照线程的整理顺序排列</li>
+<li><code>reorder_dict</code> 这里是一个字典，以顺序输出<code>batch</code></li>
+<li><code>output</code> 最终的输出序列</li>
+<li><code>batches_outstanding</code> 是当前以及做好了的索引块的数量</li>
+<li>在<code>_DataLoader()</code>中初始化的时候采取的是2倍<code>numworkers</code>数量的索引块，在<code>__next()__</code>中output一块后会再一次执行<code>_put_indices()</code>来提出索引块</li>
+<li><code>worker</code>依次将处理得到的数据放在data_queue中，这里是安装进程的先后顺序入队的</li>
+<li>每一次<code>__next()__</code>都会取<code>data_queue</code>中出队的数据进行判断，如果正式当前所需要的(顺序正确=rcvd_idx)那么直接output，否则加入<code>reorder_dict</code>中等待下一次召集，很类似与计算机网络中的滑动窗口算法。</li>
+</ol>
+<h2 id="DataLoader的源码进行分析"><a href="#DataLoader的源码进行分析" class="headerlink" title="DataLoader的源码进行分析"></a>DataLoader的源码进行分析</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">DataLoader</span><span class="params">(object)</span>:</span></span><br><span class="line">    __initialized = <span class="literal">False</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, dataset, batch_size=<span class="number">1</span>, shuffle=False, sampler=None, batch_sampler=None,</span></span></span><br><span class="line"><span class="function"><span class="params">                 num_workers=<span class="number">0</span>, collate_fn=default_collate, pin_memory=False, drop_last=False,</span></span></span><br><span class="line"><span class="function"><span class="params">				 timeout=<span class="number">0</span>, worker_init_fn=None)</span>:</span></span><br><span class="line">				 </span><br><span class="line">	        self.dataset = dataset <span class="comment">#将参数初始化</span></span><br><span class="line">	        self.batch_size = batch_size <span class="comment"># 将参数放进类变量自身内存中</span></span><br><span class="line">			self.num_workers = num_workers</span><br><span class="line">			...</span><br><span class="line">			</span><br><span class="line">	        <span class="keyword">if</span> sampler <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span> <span class="keyword">and</span> shuffle: <span class="comment">#如果需要自定义取样函数，所以当有自定义时是不能指定shuffle变量的</span></span><br><span class="line">	            <span class="keyword">raise</span> ValueError(<span class="string">'sampler option is mutually exclusive with "shuffle"'</span>)</span><br><span class="line">	        ...</span><br><span class="line">	        </span><br><span class="line">	        <span class="keyword">if</span> batch_sampler <span class="keyword">is</span> <span class="literal">None</span>:	<span class="comment">#判断是否有batch的取样函数</span></span><br><span class="line">	            <span class="keyword">if</span> sampler <span class="keyword">is</span> <span class="literal">None</span>:		<span class="comment">#判断是否有单元取样函数</span></span><br><span class="line">	                <span class="keyword">if</span> shuffle:			<span class="comment">#是否需要随机排列</span></span><br><span class="line">	                    sampler = RandomSampler(dataset)</span><br><span class="line">	                <span class="keyword">else</span>:</span><br><span class="line">	                    sampler = SequentialSampler(dataset)</span><br><span class="line">	            batch_sampler = BatchSampler(sampler, batch_size, drop_last)</span><br><span class="line">	        self.sampler = sampler</span><br><span class="line">	        self.batch_sampler = batch_sampler</span><br><span class="line">			self.__initialized = <span class="literal">True</span></span><br><span class="line">	 ...</span><br><span class="line">	 <span class="function"><span class="keyword">def</span> <span class="title">__iter__</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="keyword">return</span> _DataLoaderIter(self)</span><br><span class="line">     ...</span><br></pre></td></tr></table></figure>
+<p>可以看到在init函数中主要的就是几个抽样函数的运行：</p>
+<ul>
+<li><code>RandomSampler()</code>:随机取样</li>
+<li><code>SequentialSampler()</code> 按顺序取样</li>
+<li><code>BatchSampler()</code> 按一个batch取出数据<br><strong>注意<strong>iter</strong>必须返回一个迭代器(或者生成器)</strong></li>
+</ul>
+<h3 id="单元取样函数"><a href="#单元取样函数" class="headerlink" title="单元取样函数"></a>单元取样函数</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Sampler</span><span class="params">(object)</span>:</span></span><br><span class="line">    <span class="string">r"""Base class for all Samplers.</span></span><br><span class="line"><span class="string">    Every Sampler subclass has to provide an __iter__ method, providing a way</span></span><br><span class="line"><span class="string">    to iterate over indices of dataset elements, and a __len__ method that</span></span><br><span class="line"><span class="string">    returns the length of the returned iterators.</span></span><br><span class="line"><span class="string">    """</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, data_source)</span>:</span></span><br><span class="line">        <span class="keyword">pass</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__iter__</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="keyword">raise</span> NotImplementedError</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__len__</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="keyword">raise</span> NotImplementedError</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">SequentialSampler</span><span class="params">(Sampler)</span>:</span></span><br><span class="line">    <span class="string">r"""Samples elements sequentially, always in the same order.</span></span><br><span class="line"><span class="string">    Arguments:</span></span><br><span class="line"><span class="string">        data_source (Dataset): dataset to sample from</span></span><br><span class="line"><span class="string">    """</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, data_source)</span>:</span></span><br><span class="line">        self.data_source = data_source</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__iter__</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="keyword">return</span> iter(range(len(self.data_source))) <span class="comment">#list不是迭代器！！！一定要iter()下</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__len__</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="keyword">return</span> len(self.data_source)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">RandomSampler</span><span class="params">(Sampler)</span>:</span></span><br><span class="line">    <span class="string">r"""Samples elements randomly, without replacement.</span></span><br><span class="line"><span class="string">    Arguments:</span></span><br><span class="line"><span class="string">        data_source (Dataset): dataset to sample from</span></span><br><span class="line"><span class="string">    """</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, data_source)</span>:</span></span><br><span class="line">        self.data_source = data_source</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__iter__</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="keyword">return</span> iter(torch.randperm(len(self.data_source)).tolist()) <span class="comment">#list不是迭代器</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__len__</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="keyword">return</span> len(self.data_source)</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">"__main__"</span>:</span><br><span class="line">    print(list(RandomSampler(range(<span class="number">10</span>))))</span><br><span class="line">    <span class="comment"># [2, 8, 3, 5, 9, 4, 6, 0, 1, 7]</span></span><br><span class="line">    print(list(SequentialSampler(range(<span class="number">10</span>))))</span><br><span class="line"><span class="comment"># [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]</span></span><br></pre></td></tr></table></figure>
+<h3 id="batch取样函数"><a href="#batch取样函数" class="headerlink" title="batch取样函数"></a>batch取样函数</h3><p>根据前面取出的一个一个的数据进行组合，组合成一个batch的数据然后返回。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">BatchSampler</span><span class="params">(Sampler)</span>:</span></span><br><span class="line">    <span class="string">r"""Wraps another sampler to yield a mini-batch of indices.</span></span><br><span class="line"><span class="string">    Args:</span></span><br><span class="line"><span class="string">        sampler (Sampler): Base sampler.</span></span><br><span class="line"><span class="string">        batch_size (int): Size of mini-batch.</span></span><br><span class="line"><span class="string">        drop_last (bool): If ``True``, the sampler will drop the last batch if</span></span><br><span class="line"><span class="string">            its size would be less than ``batch_size``</span></span><br><span class="line"><span class="string">    Example:</span></span><br><span class="line"><span class="string">        &gt;&gt;&gt; list(BatchSampler(SequentialSampler(range(10)), batch_size=3, drop_last=False))</span></span><br><span class="line"><span class="string">        [[0, 1, 2], [3, 4, 5], [6, 7, 8], [9]]</span></span><br><span class="line"><span class="string">        &gt;&gt;&gt; list(BatchSampler(SequentialSampler(range(10)), batch_size=3, drop_last=True))</span></span><br><span class="line"><span class="string">        [[0, 1, 2], [3, 4, 5], [6, 7, 8]]</span></span><br><span class="line"><span class="string">    """</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, sampler, batch_size, drop_last)</span>:</span></span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> isinstance(sampler, Sampler):</span><br><span class="line">            <span class="keyword">raise</span> ValueError(<span class="string">"sampler should be an instance of "</span></span><br><span class="line">                             <span class="string">"torch.utils.data.Sampler, but got sampler=&#123;&#125;"</span></span><br><span class="line">                             .format(sampler))</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> isinstance(batch_size, int) <span class="keyword">or</span> isinstance(batch_size, bool) <span class="keyword">or</span> \</span><br><span class="line">                batch_size &lt;= <span class="number">0</span>:</span><br><span class="line">            <span class="keyword">raise</span> ValueError(<span class="string">"batch_size should be a positive integeral value, "</span></span><br><span class="line">                             <span class="string">"but got batch_size=&#123;&#125;"</span>.format(batch_size))</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> isinstance(drop_last, bool):</span><br><span class="line">            <span class="keyword">raise</span> ValueError(<span class="string">"drop_last should be a boolean value, but got "</span></span><br><span class="line">                             <span class="string">"drop_last=&#123;&#125;"</span>.format(drop_last))</span><br><span class="line">        self.sampler = sampler</span><br><span class="line">        self.batch_size = batch_size</span><br><span class="line">        self.drop_last = drop_last</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__iter__</span><span class="params">(self)</span>:</span></span><br><span class="line">        batch = []</span><br><span class="line">        <span class="comment"># 一旦达到batch_size的长度，说明batch被填满，就可以yield出去了</span></span><br><span class="line">        <span class="keyword">for</span> idx <span class="keyword">in</span> self.sampler:</span><br><span class="line">            batch.append(idx)</span><br><span class="line">            <span class="keyword">if</span> len(batch) == self.batch_size:</span><br><span class="line">                <span class="keyword">yield</span> batch</span><br><span class="line">                batch = []</span><br><span class="line">        <span class="keyword">if</span> len(batch) &gt; <span class="number">0</span> <span class="keyword">and</span> <span class="keyword">not</span> self.drop_last:</span><br><span class="line">            <span class="keyword">yield</span> batch</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__len__</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="comment"># 比如epoch有100个样本，batch_size选择为64，那么drop_last的结果为1，不drop_last的结果为2</span></span><br><span class="line">        <span class="keyword">if</span> self.drop_last:</span><br><span class="line">            <span class="keyword">return</span> len(self.sampler) // self.batch_size</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="keyword">return</span> (len(self.sampler) + self.batch_size - <span class="number">1</span>) // self.batch_size</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">"__main__"</span>:</span><br><span class="line">    print(list(BatchSampler(SequentialSampler(range(<span class="number">10</span>)), batch_size=<span class="number">3</span>, drop_last=<span class="literal">False</span>)))</span><br><span class="line">    <span class="comment"># [[0, 1, 2], [3, 4, 5], [6, 7, 8], [9]]</span></span><br><span class="line">    print(list(BatchSampler(SequentialSampler(range(<span class="number">10</span>)), batch_size=<span class="number">3</span>, drop_last=<span class="literal">True</span>)))</span><br><span class="line"><span class="comment"># [[0, 1, 2], [3, 4, 5], [6, 7, 8]]</span></span><br></pre></td></tr></table></figure></p>
+<p>比较灵活的就是<strong>iter</strong>()这里，每当满了batch<em>size个数就yield出去，yield是生成器，符合<em>_iter</em></em>的返回值规定(返回迭代器或生成器)。注意当最后如果遍历完整个sapler后如果batch不够batch_size，会根据不同的<code>drop_last</code>的值来进行操作。<code>drop_last==True</code>时会扔掉最后的一个batch</p>
+<p><strong>问题</strong>：数据是整个全部一下加载到内存中去吗？数据的加载流程是什么样的？<br><strong>解答</strong>：在Dataset部分讲过数据中较大数据是放在<code>__getitem__()</code>中加载的(有一些数据会在init中直接加载完，但是对于几千张图片是不会在init中全部加载进去的。)，以加载图像数据为例，<code>__getitem__()</code>是用来返回一个图像中的数据的，而<strong>调用</strong>这个函数是在dataloader中调用的，当dataloader在加载dataset时会<strong>执行他的2个sample函数</strong>(一个是单元、一个是batch)<strong>切记</strong>这里也<strong>并非</strong>是加载了真正的图像数据而是给了一个batch的作为<strong>index的随机数(序列数)</strong>，然后通过<code>__getitem__(self,index)</code>依次取出对应的<strong>真实数据</strong>，所以并非是一下全部加载到内存中，而是一个batch一个batch的加载的</p>
+<p>流程：</p>
+<ol>
+<li><code>dataset</code>初始化加载部分数据或不加载数据</li>
+<li><code>dataloader</code>执行init获得随机index</li>
+<li><code>dataloader</code>调用<code>_DataLoaderIter()</code>使用多线程进行数据的读取</li>
+</ol>
+<h3 id="DataLoaderIter"><a href="#DataLoaderIter" class="headerlink" title="_DataLoaderIter"></a>_DataLoaderIter</h3><p>作用：从不同的<code>index_queue</code>中消费数据并将数据转换为data放入同一个<code>data_queue</code>中<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">_DataLoaderIter</span><span class="params">(object)</span>:</span></span><br><span class="line">    <span class="string">r"""Iterates once over the DataLoader's dataset, as specified by the sampler"""</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, loader)</span>:</span></span><br><span class="line">        self.dataset = loader.dataset</span><br><span class="line">        <span class="comment"># 将一个list的sample组成一个mini-batch的函数</span></span><br><span class="line">        </span><br><span class="line">        self.collate_fn = loader.collate_fn</span><br><span class="line">        self.batch_sampler = loader.batch_sampler</span><br><span class="line">        self.num_workers = loader.num_workers</span><br><span class="line">        self.pin_memory = loader.pin_memory <span class="keyword">and</span> torch.cuda.is_available()</span><br><span class="line">        self.timeout = loader.timeout</span><br><span class="line"></span><br><span class="line">        <span class="comment"># 监听事件完成与否——https://www.cnblogs.com/lcchuguo/p/4687348.html</span></span><br><span class="line">        self.done_event = threading.Event()</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># self.sample_iter是iterator：迭代器</span></span><br><span class="line">        self.sample_iter = iter(self.batch_sampler)</span><br><span class="line">        <span class="comment"># 随机种子，用于worker_init_fn的初始化</span></span><br><span class="line">        base_seed = torch.LongTensor(<span class="number">1</span>).random_().item()</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> self.num_workers &gt; <span class="number">0</span>:</span><br><span class="line">            <span class="comment"># worker_init_fn是worker初始化函数</span></span><br><span class="line">            self.worker_init_fn = loader.worker_init_fn</span><br><span class="line"></span><br><span class="line">            <span class="comment"># index_queue 索引队列 每个worker进程对应一个: </span></span><br><span class="line">            self.index_queues = [multiprocessing.Queue() <span class="keyword">for</span> _ <span class="keyword">in</span> range(self.num_workers)]</span><br><span class="line"></span><br><span class="line">            <span class="comment"># worker 队列索引</span></span><br><span class="line">            self.worker_queue_idx = <span class="number">0</span></span><br><span class="line"></span><br><span class="line">            <span class="comment"># worker_result_queue 进程间通信</span></span><br><span class="line">            <span class="comment"># multiprocessing.SimpleQueue是multiprocessing.Queue([maxsize])的简化，只有三个方法------empty(), get(), put()</span></span><br><span class="line">            self.worker_result_queue = multiprocessing.SimpleQueue()</span><br><span class="line"></span><br><span class="line">            <span class="comment"># batches_outstanding</span></span><br><span class="line">            <span class="comment"># 当前已经准备好的 batch 的数量（可能有些正在准备中）</span></span><br><span class="line">            <span class="comment"># 当为 0 时， 说明， dataset 中已经没有剩余数据了。</span></span><br><span class="line">            <span class="comment"># 初始值为 0, 在 self._put_indices() 中 +1,在 self.__next__ 中-1</span></span><br><span class="line">            self.batches_outstanding = <span class="number">0</span></span><br><span class="line">            self.worker_pids_set = <span class="literal">False</span></span><br><span class="line"></span><br><span class="line">            <span class="comment"># shutdown为True是关闭worker</span></span><br><span class="line">            self.shutdown = <span class="literal">False</span></span><br><span class="line"></span><br><span class="line">            <span class="comment"># send_idx, rcvd_idx——发送索引，接收索引</span></span><br><span class="line">            <span class="comment"># send_idx 用来记录 这次要放 index_queue 中 batch 的 idx</span></span><br><span class="line">            self.send_idx = <span class="number">0</span></span><br><span class="line"></span><br><span class="line">            <span class="comment"># rcvd_idx 用来记录 这次要从 data_queue 中取出 的 batch 的 idx</span></span><br><span class="line">            self.rcvd_idx = <span class="number">0</span></span><br><span class="line"></span><br><span class="line">            <span class="comment"># 因为多进程，可能会导致 data_queue 中的batch乱序</span></span><br><span class="line">            <span class="comment"># 用这个来保证 batch 的返回是按照send_idx升序出去的。</span></span><br><span class="line">            self.reorder_dict = &#123;&#125;</span><br><span class="line">            </span><br><span class="line">            <span class="comment"># 创建num_workers个worker进程来处理</span></span><br><span class="line">            self.workers = [</span><br><span class="line">                multiprocessing.Process(</span><br><span class="line">                    target = _worker_loop,</span><br><span class="line">                    args = (self.dataset, self.index_queues[i],</span><br><span class="line">                          self.worker_result_queue, self.collate_fn, base_seed + i,</span><br><span class="line">                          self.worker_init_fn, i))</span><br><span class="line">                <span class="keyword">for</span> i <span class="keyword">in</span> range(self.num_workers)]</span><br><span class="line">                </span><br><span class="line">            <span class="comment"># 这里暂不分析CUDA或者timeout的情况</span></span><br><span class="line">            <span class="keyword">if</span> self.pin_memory <span class="keyword">or</span> self.timeout &gt; <span class="number">0</span>:</span><br><span class="line">                self.data_queue = queue.Queue()</span><br><span class="line">                <span class="keyword">if</span> self.pin_memory:</span><br><span class="line">                    maybe_device_id = torch.cuda.current_device()</span><br><span class="line">                <span class="keyword">else</span>:</span><br><span class="line">                    <span class="comment"># do not initialize cuda context if not necessary</span></span><br><span class="line">                    maybe_device_id = <span class="literal">None</span></span><br><span class="line">                self.worker_manager_thread = threading.Thread(</span><br><span class="line">                    target=_worker_manager_loop,</span><br><span class="line">                    args=(self.worker_result_queue, self.data_queue, self.done_event, self.pin_memory,</span><br><span class="line">                          maybe_device_id))</span><br><span class="line">                self.worker_manager_thread.daemon = <span class="literal">True</span></span><br><span class="line">                self.worker_manager_thread.start()</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">	            <span class="comment"># data_queue就是self.worker_result_queue(MultiProcessing.SimpleQueue()类型)</span></span><br><span class="line">	            <span class="comment"># 这个唯一的队列</span></span><br><span class="line">                self.data_queue = self.worker_result_queue</span><br><span class="line">			<span class="comment"># 设置守护进程</span></span><br><span class="line">            <span class="keyword">for</span> w <span class="keyword">in</span> self.workers:</span><br><span class="line">                w.daemon = <span class="literal">True</span>  <span class="comment"># ensure that the worker exits on process exit</span></span><br><span class="line">                w.start()</span><br><span class="line">           </span><br><span class="line">            _update_worker_pids(id(self), tuple(w.pid <span class="keyword">for</span> w <span class="keyword">in</span> self.workers))</span><br><span class="line">            _set_SIGCHLD_handler()</span><br><span class="line">            self.worker_pids_set = <span class="literal">True</span></span><br><span class="line"></span><br><span class="line">            <span class="comment"># prime the prefetch loop</span></span><br><span class="line">            <span class="comment"># 初始化的时候，就将 2*num_workers 个 (batch_idx, sampler_indices) 放到 index_queue 队列中，防止进程一上来没有数据。</span></span><br><span class="line">            <span class="keyword">for</span> _ <span class="keyword">in</span> range(<span class="number">2</span> * self.num_workers):</span><br><span class="line">                self._put_indices() </span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__len__</span><span class="params">(self)</span>:</span></span><br><span class="line">    	...</span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">_get_batch</span><span class="params">(self)</span>:</span></span><br><span class="line">    	...</span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__next__</span><span class="params">(self)</span>:</span></span><br><span class="line">    	...</span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__iter__</span><span class="params">(self)</span>:</span></span><br><span class="line">    	...</span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">_put_indices</span><span class="params">(self)</span>:</span></span><br><span class="line">    	...</span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">_process_next_batch</span><span class="params">(self, batch)</span>:</span></span><br><span class="line">    	...</span><br></pre></td></tr></table></figure></p>
+<p>如果想读懂_DataLoader使用多线程在干什么，那么必须要知道对于单个线程中_worker_loop()在干什么，以及multiprocessing类进行多进程操作,读懂上面的代码需要具备以下的知识：</p>
+<ul>
+<li>什么是守护线程？<a href="https://www.cnblogs.com/baizhanshi/p/8289202.html" target="_blank" rel="noopener">多线程中守护线程</a></li>
+<li>线程(进程)优先级队列队列操作以及信息的传递：<a href="https://www.runoob.com/python/python-multithreading.html" target="_blank" rel="noopener">菜鸟教程</a></li>
+<li>多线程(进程)中event的作用</li>
+<li>join()方法是什么？<a href="https://baijiahao.baidu.com/s?id=1599329640847794522&amp;wfr=spider&amp;for=pc" target="_blank" rel="noopener">join阻塞</a><br>一个josin的例子：<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">import</span> multiprocessing</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">func</span><span class="params">()</span>:</span></span><br><span class="line">    print(<span class="string">'son....PID:&#123;&#125;'</span>.format(os.getppid()))</span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</span><br><span class="line">    print(<span class="string">'main process'</span>)</span><br><span class="line">    print(<span class="string">'main is making son processes'</span>)</span><br><span class="line">    proc_1 = multiprocessing.Process(target = func)</span><br><span class="line">    proc_1.start()</span><br><span class="line">    <span class="comment">#proc_1.join()</span></span><br><span class="line">    print(<span class="string">'all done'</span>)</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>output:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">main process</span><br><span class="line">main is making son processes</span><br><span class="line">all done</span><br><span class="line">son....PID:2374</span><br></pre></td></tr></table></figure></p>
+<p>主进程运行结束后，子进程没有被销毁，依然运行直至结束。如果进程是为了配合主进程，这里就需要在子进程运行结束后，主进程才能退出，那这边就应该使用join的方法，join()的功能就是阻塞，当子进程运行时，pro_1.start()启动子进程，pro_1.join()阻塞，确保子进程运行结束才能运行其他进程</p>
+<p>回过头来看workers<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">self.workers = [</span><br><span class="line">                multiprocessing.Process(</span><br><span class="line">                    target = _worker_loop,</span><br><span class="line">                    args = (self.dataset, self.index_queues[i],</span><br><span class="line">                          self.worker_result_queue, self.collate_fn, base_seed + i,</span><br><span class="line">                          self.worker_init_fn, i))</span><br><span class="line">                <span class="keyword">for</span> i <span class="keyword">in</span> range(self.num_workers)]</span><br></pre></td></tr></table></figure></p>
+<p>在这里new出来了num_workers个worker，然后我们再继续看每个进程做的事情。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">_worker_loop</span><span class="params">(dataset, index_queue, data_queue, collate_fn, seed, init_fn, worker_id)</span>:</span></span><br><span class="line">    <span class="keyword">global</span> _use_shared_memory</span><br><span class="line">    _use_shared_memory = <span class="literal">True</span></span><br><span class="line">    ...</span><br><span class="line">    torch.set_num_threads(<span class="number">1</span>)</span><br><span class="line">    random.seed(seed)</span><br><span class="line">    <span class="comment"># 保证每个worker的随机种子相同</span></span><br><span class="line">    torch.manual_seed(seed)</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 初始化worker</span></span><br><span class="line">    <span class="keyword">if</span> init_fn <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span>:</span><br><span class="line">        init_fn(worker_id)</span><br><span class="line">    <span class="comment"># 以Linux为例，    </span></span><br><span class="line">    <span class="comment">#class ManagerWatchdog(object):</span></span><br><span class="line">    <span class="comment">#    def __init__(self):</span></span><br><span class="line">    <span class="comment">#        self.manager_pid = os.getppid()</span></span><br><span class="line">    <span class="comment">#</span></span><br><span class="line">    <span class="comment">#    def is_alive(self):</span></span><br><span class="line">    <span class="comment">#               os.getppid---&gt;获得父进程的id</span></span><br><span class="line">    <span class="comment">#        return os.getppid() == self.manager_pid</span></span><br><span class="line">    watchdog = ManagerWatchdog()</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 处理代码</span></span><br><span class="line">    <span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">        <span class="keyword">try</span>:</span><br><span class="line">            <span class="comment"># MANAGER_STATUS_CHECK_INTERVAL = 5.0 </span></span><br><span class="line">            <span class="comment"># r = 从index_queue 索引队列里取索引，即从之前准备好的sampler们中取出index</span></span><br><span class="line">            r = index_queue.get(timeout=MANAGER_STATUS_CHECK_INTERVAL)</span><br><span class="line">        <span class="keyword">except</span> queue.Empty:</span><br><span class="line">            <span class="keyword">if</span> watchdog.is_alive():</span><br><span class="line">                <span class="keyword">continue</span></span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                <span class="keyword">break</span></span><br><span class="line">        <span class="keyword">if</span> r <span class="keyword">is</span> <span class="literal">None</span>:</span><br><span class="line">            <span class="keyword">break</span></span><br><span class="line">        idx, batch_indices = r</span><br><span class="line">        <span class="keyword">try</span>:</span><br><span class="line">            <span class="comment"># 传到 collate_fn 的数据是 list of dataset[i] (i in batch_indices)</span></span><br><span class="line">            samples = collate_fn([dataset[i] <span class="keyword">for</span> i <span class="keyword">in</span> batch_indices])</span><br><span class="line">        <span class="keyword">except</span> Exception:</span><br><span class="line">            data_queue.put((idx, ExceptionWrapper(sys.exc_info())))</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="comment"># 将从索引队列取出的数据放进data_queue中，并将samples删除</span></span><br><span class="line">            data_queue.put((idx, samples))</span><br><span class="line">            <span class="keyword">del</span> samples</span><br></pre></td></tr></table></figure>
+<h1 id="感谢开源"><a href="#感谢开源" class="headerlink" title="感谢开源"></a>感谢开源</h1><p><a href="https://blog.csdn.net/g11d111/article/details/81504637" target="_blank" rel="noopener">特别感谢博客</a><br>ps：这篇博客的代码有些省略，配合官方源码看更好。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/DL/" rel="tag"># DL</a>
+          
+            <a href="/tags/Pytorch/" rel="tag"># Pytorch</a>
+          
+            <a href="/tags/Python/" rel="tag"># Python</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/08/13/7_Caffe_OpenPose教程(c++实现)/" rel="next" title="Caffe_OpenPose教程(c++实现)">
+                <i class="fa fa-chevron-left"></i> Caffe_OpenPose教程(c++实现)
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/08/19/1_CLion_CPP/" rel="prev" title="Clion 与 C++基础">
+                Clion 与 C++基础 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/avatar.gif" alt="JoeyF">
+            
+              <p class="site-author-name" itemprop="name">JoeyF</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">21</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">17</span>
+                  <span class="site-state-item-name">tags</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/ZhouYiiFeng" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:joeyf.z.y.wen@gmail.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Dataset"><span class="nav-number">1.</span> <span class="nav-text">Dataset</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#封装好的dataset类："><span class="nav-number">1.1.</span> <span class="nav-text">封装好的dataset类：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#自定义Dataset类"><span class="nav-number">1.2.</span> <span class="nav-text">自定义Dataset类</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#DataLoader"><span class="nav-number">2.</span> <span class="nav-text">DataLoader</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#DataLoader的源码进行分析"><span class="nav-number">2.1.</span> <span class="nav-text">DataLoader的源码进行分析</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#单元取样函数"><span class="nav-number">2.1.1.</span> <span class="nav-text">单元取样函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#batch取样函数"><span class="nav-number">2.1.2.</span> <span class="nav-text">batch取样函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#DataLoaderIter"><span class="nav-number">2.1.3.</span> <span class="nav-text">_DataLoaderIter</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#感谢开源"><span class="nav-number">3.</span> <span class="nav-text">感谢开源</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">JoeyF</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Gemini</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+
+
+  
+
+  
+
+</body>
+</html>

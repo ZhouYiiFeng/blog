@@ -1,0 +1,874 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Python 爬虫,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="项目结构：1.items.py: 用来存放爬虫取下来的数据类型。2.middlewares.py: 用来存放各种中间的文件。3.pipelines.py: 用来将items的模型存储到本地磁盘中4.setting.py: 本地爬虫的配置信息(比如请求头、多久发送一次请求、ip代理等问题) Scrapy爬虫笔记：1.response是一个scrapy.http.response.html.HtmlR">
+<meta name="keywords" content="Python 爬虫">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Python 爬虫">
+<meta property="og:url" content="http://zhoef.com/2019/07/27/5_scrapy+python学习记录/index.html">
+<meta property="og:site_name" content="JoeyF&#39;s Home">
+<meta property="og:description" content="项目结构：1.items.py: 用来存放爬虫取下来的数据类型。2.middlewares.py: 用来存放各种中间的文件。3.pipelines.py: 用来将items的模型存储到本地磁盘中4.setting.py: 本地爬虫的配置信息(比如请求头、多久发送一次请求、ip代理等问题) Scrapy爬虫笔记：1.response是一个scrapy.http.response.html.HtmlR">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2019-08-20T05:21:35.039Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Python 爬虫">
+<meta name="twitter:description" content="项目结构：1.items.py: 用来存放爬虫取下来的数据类型。2.middlewares.py: 用来存放各种中间的文件。3.pipelines.py: 用来将items的模型存储到本地磁盘中4.setting.py: 本地爬虫的配置信息(比如请求头、多久发送一次请求、ip代理等问题) Scrapy爬虫笔记：1.response是一个scrapy.http.response.html.HtmlR">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://zhoef.com/2019/07/27/5_scrapy+python学习记录/">
+
+
+
+
+
+  <title>Python 爬虫 | JoeyF's Home</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="default">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">JoeyF's Home</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            About
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://zhoef.com/2019/07/27/5_scrapy+python学习记录/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="JoeyF">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="JoeyF's Home">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Python 爬虫</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-07-27T17:08:32+08:00">
+                2019-07-27
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="项目结构："><a href="#项目结构：" class="headerlink" title="项目结构："></a>项目结构：</h2><p>1.items.py: 用来存放爬虫取下来的数据类型。<br>2.middlewares.py: 用来存放各种中间的文件。<br>3.pipelines.py: 用来将items的模型存储到本地磁盘中<br>4.setting.py: 本地爬虫的配置信息(比如请求头、多久发送一次请求、ip代理等问题)</p>
+<h2 id="Scrapy爬虫笔记："><a href="#Scrapy爬虫笔记：" class="headerlink" title="Scrapy爬虫笔记："></a>Scrapy爬虫笔记：</h2><p>1.response是一个<code>scrapy.http.response.html.HtmlResponse</code>对象可以执行<code>xpath</code>和<code>css</code>语法来进行提取数据<br>2.提取出来的数据，是一个<code>Selector</code>或者是一个<code>SelectorList</code>对象，如果想要获取其中的字符串，可以执行<code>getall</code>或者<code>get</code>方法<br>3.getall：获取的是<code>SelectorList</code>中所有的文本。返回是一个列表<br>4.get方法：获取的是<code>Selector</code>中的第一个文本，返回的是str类型<br>5.如果数据解析回来需要交给pipline处理，那么可以使用<code>yield</code>来返回，也可以return一个<code>List</code><br>6.item:建议在<code>items.py</code>中定义类<br>7.pipeling：是专门用来保存数据的。其中有：<br>    <strong><code>open_spider(slef,spider)</code></strong>: 当爬虫开始时执行<br>    <strong><code>process_item(slef,spider)</code></strong>: item穿过来时会调用<br>    <strong><code>clode_spider(slef,spider)</code></strong>:关闭时执行</p>
+<pre><code>要激活pipeline，应该在`settings.py`中设置`ITEM_PIPELINES`
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">ITEM_PIPELINES = &#123;</span><br><span class="line">	`....`:<span class="number">300</span>,</span><br><span class="line">	（名字）  （优先级）</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</code></pre><h2 id="Xpath格式："><a href="#Xpath格式：" class="headerlink" title="Xpath格式："></a>Xpath格式：</h2><p>1.title = response.xpath(“//h1[@class=’ph‘]/text()”).get()<br>    其爬去的页面为：<br>        <figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span> =<span class="string">"cl"</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">h1</span> <span class="attr">class</span> =<span class="string">"ph"</span>&gt;</span> ......</span><br></pre></td></tr></table></figure></p>
+<h4 id="选取节点："><a href="#选取节点：" class="headerlink" title="选取节点："></a>选取节点：</h4><ol>
+<li><code>nodename</code> 选取次节点的所有名为nodename的子节点</li>
+<li><code>/</code> 在当前元素中的，直接子元素。(不会查找孙节点)</li>
+<li><code>//</code> 查找当前节点的子孙节点</li>
+<li><code>@</code> 选取节点的某属性 //book[@price] <div id="8888"> <code>id</code>就是属性<br><strong>//a/@href</strong> 表示获取a标签下的所有href的属性值</div></li>
+</ol>
+<h4 id="谓语："><a href="#谓语：" class="headerlink" title="谓语："></a>谓语：</h4><ol>
+<li>选取子标签：/bookstore/book[1] <strong>注意下标是从1开始</strong></li>
+<li>选取最后一个标签： /bookstore/book[last()]</li>
+<li>获取多个小标数 /bookstore/book[position()&lt;3] </li>
+<li>//book[@price = 10] 过滤</li>
+<li>模糊匹配：//div[contains(@class,”fl”)]</li>
+</ol>
+<h4 id="通配符："><a href="#通配符：" class="headerlink" title="通配符："></a>通配符：</h4><ol>
+<li>*</li>
+<li>@*</li>
+</ol>
+<h2 id="实例："><a href="#实例：" class="headerlink" title="实例："></a>实例：</h2><p>trs = html.xpath(“//tr”) -&gt;返回的是一个列表</p>
+<p>tr_2 = html.xpath(“//tr[2]”)[0]</p>
+<h4 id="Step-1"><a href="#Step-1" class="headerlink" title="Step 1:"></a>Step 1:</h4><p>定义header:<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">header = &#123;</span><br><span class="line">        <span class="string">"User-Agent"</span>:<span class="string">"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Safari/537.36"</span>,</span><br><span class="line"></span><br><span class="line">        <span class="string">"Cookie"</span>: <span class="string">"JSESSIONID-WYYY=2Z029TS6mUD4rPoTHs%2BbtDaJa%5CIDNANC2hRhCeSO3EiwryPJA947wCAh5%2BF4%5CtU%2FAdsSgkS68YK%2BXMZVmZ8s%2Bd1j5bU0YyTNOfPPwks98G%2FYBH9IdwUhHBvC%2FOPjlFMzAc6uYwYqP%2BQatEygarBIFcrIBKQfJIv%2FkJV%5C%2FmTy%2F7XM1uQw%3A1563850724300; _iuqxldmzr_=32; _ntes_nnid=e2fd5d29ab308e038279af91a8c84058,1563848924322; _ntes_nuid=e2fd5d29ab308e038279af91a8c84058"</span>,</span><br><span class="line"></span><br><span class="line">        <span class="string">'Referer'</span>:<span class="string">'https://music.163.com/'</span>,</span><br><span class="line"></span><br><span class="line">        <span class="string">'origin'</span>:<span class="string">'https://music.163.com'</span>,</span><br><span class="line"></span><br><span class="line">        <span class="string">'Accept'</span>: <span class="string">'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3'</span>,</span><br><span class="line"></span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></p>
+<p>所有的爬虫必须配置其header，在浏览器中找到这些信息，然后构造字典型。</p>
+<p><strong>注意</strong>：每个网站的Cookie可能不一样需要对比。另外，Referer也是一个重要的反反爬虫的变量。</p>
+<p>网站的url如果直接从浏览器中得到可能会有问题，在报文中查看会更好。</p>
+<h4 id="Step-2"><a href="#Step-2" class="headerlink" title="Step 2"></a>Step 2</h4><ol>
+<li>准备好爬取的url。</li>
+<li>使用requests库进行爬取。</li>
+<li>查看网页是使用get,还是post进行的通信。</li>
+<li>使用lxml 中的etree库，这是个c++的内嵌库，没有智能提示<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">respo = requests.get(url= url, headers= header)</span><br><span class="line">html = etree.HTML(respo.text) <span class="comment">#将其转换为etree以方便得到数据</span></span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h4 id="Step-3"><a href="#Step-3" class="headerlink" title="Step 3"></a>Step 3</h4><p>使用 <code>xpath</code> 来获得指定的标签内容。<br><strong>要领：</strong><br>Xpath:<br><strong>Xpath返回的都是列表</strong><br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">title_ = html.xpath(<span class="string">"//div[@class = '']//a/@title"</span>) <span class="comment">#取出div下a标签中的title属性</span></span><br><span class="line"></span><br><span class="line">href_ = BASIC_DOMAIN + html.xpath(<span class="string">"//div[@class = '']//a/@href"</span>)<span class="comment">#取出div下a标签中的href属性, 但这个href只是一段，需要加上原来的域名。</span></span><br><span class="line"></span><br><span class="line">lis = html.xpath(<span class="string">"//div[@class = '']//li"</span>)<span class="comment">#取出所有li标签</span></span><br><span class="line"></span><br><span class="line">li = lis.xpath(<span class="string">".//a/text"</span>)</span><br></pre></td></tr></table></figure></p>
+<h3 id="AJAX动态网页数据爬取："><a href="#AJAX动态网页数据爬取：" class="headerlink" title="AJAX动态网页数据爬取："></a>AJAX动态网页数据爬取：</h3><h4 id="库的导入："><a href="#库的导入：" class="headerlink" title="库的导入："></a>库的导入：</h4><ol>
+<li>下载chromedriver <strong>注意匹配浏览器和driver的版本</strong></li>
+<li>下载selenium库</li>
+<li>from selenium import webdriver</li>
+</ol>
+<h4 id="Selenium-测试安装："><a href="#Selenium-测试安装：" class="headerlink" title="Selenium 测试安装："></a>Selenium 测试安装：</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> time</span><br><span class="line"><span class="keyword">from</span> selenium <span class="keyword">import</span> webdriver</span><br><span class="line">DRIVER_PATH=<span class="string">r"D:\Browse\chrome\chromedriver.exe"</span></span><br><span class="line">driver = webdriver.Chrome(executable_path = DRIVER_PATH) <span class="comment">#可以指定浏览器，但是其driver的路径必须是下载好的那一个，且要匹配</span></span><br><span class="line">url = <span class="string">"https://www.baidu.com/"</span></span><br><span class="line">driver.get(url) <span class="comment">#没有返回值，driver本身是一个对象，调用get方法可以设置其内部的参数</span></span><br><span class="line">print(driver.page_source) <span class="comment">#打印网页源码</span></span><br><span class="line">time.sleep(<span class="number">10</span>) <span class="comment">#代码执行完后，页面会自动关闭</span></span><br></pre></td></tr></table></figure>
+<p>运行上面的代码可以如果启动了浏览器，且访问了baidu主页则证明安装成功。</p>
+<h4 id="操作页面中某对象："><a href="#操作页面中某对象：" class="headerlink" title="操作页面中某对象："></a>操作页面中某对象：</h4><ol>
+<li><p>获取对象：<br>driver.find_element_by_id(‘’)<br>driver.find_element_by_name(‘’)<br>driver.find_element_by_xpath(“”)</p>
+</li>
+<li><p>常见表单元素<br><code>input type =</code>‘text/password/email/submit’</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#input</span></span><br><span class="line">input = driver.find_element_by_id(<span class="string">'kw'</span>)</span><br><span class="line">input.send_keys(<span class="string">'python'</span>)</span><br><span class="line">time.sleep(<span class="number">2</span>)</span><br><span class="line">input.clear()</span><br><span class="line"></span><br><span class="line"><span class="comment">#checkbox:</span></span><br><span class="line">checkbox = driver.find_element_by_name(<span class="string">'remember'</span>)</span><br><span class="line"></span><br><span class="line">checkbox.click() </span><br><span class="line"></span><br><span class="line"><span class="comment">#select:</span></span><br><span class="line">需要将获取的元素用Select包裹</span><br><span class="line">selectTag = Select(driver.find_element_by_name(<span class="string">'junmpMenu'</span>)</span><br><span class="line"><span class="comment"># Select(driver.find_elemrnt_by_id())</span></span><br><span class="line">selectTag.select_by_index(<span class="number">1</span>) <span class="comment">#选择小标为1的选项</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#click：</span></span><br><span class="line"><span class="comment">#点击事件：</span></span><br><span class="line"><span class="comment">#获取按钮：</span></span><br><span class="line">submitBtn = driver.find_elemrnt_by_id(<span class="string">'su'</span>)</span><br><span class="line">submitBtn.click()</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p><code>button</code><br><code>checkbox</code><br><code>select</code></p>
+<h3 id="行为链："><a href="#行为链：" class="headerlink" title="行为链："></a>行为链：</h3><p>操作可能要有很多步，可以为其生成行为链ActionChains：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> selenium.webdriver.common.acrion_chains <span class="keyword">import</span> ActionChains</span><br><span class="line"></span><br><span class="line"><span class="comment">#先找到对象，有点类似于Android开发。</span></span><br><span class="line">inputTag = driver.find_elemrnt_by_id(<span class="string">'kw'</span>)</span><br><span class="line">submitBtn = driver.find_elemrnt_by_id(<span class="string">'su'</span>)</span><br><span class="line"></span><br><span class="line">actions = ActionChains(driver)</span><br><span class="line">actions.move_to_element(inputTag)</span><br><span class="line">actions.send_keys_to_element(inputTag,<span class="string">'python'</span>)</span><br><span class="line">actions.move_to_element(submitBtn) <span class="comment">#将焦点至于submitBtn按钮处</span></span><br><span class="line">actions.click() <span class="comment">#点击鼠标位置</span></span><br><span class="line"><span class="comment">#疑问：显示的鼠标未移动，但确实点击到了。</span></span><br><span class="line">actions.perform()</span><br><span class="line"></span><br><span class="line"><span class="comment">#鼠标操作</span></span><br></pre></td></tr></table></figure></p>
+<h3 id="by包"><a href="#by包" class="headerlink" title="by包"></a>by包</h3><p><code>find_element_by_id</code>,<code>find_element_by_name</code>,<code>find_element_class</code> 都可以使用by库来简化</p>
+<p>导入：from selenium.webdriver.common.by import By<br>find_element_by_id = find_element(By.ID,’id_name’)</p>
+<h3 id="隐式等待和显示等待"><a href="#隐式等待和显示等待" class="headerlink" title="隐式等待和显示等待"></a>隐式等待和显示等待</h3><p>from selenium.webdriver.support.ui import WebDriverWati<br>from selenium.webdriver.support import expected_conditions as EC<br>隐式等待<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">driver.implicity_wait(<span class="number">10</span>) <span class="comment">#等待10s</span></span><br></pre></td></tr></table></figure></p>
+<p>显示等待：<br>可以等待某个事件，某个条件满足再执行。<br><strong>注意</strong><br><code>presence_of_elenment_located()</code>中传入一个<strong>元组</strong><br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">element = WebDriverWait(self.driver,timeout=<span class="number">100</span>).util(</span><br><span class="line">	EC.presence_of_elenment_located((By.ID,<span class="string">'id_name'</span>))</span><br><span class="line">)</span><br><span class="line"><span class="comment">#presence_of_elenment_located某个元素已经加载</span></span><br><span class="line"></span><br><span class="line">print(element)</span><br></pre></td></tr></table></figure></p>
+<p>还有其他的等待条件，可以进该函数中查看</p>
+<h3 id="异常处理："><a href="#异常处理：" class="headerlink" title="异常处理："></a>异常处理：</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">try</span>:</span><br><span class="line"> 	fp.open(filename,<span class="string">'w'</span>)</span><br><span class="line"> 	fp.write(<span class="number">321</span>)</span><br><span class="line"><span class="keyword">except</span> IOError:</span><br><span class="line">	<span class="keyword">print</span> <span class="string">"Error 没有找到文件"</span></span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">	fp.write(<span class="string">"123"</span>)</span><br><span class="line"><span class="keyword">finally</span>:</span><br><span class="line">	fp.close()</span><br></pre></td></tr></table></figure>
+<p>except 捕获异常，对于不同的异常可以进行不同的处理。</p>
+<p>finally 无论有没有异常都会执行最后的代码</p>
+<p>自定义异常类：<br>需要继承子Exception：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyException</span><span class="params">(Except)</span>:</span></span><br><span class="line">	<span class="string">"""docstring for MyException"""</span></span><br><span class="line">	<span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, msg)</span>:</span></span><br><span class="line">		super(MyException, self).__init__()</span><br><span class="line">		self.msg = msg</span><br><span class="line">		</span><br><span class="line">	<span class="function"><span class="keyword">def</span> <span class="title">__str__</span><span class="params">()</span>:</span></span><br><span class="line">		<span class="keyword">return</span> self.msg</span><br><span class="line"></span><br><span class="line"><span class="keyword">try</span>:</span><br><span class="line">	<span class="keyword">raise</span> MyException</span><br><span class="line"><span class="keyword">except</span> MyException <span class="keyword">as</span> e:</span><br><span class="line">	<span class="keyword">print</span><span class="string">"aaa"</span></span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">	<span class="keyword">pass</span></span><br><span class="line"><span class="keyword">finally</span>:</span><br><span class="line">	<span class="keyword">pass</span></span><br></pre></td></tr></table></figure></p>
+<h3 id="页面的打开与关闭："><a href="#页面的打开与关闭：" class="headerlink" title="页面的打开与关闭："></a>页面的打开与关闭：</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">driver.excute_script(<span class="string">"window.open('https://www.douban.com/')"</span>)</span><br><span class="line">print(driver.window_handles)</span><br><span class="line">driver.switch_to_window(driver.window_handles[<span class="number">1</span>])</span><br><span class="line">print(driver.current_url)</span><br><span class="line">driver.switch_to_window(driver.window_handles[<span class="number">2</span>])</span><br><span class="line">print(driver.current_url)</span><br></pre></td></tr></table></figure>
+<p>虽然在浏览器中打开了新的页面，但是其操作仍是在原来页面，想要对新的页面进行操作必须使用driver.switch_to.window(driver.window_handles[])来获取</p>
+<p>注意window_handles时一个列表，其储存顺序是打开的顺序，<strong>有时页面打开的比较缓慢，或者有data;页面</strong>其页面顺序不一定按序。需要调试</p>
+<h3 id="selenium-爬取动态页面"><a href="#selenium-爬取动态页面" class="headerlink" title="selenium 爬取动态页面"></a>selenium 爬取动态页面</h3><p>有时网页源码和检查获得到的代码是<strong>不一样</strong>的，<strong>真实内容</strong>在<strong>检查的页面</strong>中才有，这是服务器可能采用了<code>Ajax</code>技术，对于这种技术有一下两种解决方式。</p>
+<p>首先明确网页中是否<strong>存在iframe标签</strong>，在源码中查看，如果存在iframe标签则证明该页的内容在<code>iframe</code>中，随即将<code>anchor</code>转到该<code>iframe</code>中。如果没有<code>iframe</code>，那么可以直接在<code>selenium</code>的源码中得到。</p>
+<p>比如:</p>
+<ol>
+<li>在拉勾网中其<code>Ajax</code>返回的数据直接写在了<code>page_source</code>中。</li>
+<li>在网易云音乐中则是装在了<code>iframe</code>中，需要使用<code>driver.switch_to.frame(&quot;contentFrame&quot;)</code>来获得。<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">iframe</span> <span class="attr">name</span>=<span class="string">"contentFrame"</span> <span class="attr">id</span>=<span class="string">"g_iframe"</span> <span class="attr">class</span>=<span class="string">"g-iframe"</span> <span class="attr">scrolling</span>=<span class="string">"auto"</span> <span class="attr">frameborder</span>=<span class="string">"0"</span> <span class="attr">src</span>=<span class="string">"about:blank"</span> <span class="attr">allowfullscreen</span>=<span class="string">"true"</span>&gt;</span><span class="tag">&lt;/<span class="name">iframe</span>&gt;</span></span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>这样就可以爬取动态网页的数据了。</p>
+<p>使用selenium时可以不用设置headers的信息，因为本来采用的就是浏览器的信息。</p>
+<p>定义爬虫类：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Spider_163</span><span class="params">(object)</span>:</span></span><br></pre></td></tr></table></figure></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">DRIVER_PATH = <span class="string">r"D:\Browse\chrome\chromedriver.exe"</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self,url)</span>:</span></span><br><span class="line">    self.base_url = url</span><br><span class="line">    driver = webdriver.Chrome(executable_path = Spider_163.DRIVER_PATH)</span><br><span class="line">    self.driver = driver</span><br></pre></td></tr></table></figure>
+<p>构造函数：new出驱动对象，以及明确爬取的url</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">run</span><span class="params">(self)</span>:</span></span><br><span class="line">    music_lists = []</span><br><span class="line">    <span class="keyword">for</span> page <span class="keyword">in</span> range(<span class="number">1</span>,<span class="number">1</span> + <span class="number">1</span>):</span><br><span class="line">        self.driver.get(self.base_url.format((page<span class="number">-1</span>)*<span class="number">35</span>))</span><br><span class="line">        self.driver.switch_to.frame(<span class="string">"contentFrame"</span>)</span><br><span class="line">        source = self.driver.page_source</span><br><span class="line">        source = etree.HTML(source)</span><br><span class="line">        <span class="comment"># print(etree.tostring(source, encoding='utf-8').decode('utf-8'))</span></span><br><span class="line">        lis = source.xpath(<span class="string">"//ul[@class = 'm-cvrlst f-cb']//li"</span>)</span><br><span class="line">        <span class="keyword">for</span> li <span class="keyword">in</span> lis:</span><br><span class="line">            list_img_href = li.xpath(<span class="string">".//img/@src"</span>)</span><br><span class="line">            list_title = li.xpath(<span class="string">".//p[@class = 'dec']/a/@title"</span>)</span><br><span class="line">            list_author = li.xpath(<span class="string">".//a[@class='nm nm-icn f-thide s-fc3']/@title"</span>)</span><br><span class="line">            list_author_homepage = BASIC_DOMAIN + li.xpath(<span class="string">".//a[@class='nm nm-icn f-thide s-fc3']/@href"</span>)[<span class="number">0</span>]</span><br><span class="line">            list_detail_href = BASIC_DOMAIN + li.xpath(<span class="string">".//p[@class = 'dec']/a/@href"</span>)[<span class="number">0</span>]</span><br><span class="line">            music_list = &#123;</span><br><span class="line">                <span class="string">"list_img_href"</span>:list_img_href,</span><br><span class="line">                <span class="string">"list_title"</span> : list_title,</span><br><span class="line">                <span class="string">"list_author"</span> : list_author,</span><br><span class="line">                <span class="string">"list_author_homepage"</span> : list_author_homepage,</span><br><span class="line">                <span class="string">"list_detail_href"</span> : list_detail_href</span><br><span class="line">            &#125;</span><br><span class="line">            music_lists.append(music_list)</span><br><span class="line">            print(music_list)</span><br><span class="line">            time.sleep(<span class="number">1</span>)</span><br><span class="line">    <span class="keyword">with</span> open(<span class="string">"music_lists.json"</span>,<span class="string">'w'</span>,encoding=<span class="string">'utf-8'</span>) <span class="keyword">as</span> fp:</span><br><span class="line">        json.dump(music_lists,fp,ensure_ascii=<span class="literal">False</span>)</span><br><span class="line">    self.sele_parse_detail_music_list(music_lists)</span><br><span class="line">        <span class="comment"># rep = requests.get(url=self.url)</span></span><br><span class="line">        <span class="comment"># html = etree.HTML(rep)</span></span><br><span class="line">        <span class="comment"># lis = html.xpath("//ul[@class = 'm-cvrlst f-cb']/li")</span></span><br><span class="line">        <span class="comment"># print(lis)</span></span><br></pre></td></tr></table></figure>
+<p>run函数，爬虫的动力口：先爬取所有的页面信息<br>网站结构示意：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">-web|</span><br><span class="line">	|-lists_page1|</span><br><span class="line">	|			 |-music_list1	|</span><br><span class="line">	|			 |				|-music1</span><br><span class="line">	|			 |				|-music2</span><br><span class="line">	|			 |				|-music3</span><br><span class="line">	|			 |				|...</span><br><span class="line">	|			 |</span><br><span class="line">	|			 |-music_list2</span><br><span class="line">	|			 |</span><br><span class="line">	|			 |-music_list3</span><br><span class="line">	|				-...	</span><br><span class="line">	|-lists_page2</span><br><span class="line">	|</span><br><span class="line">	|-lists_page3</span><br><span class="line">	|-...</span><br></pre></td></tr></table></figure></p>
+<p>代码中采用的逻辑是先爬取所有list页面中所有的list_page中的music_lists，将所有的list信息放入一个字典中<br>然后遍历字典，进入所有的music_list页面。将所有的music放入列表中<br>每个页面的具体内容都在<code>self.driver.switch_to.frame(&quot;contentFrame&quot;)</code> 中<br><strong>注意</strong></p>
+<ol>
+<li>xpath返回的是列表，包含了所有符合xpath筛选条件的标签，所有描述越精确定位目标越明确。</li>
+<li>注意标签之间的包含关系。</li>
+<li>有时某些标签未加载进来就被访问了，这时会报错，需要设置显示等待。但本案例中没有遇到这种情况，所有没有考虑。参考一下：显示等待页面响应：<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">WebDriverWait(driver,timeout=<span class="number">10</span>).util(</span><br><span class="line">		EC.presence_of_elenment_located((By.XPATH,<span class="string">"//....."</span>))</span><br><span class="line">	)</span><br><span class="line"><span class="comment">#等待出现后再执行下面的代码</span></span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">sele_parse_detail_music_list</span><span class="params">(self,musici_lists)</span>:</span></span><br><span class="line">    li=[]</span><br><span class="line">    <span class="keyword">for</span> _list <span class="keyword">in</span> musici_lists:</span><br><span class="line">        self.driver.get(_list[<span class="string">"list_detail_href"</span>])</span><br><span class="line">        self.driver.switch_to.frame(<span class="string">"contentFrame"</span>)</span><br><span class="line">        source = self.driver.page_source</span><br><span class="line">        source = etree.HTML(source)</span><br><span class="line">        <span class="comment"># print(etree.tostring(source,encoding='utf-8').decode('utf-8'))</span></span><br><span class="line">        trs = source.xpath(<span class="string">"//table[@class = 'm-table ']/tbody//tr"</span>)</span><br><span class="line">        <span class="comment"># print(etree.tostring(trs[0], encoding='utf-8').decode('utf-8'))</span></span><br><span class="line">        <span class="keyword">for</span> tr <span class="keyword">in</span> trs:</span><br><span class="line">            music_detail_name = tr.xpath(<span class="string">".//span[@class = 'txt']/a/b/@title"</span>)[<span class="number">0</span>]</span><br><span class="line">            music_detail_href = BASIC_DOMAIN + tr.xpath(<span class="string">".//span[@class = 'txt']/a/@href"</span>)[<span class="number">0</span>]</span><br><span class="line">            music_detail_dur = tr.xpath(<span class="string">".//span[@class = 'u-dur ']/text()"</span>)[<span class="number">0</span>]</span><br><span class="line">            music_detail_artist = tr.xpath(<span class="string">".//div[@class = 'text']/@title"</span>)[<span class="number">0</span>]</span><br><span class="line">            music_detail = &#123;</span><br><span class="line">                <span class="string">"music_detail_name"</span> : music_detail_name,</span><br><span class="line">                <span class="string">"music_detail_href"</span> : music_detail_href,</span><br><span class="line">                <span class="string">"music_detail_dur"</span> : music_detail_dur,</span><br><span class="line">                <span class="string">"music_detail_artist"</span> : music_detail_artist</span><br><span class="line">            &#125;</span><br><span class="line">            li.append(music_detail)</span><br><span class="line">    <span class="keyword">with</span> open(<span class="string">"music_details.json"</span>,<span class="string">'w'</span>,encoding=<span class="string">'utf-8'</span>) <span class="keyword">as</span> fp:</span><br><span class="line">        json.dump(li,fp,ensure_ascii=<span class="literal">False</span>)</span><br></pre></td></tr></table></figure>
+<h3 id="json数据转换："><a href="#json数据转换：" class="headerlink" title="json数据转换："></a>json数据转换：</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> json</span><br><span class="line"></span><br><span class="line">persons = [</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="string">'name'</span> : <span class="string">"a"</span></span><br><span class="line">		<span class="string">'age'</span> : <span class="number">12</span></span><br><span class="line">		<span class="string">'sex'</span> : <span class="string">'male'</span></span><br><span class="line">	&#125;</span><br><span class="line">	&#123;</span><br><span class="line">		...</span><br><span class="line">	&#125;</span><br><span class="line">]</span><br><span class="line"></span><br><span class="line">json_str = json.dumps(person) <span class="comment">#生成json字符串</span></span><br><span class="line"><span class="comment">##然后再将字符串写入fp中</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#或者直接使用dump函数，如果有中文的话注意编码格式</span></span><br><span class="line"><span class="keyword">with</span> open(<span class="string">"music_lists.json"</span>,<span class="string">'w'</span>,encoding=<span class="string">'utf-8'</span>) <span class="keyword">as</span> fp:</span><br><span class="line">    json.dump(music_lists,fp,ensure_ascii=<span class="literal">False</span>)  <span class="comment">#直接写进文件</span></span><br></pre></td></tr></table></figure>
+<p>打开文件需要使用<code>utf-8</code>的格式，写入的时候不按ascii码写入。 这样中文就可以正确显示</p>
+<p>写入后的json文件是一行字符串，可以在json.cn中解码，在复制过来，可以保持好看的格式</p>
+<h3 id="字符占位填充："><a href="#字符占位填充：" class="headerlink" title="%字符占位填充："></a>%字符占位填充：</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">driver.execute_script(<span class="string">"window.open('"</span>+url_douban+<span class="string">"')"</span>) <span class="comment">#运行js的代码</span></span><br><span class="line"></span><br><span class="line">driver.execute_script(<span class="string">"window.open('%s')"</span> % url_douban ) <span class="comment">#运行js的代码</span></span><br></pre></td></tr></table></figure>
+<h3 id="文件路径的操作："><a href="#文件路径的操作：" class="headerlink" title="文件路径的操作："></a>文件路径的操作：</h3><p><code>__file__</code>属性代表了当前执行的文件的绝对路径。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">os.path.dirname(__file__) <span class="comment">#可以打印文件的上级目录的绝对路径</span></span><br><span class="line"></span><br><span class="line">path = (os.path.join(os.path.dirname(__file__),<span class="string">"images"</span>,<span class="string">"163music"</span>)) <span class="comment">#可以组成同祖先的文件路径。</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> <span class="keyword">not</span> os.path.exists(path)</span><br><span class="line">    os.mkdir(path)</span><br><span class="line"></span><br><span class="line">img_name = url.split(<span class="string">"_"</span>)[<span class="number">-1</span>]</span><br><span class="line"></span><br><span class="line">request.urlretrive(url,os.path.joint(path,img_name))</span><br></pre></td></tr></table></figure></p>
+<p>使用os.path.join,os.path.dirname可以构造各种路径，方便将数据存储到目标文件中。<br>使用os.path.exists(file_path)可以检测文件是否存在，防止覆盖，既可以看<strong>文件夹</strong>，也可以看<strong>文件</strong>。</p>
+<h3 id="正则表达式："><a href="#正则表达式：" class="headerlink" title="正则表达式："></a>正则表达式：</h3><p>格式：re.match(“正则表达式”，字符串)</p>
+<h4 id="匹配字符串-match"><a href="#匹配字符串-match" class="headerlink" title="匹配字符串:match"></a>匹配字符串:match</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ret = re.match(<span class="string">"he"</span>,text)</span><br><span class="line"></span><br><span class="line">print(ret.group())</span><br></pre></td></tr></table></figure>
+<p>match从开头开始匹配，头不匹配则直接匹配失败。</p>
+<h4 id="匹配任意一个字符："><a href="#匹配任意一个字符：" class="headerlink" title=".匹配任意一个字符："></a><code>.</code>匹配任意一个字符：</h4><p>但是无法匹配换行符。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ret = re.match(<span class="string">"."</span>,text)</span><br><span class="line"></span><br><span class="line">print(ret.group())</span><br></pre></td></tr></table></figure></p>
+<h4 id="d匹配任意一个数字："><a href="#d匹配任意一个数字：" class="headerlink" title="\d匹配任意一个数字："></a><code>\d</code>匹配任意一个数字：</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ret = re.match(<span class="string">"\d"</span>,text)</span><br><span class="line"></span><br><span class="line">print(ret.group())</span><br></pre></td></tr></table></figure>
+<h4 id="D匹配任意一个f非数字："><a href="#D匹配任意一个f非数字：" class="headerlink" title="\D匹配任意一个f非数字："></a><code>\D</code>匹配任意一个f非数字：</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ret = re.match(<span class="string">"\D"</span>,text)</span><br><span class="line"></span><br><span class="line">print(ret.group())</span><br></pre></td></tr></table></figure>
+<h4 id="s匹配任意一个空白字符-n-t-r-’-‘-："><a href="#s匹配任意一个空白字符-n-t-r-’-‘-：" class="headerlink" title="\s匹配任意一个空白字符(\n,\t,\r ,’ ‘)："></a><code>\s</code>匹配任意一个空白字符(\n,\t,\r ,’ ‘)：</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ret = re.match(<span class="string">"\s"</span>,text)</span><br><span class="line"></span><br><span class="line">print(ret.group())</span><br></pre></td></tr></table></figure>
+<h4 id="w匹配任意一个a-z-A-Z-0-9-以及下划线"><a href="#w匹配任意一个a-z-A-Z-0-9-以及下划线" class="headerlink" title="\w匹配任意一个a-z A-Z 0-9 _以及下划线"></a><code>\w</code>匹配任意一个a<code>-z A-Z 0-9</code> <code>_</code>以及下划线</h4><p><code>\W</code> 与其相反<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ret = re.match(<span class="string">"\w"</span>,text)</span><br><span class="line"></span><br><span class="line">print(ret.group())</span><br></pre></td></tr></table></figure></p>
+<h4 id><a href="#" class="headerlink" title="[]"></a><code>[]</code></h4><p>匹配一个在[]中的字符<br>但是要注意keyword需要转义字符<br><strong><sup><a href="#fn_" id="reffn_"></a></sup></strong>是取反的意思<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ret = re.match(<span class="string">"[\d\-]"</span>,text)</span><br><span class="line"></span><br><span class="line">print(ret.group())</span><br></pre></td></tr></table></figure></p>
+<h4 id="-1"><a href="#-1" class="headerlink" title="+"></a><code>+</code></h4><p>前面的字符是一个或多个</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ret = re.match(<span class="string">"[\d\-]+"</span>,text)</span><br><span class="line"></span><br><span class="line">print(ret.group())</span><br></pre></td></tr></table></figure>
+<p><code>[\d\-]+</code>可以是一个或多个满足。</p>
+<h4 id="-2"><a href="#-2" class="headerlink" title="*"></a><code>*</code></h4><p>前面的字符是0个或多个</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ret = re.match(<span class="string">"[\d\-]*"</span>,text)</span><br><span class="line"></span><br><span class="line">print(ret.group())</span><br></pre></td></tr></table></figure>
+<p>于<code>+</code>的区别仅限于可以0个</p>
+<h4 id="？"><a href="#？" class="headerlink" title="？"></a><code>？</code></h4><p>匹配0个或1个字符,<br>与<code>.</code>的区别：可以包含换行符，且<code>?</code>是修饰符，前面必须要有格式<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">text = <span class="string">"\n"</span></span><br><span class="line">ret = re.match(<span class="string">r"\d?"</span>,text)</span><br><span class="line">print(ret.group())</span><br></pre></td></tr></table></figure></p>
+<h4 id="m-m-n-m"><a href="#m-m-n-m" class="headerlink" title="{m} {m,n} {m,}"></a><code>{m}</code> <code>{m,n}</code> <code>{m,}</code></h4><p>匹配m个前面格式的字符<br>不满足m个也会报错<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ret = re.match(<span class="string">"[\d]&#123;2&#125;"</span>,text) <span class="comment">#匹配2个数字，不满足两个也会报错</span></span><br><span class="line"></span><br><span class="line">print(ret.group())</span><br></pre></td></tr></table></figure></p>
+<h4 id="匹配邮箱："><a href="#匹配邮箱：" class="headerlink" title="匹配邮箱："></a>匹配邮箱：</h4><p><strong>注意<code>.</code>需要转义</strong><br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ret = re.match(<span class="string">"\w+@[a-z0-9]+\.[a-z]+"</span>,text) <span class="comment">#注意.需要转义</span></span><br><span class="line"></span><br><span class="line">print(ret.group())</span><br></pre></td></tr></table></figure></p>
+<h4 id="匹配url："><a href="#匹配url：" class="headerlink" title="匹配url："></a>匹配url：</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ret = re.match(<span class="string">r"(http|https|ftp)://[^\s]+"</span>, img_href)  <span class="comment"># 注意.需要转义</span></span><br><span class="line"></span><br><span class="line">print(ret.group())</span><br></pre></td></tr></table></figure>
+<h4 id="group分组："><a href="#group分组：" class="headerlink" title="group分组："></a>group分组：</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">text = <span class="string">"apple's price $99, orange's price is $10"</span></span><br><span class="line">ret = re.search(<span class="string">r"(\S+)\$(\d+),(\S+)\$(\d+)"</span>)</span><br><span class="line">price=&#123;</span><br><span class="line">    <span class="string">"apple"</span>:group(<span class="number">2</span>),</span><br><span class="line">    <span class="string">"orange"</span>:group(<span class="number">4</span>)</span><br><span class="line">&#125;</span><br><span class="line">print(price)</span><br></pre></td></tr></table></figure>
+<h4 id="findall"><a href="#findall" class="headerlink" title="findall:"></a>findall:</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">text = <span class="string">"apple's price $99, orange's price is $10"</span></span><br><span class="line">rtn = re.findall(<span class="string">"\$\d+"</span>,text)</span><br><span class="line">print(rtn)</span><br></pre></td></tr></table></figure>
+<h4 id="sub："><a href="#sub：" class="headerlink" title="sub："></a>sub：</h4><p>替换字符串中的目标：<br>sub(‘正则表达式’,’替换成什么’,test,count) count是指替换几个<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">text = <span class="string">"apple's price $99, orange's price is $10"</span></span><br><span class="line">rtn = re.sub(<span class="string">"\$\d+"</span>,<span class="string">'$0'</span>,text)</span><br><span class="line">print(rtn)</span><br></pre></td></tr></table></figure></p>
+<h4 id="正则表达式的贪婪模式："><a href="#正则表达式的贪婪模式：" class="headerlink" title="正则表达式的贪婪模式："></a>正则表达式的贪婪模式：</h4><p>使用<code>？</code>符合来表明非贪婪模式。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">text = <span class="string">"apple's price $99, orange's price is $10"</span></span><br><span class="line">rtn = re.sub(<span class="string">"a.*i"</span>,<span class="string">'$0'</span>,text)</span><br><span class="line">print(rtn)</span><br><span class="line"><span class="comment"># $0s $10</span></span><br><span class="line"></span><br><span class="line">text = <span class="string">"apple's price $99, orange's price is $10"</span></span><br><span class="line">rtn = re.sub(<span class="string">"a.*?i"</span>,<span class="string">'$0'</span>,text)</span><br><span class="line">print(rtn)</span><br><span class="line"><span class="comment"># $0ce $99, or$0ce is $10</span></span><br></pre></td></tr></table></figure></p>
+<p>贪婪会尽可能多的匹配字符，特别注意定两端匹配中间的字符时，是否两端可以更大。<br>比如：<code>&lt;&gt;&gt;&lt;&gt;&lt;&gt;&lt;&lt;&gt;&gt;&lt;&gt;</code> 匹配&lt;&gt;的话，非贪婪会全部匹配。</p>
+<p>实例：将html 的标签去掉<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">html = <span class="string">"""</span></span><br><span class="line"><span class="string">&lt;!DOCTYPE html&gt;</span></span><br><span class="line"><span class="string">&lt;html&gt;</span></span><br><span class="line"><span class="string">&lt;head&gt;</span></span><br><span class="line"><span class="string">    &lt;title&gt;哈哈这只剩一个&lt;/title&gt;</span></span><br><span class="line"><span class="string">&lt;/head&gt;</span></span><br><span class="line"><span class="string">&lt;body&gt;</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">&lt;/body&gt;</span></span><br><span class="line"><span class="string">&lt;/html&gt;</span></span><br><span class="line"><span class="string">"""</span></span><br><span class="line">rtn = re.sub(<span class="string">'&lt;.*+?&gt;'</span>,<span class="string">''</span>,html)</span><br></pre></td></tr></table></figure></p>
+<p>会将所有的&lt;…&gt;标签都去掉</p>
+<h4 id="spit："><a href="#spit：" class="headerlink" title="spit："></a>spit：</h4><p>re.split(‘正则’，text)<br>正则是分割符<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">re.split(<span class="string">' '</span>，text)</span><br><span class="line"><span class="comment">#空格作为分隔符</span></span><br></pre></td></tr></table></figure></p>
+<h4 id="compile"><a href="#compile" class="headerlink" title="compile"></a>compile</h4><p>将正则表达式先编译：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">r = re.compile(<span class="string">r"""</span></span><br><span class="line"><span class="string">    \d+ #整数</span></span><br><span class="line"><span class="string">    \.? #小数点</span></span><br><span class="line"><span class="string">    \d* #小数</span></span><br><span class="line"><span class="string">                """</span>,re.VERBOSE</span><br><span class="line">    )</span><br><span class="line"></span><br><span class="line">ret = re.search(r,text)</span><br></pre></td></tr></table></figure></p>
+<p>会根据正则表达式来分割字符串</p>
+<h3 id="文件，图片的下载："><a href="#文件，图片的下载：" class="headerlink" title="文件，图片的下载："></a>文件，图片的下载：</h3><p>首先要得到文件、图片的url</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Python-爬虫/" rel="tag"># Python 爬虫</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/07/27/3_Clion_Caffe/" rel="next" title="Clion + Caffe">
+                <i class="fa fa-chevron-left"></i> Clion + Caffe
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/08/11/8_Pytorch_BatchNorm/" rel="prev" title="BatchNorm 层">
+                BatchNorm 层 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/avatar.gif" alt="JoeyF">
+            
+              <p class="site-author-name" itemprop="name">JoeyF</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">21</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">17</span>
+                  <span class="site-state-item-name">tags</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/ZhouYiiFeng" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:joeyf.z.y.wen@gmail.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#项目结构："><span class="nav-number">1.</span> <span class="nav-text">项目结构：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Scrapy爬虫笔记："><span class="nav-number">2.</span> <span class="nav-text">Scrapy爬虫笔记：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Xpath格式："><span class="nav-number">3.</span> <span class="nav-text">Xpath格式：</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#选取节点："><span class="nav-number">3.0.1.</span> <span class="nav-text">选取节点：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#谓语："><span class="nav-number">3.0.2.</span> <span class="nav-text">谓语：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#通配符："><span class="nav-number">3.0.3.</span> <span class="nav-text">通配符：</span></a></li></ol></li></ol><li class="nav-item nav-level-2"><a class="nav-link" href="#实例："><span class="nav-number">4.</span> <span class="nav-text">实例：</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Step-1"><span class="nav-number">4.0.1.</span> <span class="nav-text">Step 1:</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Step-2"><span class="nav-number">4.0.2.</span> <span class="nav-text">Step 2</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Step-3"><span class="nav-number">4.0.3.</span> <span class="nav-text">Step 3</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#AJAX动态网页数据爬取："><span class="nav-number">4.1.</span> <span class="nav-text">AJAX动态网页数据爬取：</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#库的导入："><span class="nav-number">4.1.1.</span> <span class="nav-text">库的导入：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Selenium-测试安装："><span class="nav-number">4.1.2.</span> <span class="nav-text">Selenium 测试安装：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#操作页面中某对象："><span class="nav-number">4.1.3.</span> <span class="nav-text">操作页面中某对象：</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#行为链："><span class="nav-number">4.2.</span> <span class="nav-text">行为链：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#by包"><span class="nav-number">4.3.</span> <span class="nav-text">by包</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#隐式等待和显示等待"><span class="nav-number">4.4.</span> <span class="nav-text">隐式等待和显示等待</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#异常处理："><span class="nav-number">4.5.</span> <span class="nav-text">异常处理：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#页面的打开与关闭："><span class="nav-number">4.6.</span> <span class="nav-text">页面的打开与关闭：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#selenium-爬取动态页面"><span class="nav-number">4.7.</span> <span class="nav-text">selenium 爬取动态页面</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#json数据转换："><span class="nav-number">4.8.</span> <span class="nav-text">json数据转换：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#字符占位填充："><span class="nav-number">4.9.</span> <span class="nav-text">%字符占位填充：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#文件路径的操作："><span class="nav-number">4.10.</span> <span class="nav-text">文件路径的操作：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#正则表达式："><span class="nav-number">4.11.</span> <span class="nav-text">正则表达式：</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#匹配字符串-match"><span class="nav-number">4.11.1.</span> <span class="nav-text">匹配字符串:match</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#匹配任意一个字符："><span class="nav-number">4.11.2.</span> <span class="nav-text">.匹配任意一个字符：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#d匹配任意一个数字："><span class="nav-number">4.11.3.</span> <span class="nav-text">\d匹配任意一个数字：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#D匹配任意一个f非数字："><span class="nav-number">4.11.4.</span> <span class="nav-text">\D匹配任意一个f非数字：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#s匹配任意一个空白字符-n-t-r-’-‘-："><span class="nav-number">4.11.5.</span> <span class="nav-text">\s匹配任意一个空白字符(\n,\t,\r ,’ ‘)：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#w匹配任意一个a-z-A-Z-0-9-以及下划线"><span class="nav-number">4.11.6.</span> <span class="nav-text">\w匹配任意一个a-z A-Z 0-9 _以及下划线</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#null"><span class="nav-number">4.11.7.</span> <span class="nav-text">[]</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#-1"><span class="nav-number">4.11.8.</span> <span class="nav-text">+</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#-2"><span class="nav-number">4.11.9.</span> <span class="nav-text">*</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#？"><span class="nav-number">4.11.10.</span> <span class="nav-text">？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#m-m-n-m"><span class="nav-number">4.11.11.</span> <span class="nav-text">{m} {m,n} {m,}</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#匹配邮箱："><span class="nav-number">4.11.12.</span> <span class="nav-text">匹配邮箱：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#匹配url："><span class="nav-number">4.11.13.</span> <span class="nav-text">匹配url：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#group分组："><span class="nav-number">4.11.14.</span> <span class="nav-text">group分组：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#findall"><span class="nav-number">4.11.15.</span> <span class="nav-text">findall:</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#sub："><span class="nav-number">4.11.16.</span> <span class="nav-text">sub：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#正则表达式的贪婪模式："><span class="nav-number">4.11.17.</span> <span class="nav-text">正则表达式的贪婪模式：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#spit："><span class="nav-number">4.11.18.</span> <span class="nav-text">spit：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#compile"><span class="nav-number">4.11.19.</span> <span class="nav-text">compile</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#文件，图片的下载："><span class="nav-number">4.12.</span> <span class="nav-text">文件，图片的下载：</span></a></li></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">JoeyF</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Gemini</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+
+
+  
+
+  
+
+</body>
+</html>

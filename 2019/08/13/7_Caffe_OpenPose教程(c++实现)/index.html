@@ -1,0 +1,846 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="DL,Caffe,C++,OpenPose,Pose,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="导言:这其实是为的毕业设计时做的项目，在不使用openpose官方API，仅使用openpose训练得到的模型进行pose Estimation，这篇paper很牛逼，很巧妙地解决了多人的姿态估计的问题。刚开始的时候(本科毕设)只做到了单人的预测，但是本来模型的提出就是针对多人的预测，所以我那时并没有很好的利用了paper所提供的模型，可以说只用了1/3.为什么说1/3再之后会解释，这篇博客不会纠">
+<meta name="keywords" content="DL,Caffe,C++,OpenPose,Pose">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Caffe_OpenPose教程(c++实现)">
+<meta property="og:url" content="http://zhoef.com/2019/08/13/7_Caffe_OpenPose教程(c++实现)/index.html">
+<meta property="og:site_name" content="JoeyF&#39;s Home">
+<meta property="og:description" content="导言:这其实是为的毕业设计时做的项目，在不使用openpose官方API，仅使用openpose训练得到的模型进行pose Estimation，这篇paper很牛逼，很巧妙地解决了多人的姿态估计的问题。刚开始的时候(本科毕设)只做到了单人的预测，但是本来模型的提出就是针对多人的预测，所以我那时并没有很好的利用了paper所提供的模型，可以说只用了1/3.为什么说1/3再之后会解释，这篇博客不会纠">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="http://zhoef.com/2019/08/13/7_Caffe_OpenPose教程(c++实现)/7_Caffe_OpenPose教程(c++实现">
+<meta property="og:image" content="http://zhoef.com/2019/08/13/7_Caffe_OpenPose教程(c++实现)/7_Caffe_OpenPose教程(c++实现">
+<meta property="og:image" content="http://zhoef.com/2019/08/13/7_Caffe_OpenPose教程(c++实现)/7_Caffe_OpenPose教程(c++实现">
+<meta property="og:image" content="http://zhoef.com/2019/08/13/7_Caffe_OpenPose教程(c++实现)/7_Caffe_OpenPose教程(c++实现">
+<meta property="og:image" content="http://zhoef.com/2019/08/13/7_Caffe_OpenPose教程(c++实现)/7_Caffe_OpenPose教程(c++实现">
+<meta property="og:image" content="http://zhoef.com/2019/08/13/7_Caffe_OpenPose教程(c++实现)/7_Caffe_OpenPose教程(c++实现">
+<meta property="og:image" content="http://zhoef.com/2019/08/13/7_Caffe_OpenPose教程(c++实现)/7_Caffe_OpenPose教程(c++实现">
+<meta property="og:image" content="http://zhoef.com/2019/08/13/7_Caffe_OpenPose教程(c++实现)/7_Caffe_OpenPose教程(c++实现">
+<meta property="og:image" content="http://zhoef.com/2019/08/13/7_Caffe_OpenPose教程(c++实现)/7_Caffe_OpenPose教程(c++实现">
+<meta property="og:updated_time" content="2019-08-24T02:28:18.726Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Caffe_OpenPose教程(c++实现)">
+<meta name="twitter:description" content="导言:这其实是为的毕业设计时做的项目，在不使用openpose官方API，仅使用openpose训练得到的模型进行pose Estimation，这篇paper很牛逼，很巧妙地解决了多人的姿态估计的问题。刚开始的时候(本科毕设)只做到了单人的预测，但是本来模型的提出就是针对多人的预测，所以我那时并没有很好的利用了paper所提供的模型，可以说只用了1/3.为什么说1/3再之后会解释，这篇博客不会纠">
+<meta name="twitter:image" content="http://zhoef.com/2019/08/13/7_Caffe_OpenPose教程(c++实现)/7_Caffe_OpenPose教程(c++实现">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://zhoef.com/2019/08/13/7_Caffe_OpenPose教程(c++实现)/">
+
+
+
+
+
+  <title>Caffe_OpenPose教程(c++实现) | JoeyF's Home</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="default">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">JoeyF's Home</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            About
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://zhoef.com/2019/08/13/7_Caffe_OpenPose教程(c++实现)/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="JoeyF">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="JoeyF's Home">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Caffe_OpenPose教程(c++实现)</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-08-13T17:59:21+08:00">
+                2019-08-13
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>导言:这其实是为的毕业设计时做的项目，在不使用openpose官方API，仅使用openpose训练得到的模型进行pose Estimation，这篇paper很牛逼，很巧妙地解决了多人的姿态估计的问题。刚开始的时候(本科毕设)只做到了单人的预测，但是本来模型的提出就是针对多人的预测，所以我那时并没有很好的利用了paper所提供的模型，可以说只用了1/3.为什么说1/3再之后会解释，这篇博客不会纠结太多关于Pose的知识，如果有CPM的基础会更好。CPM在之后我也会跟着出一篇，那篇主要将CPM应用到手势估计中(这就是我毕设的原始课题..)</p>
+<h1 id="模型的下载"><a href="#模型的下载" class="headerlink" title="模型的下载"></a>模型的下载</h1><p><a href="https://github.com/CMU-Perceptual-Computing-Lab/openpose" target="_blank" rel="noopener">OpenPose官方github</a><br>项目中没有模型权值，下载后会自动运行getModels.sh来得到权值文件。可以从其中扣除链接来下载，也可以在国内的网盘中下载，也可以私信我的email来获取(主页左方)。这篇文章使用<code>pose_iter_440000.caffemodel</code>这个模型做姿态预测。</p>
+<h1 id="Caffe的准备"><a href="#Caffe的准备" class="headerlink" title="Caffe的准备"></a>Caffe的准备</h1><p>默认你已经配置好了你的Caffe环境，我们不会使用Pycaffe接口，而直接在源码中添加代码进行预测，如果你是在linux上使用clion，请配置好其对应的cmake文件。</p>
+<p>我们的运行文件可以创建在<code>your_caffe_path/examples/</code>下面，新建一个类名：Regressor</p>
+<h1 id="Regressor-类"><a href="#Regressor-类" class="headerlink" title="Regressor 类"></a>Regressor 类</h1><h2 id="一些类中的变量"><a href="#一些类中的变量" class="headerlink" title="一些类中的变量"></a>一些类中的变量</h2><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">caffe::<span class="built_in">shared_ptr</span>&lt;Net&lt;<span class="keyword">float</span>&gt; &gt; net_;</span><br><span class="line">    cv::Size input_geometry_;</span><br><span class="line">    cv::Size img_geometry;</span><br><span class="line">    <span class="keyword">int</span> num_channels_;</span><br><span class="line">    cv::Mat mean_;</span><br><span class="line">    Mat oriImg;   </span><br><span class="line">    <span class="keyword">const</span> <span class="keyword">int</span> nPoints = <span class="number">18</span>;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>input<em>geometry</em> 是网络所要求的input image的大小</li>
+<li>img_geometry是原始图像的大小</li>
+<li>num<em>channels</em>是输入的通道数</li>
+<li>oriImg 是输入图像</li>
+<li>nPoints是结点数量，coco是预测18个节点</li>
+</ul>
+<h2 id="构造函数："><a href="#构造函数：" class="headerlink" title="构造函数："></a>构造函数：</h2><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">Regressor::Regressor(<span class="keyword">const</span> <span class="built_in">string</span>&amp; model_file, <span class="keyword">const</span> <span class="built_in">string</span>&amp; trained_file)</span><br><span class="line">&#123;</span><br><span class="line"><span class="meta">#<span class="meta-keyword">ifdef</span> CPU_ONLY</span></span><br><span class="line">    Caffe::set_mode(Caffe::CPU);</span><br><span class="line"><span class="meta">#<span class="meta-keyword">else</span></span></span><br><span class="line">    Caffe::set_mode(Caffe::GPU);</span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br><span class="line"></span><br><span class="line">    <span class="comment">/* Load the network. */</span></span><br><span class="line">    net_.reset(<span class="keyword">new</span> Net&lt;<span class="keyword">float</span>&gt;(model_file, TEST));</span><br><span class="line">    net_-&gt;CopyTrainedLayersFrom(trained_file);</span><br><span class="line"></span><br><span class="line">    CHECK_EQ(net_-&gt;num_inputs(), <span class="number">1</span>) &lt;&lt; <span class="string">"Network should have exactly one input."</span>;</span><br><span class="line">    CHECK_EQ(net_-&gt;num_outputs(), <span class="number">1</span>) &lt;&lt; <span class="string">"Network should have exactly one output."</span>;</span><br><span class="line"></span><br><span class="line">    Blob&lt;<span class="keyword">float</span>&gt;* input_layer = net_-&gt;input_blobs()[<span class="number">0</span>];</span><br><span class="line">    num_channels_ = input_layer-&gt;channels();</span><br><span class="line">    CHECK(num_channels_ == <span class="number">3</span> || num_channels_ == <span class="number">1</span>)</span><br><span class="line">    &lt;&lt; <span class="string">"Input layer should have 1 or 3 channels."</span>;</span><br><span class="line"></span><br><span class="line">    input_geometry_ = cv::Size(input_layer-&gt;width(), input_layer-&gt;height());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>构造函数中主要是对权值文件的加载，以及一些变量的设置。</p>
+<h2 id="预测接口函数"><a href="#预测接口函数" class="headerlink" title="预测接口函数"></a>预测接口函数</h2><p>在PoseRegress函数中主要是运行的第一个入口，在其中利用模型进行了预测。并且对预测结果进行加工返回。<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">cv::Mat Regressor::PoseRegress(<span class="keyword">const</span> cv::Mat &amp; img, Skeleton_Info &amp; predictions)</span><br><span class="line">&#123;</span><br><span class="line">    img_geometry.width = img.cols;</span><br><span class="line">    img_geometry.height = img.rows;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">std</span>::<span class="built_in">vector</span>&lt;<span class="keyword">float</span>&gt; output = Predict(img, PROB_PIX);<span class="comment">//PROB_PIX这里是46,即368/8得到的(3个缩小池化)</span></span><br><span class="line"></span><br><span class="line">    cv::Mat output_M = cv::Mat(output);</span><br><span class="line">    cv::Mat pre_input = output_M.reshape(<span class="number">0</span>, PROB_PIX * PROB_CHANEL_POSE); <span class="comment">//PROB_PIX这里是46,即368/8得到的(3个缩小池化)</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">this</span>-&gt;oriImg = img;</span><br><span class="line">    <span class="keyword">return</span> prossBlob2PoseInfo(pre_input, predictions);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="预测函数"><a href="#预测函数" class="headerlink" title="预测函数"></a>预测函数</h2><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">std</span>::<span class="built_in">vector</span>&lt;<span class="keyword">float</span>&gt; Regressor::Predict(<span class="keyword">const</span> cv::Mat&amp; img, <span class="keyword">int</span> prob_len) &#123;</span><br><span class="line">    Blob&lt;<span class="keyword">float</span>&gt;* input_layer = net_-&gt;input_blobs()[<span class="number">0</span>];</span><br><span class="line">    input_layer-&gt;Reshape(<span class="number">1</span>, num_channels_,</span><br><span class="line">                         input_geometry_.height, input_geometry_.width);</span><br><span class="line">    <span class="comment">/* Forward dimension change to all layers. */</span></span><br><span class="line">    net_-&gt;Reshape();</span><br><span class="line">    <span class="built_in">std</span>::<span class="built_in">vector</span>&lt;cv::Mat&gt; input_channels;</span><br><span class="line"></span><br><span class="line">    WrapInputLayer(&amp;input_channels);</span><br><span class="line">    Preprocess(img, &amp;input_channels);</span><br><span class="line"></span><br><span class="line">    net_-&gt;Forward();</span><br><span class="line"></span><br><span class="line">    <span class="comment">/* Copy the output layer to a std::vector */</span></span><br><span class="line">    Blob&lt;<span class="keyword">float</span>&gt;* output_layer = net_-&gt;output_blobs()[<span class="number">0</span>]; <span class="comment">//输出是一个blob数组，尽管这里只有一个。</span></span><br><span class="line">    <span class="keyword">const</span> <span class="keyword">float</span>* begin = output_layer-&gt;cpu_data();</span><br><span class="line">    <span class="keyword">const</span> <span class="keyword">float</span>* end = begin + output_layer-&gt;channels() * prob_len * prob_len;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">std</span>::<span class="built_in">vector</span>&lt;<span class="keyword">float</span>&gt;(begin, end);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在这里注意的是<code>WrapInputLayer(&amp;input_channels)</code> 和<code>Preprocess(img, &amp;input_channels)</code>函数，</p>
+<ul>
+<li>第一：必须将输入image改为caffe的input格式：<code>N C H W</code>。并且要归一化至0-1之间。并且要化为Opencv中的RGB顺序即BGR。</li>
+<li>第二：caffe的input_data都是一维的以行顺序访问的长向量，所以在caffe中很常见一些offset的用法。这一点可以在<code>WrapInputLayer</code>中看出：<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">void</span> Regressor::WrapInputLayer(<span class="built_in">std</span>::<span class="built_in">vector</span>&lt;cv::Mat&gt;* input_channels) &#123;</span><br><span class="line">    Blob&lt;<span class="keyword">float</span>&gt;* input_layer = net_-&gt;input_blobs()[<span class="number">0</span>];</span><br><span class="line">    <span class="keyword">int</span> width = input_layer-&gt;width();</span><br><span class="line">    <span class="keyword">int</span> height = input_layer-&gt;height();</span><br><span class="line">    <span class="keyword">float</span>* input_data = input_layer-&gt;mutable_cpu_data();</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; input_layer-&gt;channels(); ++i) &#123;</span><br><span class="line">        cv::<span class="function">Mat <span class="title">channel</span><span class="params">(height, width, CV_32FC1, input_data)</span></span>;</span><br><span class="line">        input_channels-&gt;push_back(channel);</span><br><span class="line">        input_data += width * height;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>在为input_layer装载数据指针时，为了能像操作Mat一样操作input_data，caffe灵活运用了c++的指针特性。这之间的原理如图所示<br><img src="/2019/08/13/7_Caffe_OpenPose教程(c++实现)/7_Caffe_OpenPose教程(c++实现" alt="wrapInput">/1.png)<center>wrapInput</center></p>
+<p>同理，在输出层这个blob的cpu_data()也是一维的长向量，用指针将其读出后装在一个vector中(我采用的是转化为vector然后再转为Mat进行操作，<strong>当然最好地一定是按照官方源码一样直接包裹成channels类似于WrapInputLayer</strong>)。<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="keyword">float</span>* begin = output_layer-&gt;cpu_data();</span><br><span class="line"><span class="keyword">const</span> <span class="keyword">float</span>* end = begin + output_layer-&gt;channels() * prob_len * prob_len;</span><br><span class="line"><span class="keyword">return</span> <span class="built_in">std</span>::<span class="built_in">vector</span>&lt;<span class="keyword">float</span>&gt;(begin, end);</span><br></pre></td></tr></table></figure></p>
+<p><strong>在caffe中可读可写的指针用input_layer-&gt;mutable_cpu_data()获得，只读的用output_layer-&gt;cpu_data()获得，gpu数据同理。</strong>不能直接读gpu的数据除非是在cuda编程中。需要现将数据换到cpu上在读出。</p>
+<p>当数据装载好了后<code>net_-&gt;Forward()</code>开始预测。</p>
+<p>视角再回到预测函数PoseRegress这里，为方便阅读我这里再贴下源码：<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">cv::Mat Regressor::PoseRegress(<span class="keyword">const</span> cv::Mat &amp; img, Skeleton_Info &amp; predictions)</span><br><span class="line">&#123;</span><br><span class="line">    img_geometry.width = img.cols;</span><br><span class="line">    img_geometry.height = img.rows;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">std</span>::<span class="built_in">vector</span>&lt;<span class="keyword">float</span>&gt; output = Predict(img, PROB_PIX);<span class="comment">//PROB_PIX这里是46,即368/8得到的(3个缩小池化)</span></span><br><span class="line"></span><br><span class="line">    cv::Mat output_M = cv::Mat(output);</span><br><span class="line">    cv::Mat pre_input = output_M.reshape(<span class="number">0</span>, PROB_PIX * PROB_CHANEL_POSE);<span class="comment">//PROB_PIX这里是46,即368/8得到的(3个缩小池化)</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">this</span>-&gt;oriImg = img;</span><br><span class="line">    <span class="keyword">return</span> prossBlob2PoseInfo(pre_input, predictions);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>得到<code>Predict(img, PROB_PIX)</code>返回的向量后我们将其转为Mat，然后reshape一下，这里的reshape可以参考我有一篇专门将reshape的博客，这里最后得到的pre_input的通道数等于原来的output_M的通道数等于1,有46×19×3行，有46列。</p>
+<h2 id="处理预测得到的信息"><a href="#处理预测得到的信息" class="headerlink" title="处理预测得到的信息"></a>处理预测得到的信息</h2><p>通过论文(Cao_Realtime_Multi-Person_2D_CVPR_2017_paper)可以得到模型的输出是有两个stage：</p>
+<ul>
+<li>第一个stage是Keypoint的预测</li>
+<li>第二个则是PAF的预测</li>
+</ul>
+<p>对于KeyPoint我相信读者并不陌生，无论有没有看过CPM(当然看过最好)都会很感性地运用kaypoint的数据：对于模型output的前19通道，每一个通道对应18个关节点的热力图，最后一个是背景，值越大probability越大。如果我们只针对的是单人的预测接下来就很好办了<strong>只用依次遍历热力图然后找出最大的位置即可(这也是我毕设的做法)</strong>但是如果输出帧中有多人怎么处理呢？这才是这篇论文的核心：Multi-Person级的预测。</p>
+<p>这里先介绍PAF，刚开始的时候我花非了很大的精力取搞懂PAF是个什么东西，论文中是这么介绍的：<br><img src="/2019/08/13/7_Caffe_OpenPose教程(c++实现)/7_Caffe_OpenPose教程(c++实现" alt="PAF1">/2.png)<center>PAF1</center><br>考虑单个的肢，节点$x<em>{j1,k}$ 与$x</em>{j2,k}$组成一个肢体，对于每一个落在该肢体上的点，其PAF定义为一个由$x<em>{j1,k}$ 指向$x</em>{j2,k}$的单位向量。</p>
+<p>所以我们得到这个预测信息怎么使用呢？这里类比一下余弦相似度，当且仅当两个向量同向时，其相似度最大，而当一个向量方向越是偏离另一个向量其相似度越低。图PAF2举了一个例子：<br><img src="/2019/08/13/7_Caffe_OpenPose教程(c++实现)/7_Caffe_OpenPose教程(c++实现" alt="PAF2">/3.png)<center>PAF2</center></p>
+<p>$Y<em>{j1,kn}$和$Y</em>{j2,kn}$中</p>
+<ul>
+<li>Y代表预测的值</li>
+<li>j1代表关节点1号类型(瞎举例的类型和原本coco类型没有任何关系)，j1,j2构成一个肢体。</li>
+<li>kn代表第几个人，图中假设3个人</li>
+</ul>
+<p><strong>版本一</strong>：我们只需要计算两两点直接的单位向量(绿色的箭头)然后将该向量与该点所处的PAF向量(红色箭头)做内积，然后选择大的那个点配对就可以找到合法的匹配点。<br><strong>缺陷</strong>：如果直接使用两个预测的端点来计算相似度，那么对于这种情况将会出错：<br><img src="/2019/08/13/7_Caffe_OpenPose教程(c++实现)/7_Caffe_OpenPose教程(c++实现" alt="缺陷1">/4.png)<center>缺陷1</center><br>当两个预测的端点在同一水瓶线时，相似度都是一样的。</p>
+<p><strong>版本二</strong>：我们两两点中抽样几个点，将总的相似度记为所有抽样点的相似度的和，每一个抽样点的相似度的计算方式就是当前的单位向量($ x<em>{j1,k} $ 指向$$x</em>{j2,k}$$的单位向量)，与该点处的PAF值的点积。<br><img src="/2019/08/13/7_Caffe_OpenPose教程(c++实现)/7_Caffe_OpenPose教程(c++实现" alt="版本2">/5.png)<center>版本2</center><br>蓝色点是抽样点，当计算相似度时，以该点的PAF的值点积单位向量的值，然后加权起来。可以发现如果是水平的情况，中间红色点的PAF值是0,那么就可以轻易区分这种情况了。</p>
+<p><em>解释：很多读者肯定有这样一个疑问：如果这个红点也在黄色区域(PAF不等于0的地方)那么这种情况不会还是分别不出来吗？</em><br>针对这种问题我的解释是：</p>
+<ul>
+<li><p>第一，这种绝对水平的情况在真实或者预测中一般不可能出现。即使出现了其PAF的预测值也不可能完全一样，因为预测模型需要具有很强的范化能力，所以不可能预测处一个和PAF的label一样的结果出来。</p>
+</li>
+<li><p>第二，只要控制好抽样的数量这个问题一定是可以解决的。</p>
+</li>
+</ul>
+<p><code>prossBlob2PoseInfo</code>源码：<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br></pre></td><td class="code"><pre><span class="line">cv::Mat Regressor::prossBlob2PoseInfo(cv::Mat &amp; probMat, Skeleton_Info &amp; skeletons_people)</span><br><span class="line">&#123;</span><br><span class="line"></span><br><span class="line">    probMat = probMat.reshape(<span class="number">0</span>,<span class="number">57</span>);</span><br><span class="line">    probMat = probMat.t();</span><br><span class="line">    probMat = probMat.reshape(<span class="number">57</span>,<span class="number">46</span>);</span><br><span class="line">    <span class="built_in">std</span>::<span class="built_in">vector</span>&lt;Mat&gt; probChs;</span><br><span class="line">    split(probMat, probChs);</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>;i&lt;probChs.size();i++)&#123;</span><br><span class="line">        resize(probChs[i], probChs[i], input_Ori_geometry_);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">int</span> keyPointId = <span class="number">0</span>;</span><br><span class="line">    <span class="built_in">std</span>::<span class="built_in">vector</span>&lt;<span class="built_in">std</span>::<span class="built_in">vector</span>&lt;KeyPoint&gt;&gt; detectedKeypoints;</span><br><span class="line">    <span class="built_in">std</span>::<span class="built_in">vector</span>&lt;KeyPoint&gt; keyPointsList;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; nPoints;++i)&#123;</span><br><span class="line">        <span class="built_in">std</span>::<span class="built_in">vector</span>&lt;KeyPoint&gt; keyPoints;</span><br><span class="line"></span><br><span class="line">        getKeyPoints(probChs[i],<span class="number">0.1</span>,keyPoints);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i&lt; keyPoints.size();++i,++keyPointId)&#123;</span><br><span class="line">            keyPoints[i].id = keyPointId;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        detectedKeypoints.push_back(keyPoints);</span><br><span class="line">        keyPointsList.insert(keyPointsList.end(),keyPoints.begin(),keyPoints.end());</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">std</span>::<span class="built_in">vector</span>&lt;cv::Scalar&gt; colors;</span><br><span class="line">    populateColorPalette(colors,nPoints); </span><br><span class="line"></span><br><span class="line">    cv::Mat outputFrame = <span class="keyword">this</span>-&gt;oriImg.clone();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; nPoints;++i)&#123;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; detectedKeypoints[i].size();++j)&#123;</span><br><span class="line">            cv::circle(outputFrame,detectedKeypoints[i][j].point,<span class="number">5</span>,colors[i],<span class="number">-1</span>,cv::LINE_AA);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">std</span>::<span class="built_in">vector</span>&lt;<span class="built_in">std</span>::<span class="built_in">vector</span>&lt;ValidPair&gt;&gt; validPairs;</span><br><span class="line">    <span class="built_in">std</span>::<span class="built_in">set</span>&lt;<span class="keyword">int</span>&gt; invalidPairs;</span><br><span class="line">    getValidPairs(probChs,detectedKeypoints,validPairs,invalidPairs);</span><br><span class="line"></span><br><span class="line">    <span class="built_in">std</span>::<span class="built_in">vector</span>&lt;<span class="built_in">std</span>::<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt;&gt; personwiseKeypoints;</span><br><span class="line">    getPersonwiseKeypoints(validPairs,invalidPairs,personwiseKeypoints);</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i&lt; nPoints<span class="number">-1</span>;++i)&#123;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> n  = <span class="number">0</span>; n &lt; personwiseKeypoints.size();++n)&#123;</span><br><span class="line">            <span class="keyword">const</span> <span class="built_in">std</span>::pair&lt;<span class="keyword">int</span>,<span class="keyword">int</span>&gt;&amp; posePair = posePairs[i];</span><br><span class="line">            <span class="keyword">int</span> indexA = personwiseKeypoints[n][posePair.first];</span><br><span class="line">            <span class="keyword">int</span> indexB = personwiseKeypoints[n][posePair.second];</span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span>(indexA == <span class="number">-1</span> || indexB == <span class="number">-1</span>)&#123;</span><br><span class="line">                <span class="keyword">continue</span>;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">const</span> KeyPoint&amp; kpA = keyPointsList[indexA];</span><br><span class="line">            <span class="keyword">const</span> KeyPoint&amp; kpB = keyPointsList[indexB];</span><br><span class="line"></span><br><span class="line">            cv::line(outputFrame,kpA.point,kpB.point,colors[i],<span class="number">3</span>,cv::LINE_AA);</span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    cv::imshow(<span class="string">"Detected Pose"</span>,outputFrame);</span><br><span class="line">    cv::waitKey(<span class="number">0</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="找到所有人的对应节点"><a href="#找到所有人的对应节点" class="headerlink" title="找到所有人的对应节点"></a>找到所有人的对应节点</h3><p>从18张热力图中我们可以得到每一个节点的热力图，但是单张热力图中包含了多人(数量未知的人)的同一个关节点位置图，在<code>getKeyPoints</code>函数中就是为了提取出每一个人的同一类关节点。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">void</span> Regressor::getKeyPoints(cv::Mat&amp; probMap,<span class="keyword">double</span> threshold,<span class="built_in">std</span>::<span class="built_in">vector</span>&lt;KeyPoint&gt;&amp; keyPoints)&#123;</span><br><span class="line">    cv::Mat smoothProbMap;</span><br><span class="line">    cv::GaussianBlur( probMap, smoothProbMap, cv::Size( <span class="number">3</span>, <span class="number">3</span> ), <span class="number">0</span>, <span class="number">0</span> );</span><br><span class="line"></span><br><span class="line">    cv::Mat maskedProbMap;</span><br><span class="line">    cv::threshold(smoothProbMap,maskedProbMap,threshold,<span class="number">255</span>,cv::THRESH_BINARY);</span><br><span class="line"></span><br><span class="line">    maskedProbMap.convertTo(maskedProbMap,CV_8U,<span class="number">1</span>);</span><br><span class="line"></span><br><span class="line">    <span class="built_in">std</span>::<span class="built_in">vector</span>&lt;<span class="built_in">std</span>::<span class="built_in">vector</span>&lt;cv::Point&gt; &gt; contours;</span><br><span class="line">    cv::findContours(maskedProbMap,contours,cv::RETR_TREE,cv::CHAIN_APPROX_SIMPLE);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; contours.size();++i)&#123;</span><br><span class="line">        cv::Mat blobMask = cv::Mat::zeros(smoothProbMap.rows,smoothProbMap.cols,smoothProbMap.type());</span><br><span class="line"></span><br><span class="line">        cv::fillConvexPoly(blobMask,contours[i],cv::Scalar(<span class="number">1</span>));</span><br><span class="line"></span><br><span class="line">        <span class="keyword">double</span> maxVal;</span><br><span class="line">        cv::Point maxLoc;</span><br><span class="line"></span><br><span class="line">        cv::minMaxLoc(smoothProbMap.mul(blobMask),<span class="number">0</span>,&amp;maxVal,<span class="number">0</span>,&amp;maxLoc);</span><br><span class="line"></span><br><span class="line">        keyPoints.push_back(KeyPoint(maxLoc, probMap.at&lt;<span class="keyword">float</span>&gt;(maxLoc.y,maxLoc.x)));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><img src="/2019/08/13/7_Caffe_OpenPose教程(c++实现)/7_Caffe_OpenPose教程(c++实现" alt="热力图">/8.png)<center>一个节点对应的热力图</center></p>
+<p>这里也可以看出如果只针对单人的预测的话，我们只需要将得到图中最大的那个点的位置就可以了，但是在多人预测中这显然是不行的，我们必须在每一个高斯圆中找到圆中的局部最大点才可以找到所有人的该类的关节点。这里也体现了文章<strong>为什么要使用高斯圆的</strong>好处，为了形成多个极大值区域，在之后依次对这些区域进行最大值查找。而如果只是一个点的预测的话是无法形成区域的。<br><em>读者可能说单点预测的话可以用top(N)来得到前几个最大值的位置。首先这个N是率先无法确定的;如果使用阈值的话，阈值的选取暂且不说，使用高斯圆从大范围锁定极大值点的精确度明显更高。</em></p>
+<p>所以我们需要对于每一个独立的高斯圆构造掩码图，然后使用原来的热力图依次乘以掩码图得到单一的高斯圆的热力图，然后在这里寻找最大值即可。</p>
+<p>步骤如下：</p>
+<ul>
+<li>高斯处理边界(这个和高斯圆没有关系哈)</li>
+<li>Threshold阈值二分，大于阈值的置为255</li>
+<li>联通域检测，findcounter()</li>
+<li>利用findcounter返回的每一个独立的连通域进行填充，将每一个边界内的填充为1<code>cv::fillConvexPoly(blobMask,contours[i],cv::Scalar(1))</code></li>
+<li>使用原来的热力图和上一步得到的掩码进行mul操作，(元素对应乘积)</li>
+<li>寻找每一个最大值。</li>
+</ul>
+<h3 id="找寻配对的两点"><a href="#找寻配对的两点" class="headerlink" title="找寻配对的两点"></a>找寻配对的两点</h3><p>返回的值是<code>validPairs</code>：第一维一共18层对应18个关节点，第二维有每个关节类别对应侦测出来的不同节点(比如有4个人的对应的鼻子节点，则有4个Point)，每一个节点有其对于的id号起到唯一性标志的作用</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">void</span> Regressor::getValidPairs(<span class="keyword">const</span> <span class="built_in">std</span>::<span class="built_in">vector</span>&lt;cv::Mat&gt; &amp;netOutputParts,</span><br><span class="line">                              <span class="keyword">const</span> <span class="built_in">std</span>::<span class="built_in">vector</span>&lt;<span class="built_in">std</span>::<span class="built_in">vector</span>&lt;KeyPoint&gt;&gt; &amp;detectedKeypoints,</span><br><span class="line">                              <span class="built_in">std</span>::<span class="built_in">vector</span>&lt;<span class="built_in">std</span>::<span class="built_in">vector</span>&lt;ValidPair&gt;&gt; &amp;validPairs, <span class="built_in">std</span>::<span class="built_in">set</span>&lt;<span class="keyword">int</span>&gt; &amp;invalidPairs) &#123;</span><br><span class="line">    <span class="keyword">int</span> nInterpSamples = <span class="number">10</span>; <span class="comment">//抽样点数</span></span><br><span class="line">    <span class="keyword">float</span> pafScoreTh = <span class="number">0.1</span>;  <span class="comment">// paf的阈值</span></span><br><span class="line">    <span class="keyword">float</span> confTh = <span class="number">0.7</span>;      <span class="comment">// 筛选的阈值</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> k = <span class="number">0</span>; k &lt; mapIdx.size();++k )&#123; <span class="comment">//3个for循环，第一层是节点类别的循环，第二、三层是两个组依次两两计算相似度。</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">//A-&gt;B constitute a limb</span></span><br><span class="line">        cv::Mat pafA = netOutputParts[mapIdx[k].first];</span><br><span class="line">        cv::Mat pafB = netOutputParts[mapIdx[k].second];</span><br><span class="line"></span><br><span class="line">        <span class="comment">//Find the keypoints for the first and second limb</span></span><br><span class="line">        <span class="keyword">const</span> <span class="built_in">std</span>::<span class="built_in">vector</span>&lt;KeyPoint&gt;&amp; candA = detectedKeypoints[posePairs[k].first]; <span class="comment">//取出k类关节点的端点A</span></span><br><span class="line">        <span class="keyword">const</span> <span class="built_in">std</span>::<span class="built_in">vector</span>&lt;KeyPoint&gt;&amp; candB = detectedKeypoints[posePairs[k].second]; <span class="comment">//取出k类关节点的端点B</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">int</span> nA = candA.size();</span><br><span class="line">        <span class="keyword">int</span> nB = candB.size();</span><br><span class="line"></span><br><span class="line">        <span class="comment">/*</span></span><br><span class="line"><span class="comment">          # If keypoints for the joint-pair is detected</span></span><br><span class="line"><span class="comment">          # check every joint in candA with every joint in candB</span></span><br><span class="line"><span class="comment">          # Calculate the distance vector between the two joints</span></span><br><span class="line"><span class="comment">          # Find the PAF values at a set of interpolated points between the joints</span></span><br><span class="line"><span class="comment">          # Use the above formula to compute a score to mark the connection valid</span></span><br><span class="line"><span class="comment">         */</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span>(nA != <span class="number">0</span> &amp;&amp; nB != <span class="number">0</span>)&#123;</span><br><span class="line">            <span class="built_in">std</span>::<span class="built_in">vector</span>&lt;ValidPair&gt; localValidPairs;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i&lt; nA;++i)&#123;</span><br><span class="line">                <span class="keyword">int</span> maxJ = <span class="number">-1</span>;</span><br><span class="line">                <span class="keyword">float</span> maxScore = <span class="number">-1</span>;</span><br><span class="line">                <span class="keyword">bool</span> found = <span class="literal">false</span>; <span class="comment">//为了防止所有点都小于阈值的情况，(针对与pairPose的最后2个维度，&#123;2,17&#125;，&#123;5,16&#125;，感觉这两个是凑数的。。。)</span></span><br><span class="line"></span><br><span class="line">                <span class="keyword">for</span>(<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; nB;++j)&#123;</span><br><span class="line">                    <span class="built_in">std</span>::pair&lt;<span class="keyword">float</span>,<span class="keyword">float</span>&gt; distance(candB[j].point.x - candA[i].point.x,candB[j].point.y - candA[i].point.y);</span><br><span class="line"></span><br><span class="line">                    <span class="keyword">float</span> norm = <span class="built_in">std</span>::<span class="built_in">sqrt</span>(distance.first*distance.first + distance.second*distance.second);</span><br><span class="line"></span><br><span class="line">                    <span class="keyword">if</span>(!norm)&#123;</span><br><span class="line">                        <span class="keyword">continue</span>;</span><br><span class="line">                    &#125; </span><br><span class="line"></span><br><span class="line"><span class="comment">//                  单位化AB向量。</span></span><br><span class="line">                    distance.first /= norm;</span><br><span class="line">                    distance.second /= norm;</span><br><span class="line"></span><br><span class="line">                    <span class="comment">//Find p(u)</span></span><br><span class="line">                    <span class="built_in">std</span>::<span class="built_in">vector</span>&lt;cv::Point&gt; interpCoords;</span><br><span class="line">                    <span class="comment">//对AB连线进行抽样</span></span><br><span class="line">                    populateInterpPoints(candA[i].point,candB[j].point,nInterpSamples,interpCoords);</span><br><span class="line">                    <span class="comment">//Find L(p(u))</span></span><br><span class="line">                    <span class="built_in">std</span>::<span class="built_in">vector</span>&lt;<span class="built_in">std</span>::pair&lt;<span class="keyword">float</span>,<span class="keyword">float</span>&gt;&gt; pafInterp;</span><br><span class="line">                    <span class="keyword">for</span>(<span class="keyword">int</span> l = <span class="number">0</span>; l &lt; interpCoords.size();++l)&#123;</span><br><span class="line">                        pafInterp.push_back(</span><br><span class="line">                                <span class="built_in">std</span>::pair&lt;<span class="keyword">float</span>,<span class="keyword">float</span>&gt;(</span><br><span class="line">                                        pafA.at&lt;<span class="keyword">float</span>&gt;(interpCoords[l].y,interpCoords[l].x),</span><br><span class="line">                                        pafB.at&lt;<span class="keyword">float</span>&gt;(interpCoords[l].y,interpCoords[l].x)</span><br><span class="line">                                )); <span class="comment">//得到每一个抽样点的paf值。</span></span><br><span class="line">                    &#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//                  依次做点积得到相似度：</span></span><br><span class="line">                    <span class="built_in">std</span>::<span class="built_in">vector</span>&lt;<span class="keyword">float</span>&gt; pafScores;</span><br><span class="line">                    <span class="keyword">float</span> sumOfPafScores = <span class="number">0</span>;</span><br><span class="line">                    <span class="keyword">int</span> numOverTh = <span class="number">0</span>;</span><br><span class="line">                    <span class="keyword">for</span>(<span class="keyword">int</span> l = <span class="number">0</span>; l&lt; pafInterp.size();++l)&#123;</span><br><span class="line">                        <span class="keyword">float</span> score = pafInterp[l].first*distance.first + pafInterp[l].second*distance.second;</span><br><span class="line">                        sumOfPafScores += score;</span><br><span class="line">                        <span class="keyword">if</span>(score &gt; pafScoreTh)&#123;</span><br><span class="line">                            ++numOverTh;</span><br><span class="line">                        &#125;</span><br><span class="line"></span><br><span class="line">                        pafScores.push_back(score);</span><br><span class="line">                    &#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//                  计算相似度的平均值</span></span><br><span class="line">                    <span class="keyword">float</span> avgPafScore = sumOfPafScores/((<span class="keyword">float</span>)pafInterp.size());</span><br><span class="line"></span><br><span class="line"><span class="comment">//                  选出最大的作为匹配点。</span></span><br><span class="line">                    <span class="keyword">if</span>(((<span class="keyword">float</span>)numOverTh)/((<span class="keyword">float</span>)nInterpSamples) &gt; confTh)&#123;</span><br><span class="line">                        <span class="keyword">if</span>(avgPafScore &gt; maxScore)&#123;</span><br><span class="line">                            maxJ = j;</span><br><span class="line">                            maxScore = avgPafScore;</span><br><span class="line">                            found = <span class="literal">true</span>;</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;</span><br><span class="line"></span><br><span class="line">                &#125;<span class="comment">/* j */</span></span><br><span class="line"></span><br><span class="line">                <span class="keyword">if</span>(found)&#123;</span><br><span class="line">                    localValidPairs.push_back(ValidPair(candA[i].id,candB[maxJ].id,maxScore));</span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">            &#125;<span class="comment">/* i */</span></span><br><span class="line"></span><br><span class="line">            validPairs.push_back(localValidPairs);</span><br><span class="line"></span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            invalidPairs.insert(k);</span><br><span class="line">            validPairs.push_back(<span class="built_in">std</span>::<span class="built_in">vector</span>&lt;ValidPair&gt;());</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;<span class="comment">/* k */</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="组合每一个人体图："><a href="#组合每一个人体图：" class="headerlink" title="组合每一个人体图："></a>组合每一个人体图：</h3><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">getPersonwiseKeypoints</span><span class="params">(<span class="keyword">const</span> <span class="built_in">std</span>::<span class="built_in">vector</span>&lt;<span class="built_in">std</span>::<span class="built_in">vector</span>&lt;ValidPair&gt;&gt;&amp; validPairs,</span></span></span><br><span class="line"><span class="function"><span class="params">                            <span class="keyword">const</span> <span class="built_in">std</span>::<span class="built_in">set</span>&lt;<span class="keyword">int</span>&gt;&amp; invalidPairs,</span></span></span><br><span class="line"><span class="function"><span class="params">                            <span class="built_in">std</span>::<span class="built_in">vector</span>&lt;<span class="built_in">std</span>::<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt;&gt;&amp; personwiseKeypoints)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> k = <span class="number">0</span>; k &lt; mapIdx.size();++k)&#123;</span><br><span class="line">        <span class="keyword">if</span>(invalidPairs.find(k) != invalidPairs.end())&#123;</span><br><span class="line">            <span class="keyword">continue</span>; <span class="comment">// 如果 k 在invalidPairs中 则跳过本节点。代表本节点没有被侦测出来。</span></span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 如果 k 不在invalidPairs中</span></span><br><span class="line">        <span class="keyword">const</span> <span class="built_in">std</span>::<span class="built_in">vector</span>&lt;ValidPair&gt;&amp; localValidPairs(validPairs[k]);</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">int</span> <span class="title">indexA</span><span class="params">(posePairs[k].first)</span></span>;</span><br><span class="line">        <span class="function"><span class="keyword">int</span> <span class="title">indexB</span><span class="params">(posePairs[k].second)</span></span>;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i&lt; localValidPairs.size();++i)&#123;<span class="comment">// i 个侦测出来的节点(不同人的同一个limb)</span></span><br><span class="line">            <span class="keyword">bool</span> found = <span class="literal">false</span>;</span><br><span class="line"><span class="comment">//            int personIdx = -1;</span></span><br><span class="line"></span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">int</span> j = <span class="number">0</span>; !found &amp;&amp; j &lt; personwiseKeypoints.size();++j)&#123;<span class="comment">//如果j在已经归理出来的人体图中。</span></span><br><span class="line">                <span class="keyword">if</span>(personwiseKeypoints[j][indexA] == localValidPairs[i].aId)&#123; <span class="comment">//如果当前的indexA已经被侦测过。</span></span><br><span class="line"><span class="comment">//                  //这个点属于之前构造的人体图personIdx中的indexA号节点,将该点加入已有节点indexA的对应人体图中。</span></span><br><span class="line">                    personwiseKeypoints[j][indexB] = localValidPairs[i].bId; <span class="comment">//这里会出现一个疑问</span></span><br><span class="line">                    found = <span class="literal">true</span>; <span class="comment">//标志</span></span><br><span class="line">                &#125;</span><br><span class="line">            &#125;<span class="comment">/* j */</span></span><br><span class="line"></span><br><span class="line">           <span class="keyword">if</span> (!found &amp;&amp; k &lt; <span class="number">17</span>)&#123;</span><br><span class="line">                <span class="built_in">std</span>::<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; lpkp(<span class="built_in">std</span>::<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt;(<span class="number">18</span>,<span class="number">-1</span>));</span><br><span class="line"></span><br><span class="line">                lpkp.at(indexA) = localValidPairs[i].aId;</span><br><span class="line">                lpkp.at(indexB) = localValidPairs[i].bId;</span><br><span class="line"></span><br><span class="line">                personwiseKeypoints.push_back(lpkp);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;<span class="comment">/* i */</span></span><br><span class="line">    &#125;<span class="comment">/* k */</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>疑问：如果出现 同一个人的不同limb但是这两个limb没有公共点怎么办？换句话说当前的limb是属于已经侦测但未完全侦测的A人体图，但是该limb和A中已有的点没有公共点，这种情况使得<code>personwiseKeypoints[j][indexA] == localValidPairs[i].aId</code>不成立，逻辑出错。</p>
+<p><img src="/2019/08/13/7_Caffe_OpenPose教程(c++实现)/7_Caffe_OpenPose教程(c++实现" alt="无公共点情况">/7.png)<center>无公共点情况</center></p>
+<p><strong>解答</strong></p>
+<ol>
+<li>正是由于这种情况所以必须要按照<code>posePairs</code>的顺序进行识别，才能保证下一个limb必和已检测的关节点有公共点。(不懂得可以按照<code>posePairs</code>的顺序画一下人体支架图)</li>
+<li>如果还出现了这种情况，那么openpose会将其视为另一个人的人体图，意味着这个人体被分成了2部分。但是仔细一样这样的设定也是合理的，因为当人物前后重叠时，这样可以最大限度的区分。图示(问题图1)中的输出人数有7人。<br><img src="/2019/08/13/7_Caffe_OpenPose教程(c++实现)/7_Caffe_OpenPose教程(c++实现" alt="问题">/9.png)<center>问题图1</center></li>
+</ol>
+<h1 id="结果："><a href="#结果：" class="headerlink" title="结果："></a>结果：</h1><p><img src="/2019/08/13/7_Caffe_OpenPose教程(c++实现)/7_Caffe_OpenPose教程(c++实现" alt="结果">/6.png)<center>结果图</center></p>
+<h1 id="感谢Learn-OpenCV社区，感谢开源"><a href="#感谢Learn-OpenCV社区，感谢开源" class="headerlink" title="感谢Learn OpenCV社区，感谢开源"></a>感谢Learn OpenCV社区，感谢开源</h1><h1 id="本文参考教程"><a href="#本文参考教程" class="headerlink" title="本文参考教程"></a><a href="https://www.learnopencv.com/multi-person-pose-estimation-in-opencv-using-openpose" target="_blank" rel="noopener">本文参考教程</a></h1>
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/DL/" rel="tag"># DL</a>
+          
+            <a href="/tags/Caffe/" rel="tag"># Caffe</a>
+          
+            <a href="/tags/C/" rel="tag"># C++</a>
+          
+            <a href="/tags/OpenPose/" rel="tag"># OpenPose</a>
+          
+            <a href="/tags/Pose/" rel="tag"># Pose</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/08/12/10_Pytorch_layer_Model/" rel="next" title="Pytorch 层的介绍以及网络的搭建">
+                <i class="fa fa-chevron-left"></i> Pytorch 层的介绍以及网络的搭建
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/08/15/9_Pytorch_Data/" rel="prev" title="Pytorch Data">
+                Pytorch Data <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/avatar.gif" alt="JoeyF">
+            
+              <p class="site-author-name" itemprop="name">JoeyF</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">21</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">17</span>
+                  <span class="site-state-item-name">tags</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/ZhouYiiFeng" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:joeyf.z.y.wen@gmail.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#模型的下载"><span class="nav-number">1.</span> <span class="nav-text">模型的下载</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Caffe的准备"><span class="nav-number">2.</span> <span class="nav-text">Caffe的准备</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Regressor-类"><span class="nav-number">3.</span> <span class="nav-text">Regressor 类</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#一些类中的变量"><span class="nav-number">3.1.</span> <span class="nav-text">一些类中的变量</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#构造函数："><span class="nav-number">3.2.</span> <span class="nav-text">构造函数：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#预测接口函数"><span class="nav-number">3.3.</span> <span class="nav-text">预测接口函数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#预测函数"><span class="nav-number">3.4.</span> <span class="nav-text">预测函数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#处理预测得到的信息"><span class="nav-number">3.5.</span> <span class="nav-text">处理预测得到的信息</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#找到所有人的对应节点"><span class="nav-number">3.5.1.</span> <span class="nav-text">找到所有人的对应节点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#找寻配对的两点"><span class="nav-number">3.5.2.</span> <span class="nav-text">找寻配对的两点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#组合每一个人体图："><span class="nav-number">3.5.3.</span> <span class="nav-text">组合每一个人体图：</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#结果："><span class="nav-number">4.</span> <span class="nav-text">结果：</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#感谢Learn-OpenCV社区，感谢开源"><span class="nav-number">5.</span> <span class="nav-text">感谢Learn OpenCV社区，感谢开源</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#本文参考教程"><span class="nav-number">6.</span> <span class="nav-text">本文参考教程</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">JoeyF</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Gemini</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+
+
+  
+
+  
+
+</body>
+</html>
