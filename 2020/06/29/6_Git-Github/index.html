@@ -87,7 +87,7 @@
 <meta property="og:site_name" content="JoeyF&#39;s Home">
 <meta property="og:description" content="向GitHub上传递项目： 新建文件夹：使用git init得到.git 在文件夹中进行操作： git add .将所有的文件添加于暂存库中  git commit ‘comment’将项目添加进本地仓库中  git remote add origin https://github.com/guyibang/T…将本地项目于github上的项目进行关联  git pull origin maste">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2020-06-29T14:24:14.657Z">
+<meta property="og:updated_time" content="2020-06-29T15:33:52.558Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Git相关操作">
 <meta name="twitter:description" content="向GitHub上传递项目： 新建文件夹：使用git init得到.git 在文件夹中进行操作： git add .将所有的文件添加于暂存库中  git commit ‘comment’将项目添加进本地仓库中  git remote add origin https://github.com/guyibang/T…将本地项目于github上的项目进行关联  git pull origin maste">
@@ -353,9 +353,26 @@
 <li><code>git commit -m &quot;aa&quot;</code></li>
 <li><code>git push -u origin master</code>上传。</li>
 </ol>
-<h2 id="切换git中的分支："><a href="#切换git中的分支：" class="headerlink" title="切换git中的分支："></a>切换git中的分支：</h2><h1 id="问题："><a href="#问题：" class="headerlink" title="问题："></a>问题：</h1><h2 id="使用另一个账户进行git提交时会出现权限问题。其原因是因为仅仅通过"><a href="#使用另一个账户进行git提交时会出现权限问题。其原因是因为仅仅通过" class="headerlink" title="使用另一个账户进行git提交时会出现权限问题。其原因是因为仅仅通过"></a>使用另一个账户进行git提交时会出现权限问题。其原因是因为仅仅通过</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git config --global user.name &quot;YOURUSERNAME&quot; </span><br><span class="line">git config --global user.email &quot;YOUREMAIL&quot;</span><br></pre></td></tr></table></figure>
+<h2 id="切换git中的分支："><a href="#切换git中的分支：" class="headerlink" title="切换git中的分支："></a>切换git中的分支：</h2><h1 id="问题1："><a href="#问题1：" class="headerlink" title="问题1："></a>问题1：</h1><h2 id="使用另一个账户进行git提交时会出现权限问题。其原因是因为仅仅通过"><a href="#使用另一个账户进行git提交时会出现权限问题。其原因是因为仅仅通过" class="headerlink" title="使用另一个账户进行git提交时会出现权限问题。其原因是因为仅仅通过"></a>使用另一个账户进行git提交时会出现权限问题。其原因是因为仅仅通过</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git config --global user.name &quot;YOURUSERNAME&quot; </span><br><span class="line">git config --global user.email &quot;YOUREMAIL&quot;</span><br></pre></td></tr></table></figure>
 <p>git账号并未完全切换过来。</p>
 <h2 id="解决方法："><a href="#解决方法：" class="headerlink" title="解决方法："></a>解决方法：</h2><p>之后需要在github账号中生成的tokens（密码）<a href="[https://www.cnblogs.com/u-1596086/p/11328374.html]">参考</a>:[<a href="https://www.cnblogs.com/tolingsoft/p/12060864.html" target="_blank" rel="noopener">https://www.cnblogs.com/tolingsoft/p/12060864.html</a>]<br>注意配置该用户的仓库权限。<br>如果不生成新的token就会一直报密码错误。</p>
+<h1 id="问题2："><a href="#问题2：" class="headerlink" title="问题2："></a>问题2：</h1><p>在使用多个git用户后，本地机器无法获得正确的github仓库权限。</p>
+<ol>
+<li><p>添加用户名后面添加 <code>--replace-all</code> <code>git config --global user.name &quot;YOURUSERNAME&quot; --replace-all</code></p>
+</li>
+<li><p>方法2：尝试删除github上的项目，重新新建，并且上传。<br>以Hexo 博客为例：</p>
+<ol>
+<li>删除原来的博客项目</li>
+<li>新建项目</li>
+<li>将本地的.git文件删除，修改_config.yml文件中的repository。</li>
+<li>git remote add origin <a href="https://github.com/ZhouYiiFeng/blog.git" target="_blank" rel="noopener">https://github.com/ZhouYiiFeng/blog.git</a>    </li>
+<li>hexo g</li>
+<li>hexo d 在.develop_git/ 下生成.git文件</li>
+<li>git commit -m ‘0629’</li>
+<li>git push -u origin master</li>
+</ol>
+</li>
+</ol>
 
       
     </div>
@@ -535,7 +552,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#新建文件夹："><span class="nav-number">1.</span> <span class="nav-text">新建文件夹：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#在文件夹中进行操作："><span class="nav-number">2.</span> <span class="nav-text">在文件夹中进行操作：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#切换git中的分支："><span class="nav-number">3.</span> <span class="nav-text">切换git中的分支：</span></a></li></ol><li class="nav-item nav-level-1"><a class="nav-link" href="#问题："><span class="nav-number"></span> <span class="nav-text">问题：</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#使用另一个账户进行git提交时会出现权限问题。其原因是因为仅仅通过"><span class="nav-number">1.</span> <span class="nav-text">使用另一个账户进行git提交时会出现权限问题。其原因是因为仅仅通过</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#解决方法："><span class="nav-number">2.</span> <span class="nav-text">解决方法：</span></a></li></ol></li></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#新建文件夹："><span class="nav-number">1.</span> <span class="nav-text">新建文件夹：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#在文件夹中进行操作："><span class="nav-number">2.</span> <span class="nav-text">在文件夹中进行操作：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#切换git中的分支："><span class="nav-number">3.</span> <span class="nav-text">切换git中的分支：</span></a></li></ol><li class="nav-item nav-level-1"><a class="nav-link" href="#问题1："><span class="nav-number"></span> <span class="nav-text">问题1：</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#使用另一个账户进行git提交时会出现权限问题。其原因是因为仅仅通过"><span class="nav-number">1.</span> <span class="nav-text">使用另一个账户进行git提交时会出现权限问题。其原因是因为仅仅通过</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#解决方法："><span class="nav-number">2.</span> <span class="nav-text">解决方法：</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#问题2："><span class="nav-number"></span> <span class="nav-text">问题2：</span></a></li></div>
             
 
           </div>
