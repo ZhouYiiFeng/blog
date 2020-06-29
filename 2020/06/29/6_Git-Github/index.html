@@ -87,7 +87,7 @@
 <meta property="og:site_name" content="JoeyF&#39;s Home">
 <meta property="og:description" content="向GitHub上传递项目： 新建文件夹：使用git init得到.git 在文件夹中进行操作： git add .将所有的文件添加于暂存库中  git commit ‘comment’将项目添加进本地仓库中  git remote add origin https://github.com/guyibang/T…将本地项目于github上的项目进行关联  git pull origin maste">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2020-06-29T15:35:51.044Z">
+<meta property="og:updated_time" content="2020-06-29T16:27:25.067Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Git相关操作">
 <meta name="twitter:description" content="向GitHub上传递项目： 新建文件夹：使用git init得到.git 在文件夹中进行操作： git add .将所有的文件添加于暂存库中  git commit ‘comment’将项目添加进本地仓库中  git remote add origin https://github.com/guyibang/T…将本地项目于github上的项目进行关联  git pull origin maste">
@@ -360,6 +360,8 @@
 <ol>
 <li><p>添加用户名后面添加 <code>--replace-all</code> <code>git config --global user.name &quot;YOURUSERNAME&quot; --replace-all</code></p>
 </li>
+<li><p>git config —global —edit</p>
+</li>
 <li><p>方法2：尝试删除github上的项目，重新新建，并且上传。<br>以Hexo 博客为例：</p>
 <ol>
 <li>删除原来的博客项目</li>
@@ -370,6 +372,15 @@
 <li>hexo d 在.develop_git/ 下生成.git文件</li>
 <li>git commit -m ‘0629’</li>
 <li>git push -u origin master<br>该方法无法直接使用hexo d生成。只能用git手动上传。</li>
+</ol>
+</li>
+<li><p>方法3.</p>
+<ol>
+<li>我发现使用ssh时我本地的用户名仍然没有改变。<code>ssh -T git@github.com</code></li>
+<li><p><code>ssh-keygen -t rsa -b 4096 -C &quot;584810382@qq.com&quot;</code>，一路默认回车</p>
+</li>
+<li><p><code>clip &lt; ~/.ssh/id_rsa.pub</code>，将ssh密钥拷贝到github ssh keys上。</p>
+</li>
 </ol>
 </li>
 </ol>
