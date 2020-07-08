@@ -90,7 +90,7 @@
 <meta property="og:image" content="http://zhoef.com/2020/07/08/22_DeepfakeDetection之DeeperForensics-1.0/1.PNG">
 <meta property="og:image" content="http://zhoef.com/2020/07/08/22_DeepfakeDetection之DeeperForensics-1.0/2.PNG">
 <meta property="og:image" content="http://zhoef.com/2020/07/08/22_DeepfakeDetection之DeeperForensics-1.0/3.PNG">
-<meta property="og:updated_time" content="2020-07-08T10:34:20.014Z">
+<meta property="og:updated_time" content="2020-07-08T10:37:04.791Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Deepfake Detection之DeeperForensics-1.0">
 <meta name="twitter:description" content="数据集组成数据集含有1000个manipulate videos以及1000个源视频(FF++的youtube视频) 1000个manipulate 被5个等级的random-type distortions 处理，得到5个1000视频1000个manipulate 使用more than one distortion处理，得到3个1000视频 文件分布： manipulate_video_lis">
@@ -403,7 +403,35 @@
 </p>
 
 <h3 id="实验三"><a href="#实验三" class="headerlink" title="实验三"></a>实验三</h3><p>探讨训练集对于模型performance的影响<br>We use 1, 000 manipulated videos in the standard set (std), 1,000 manipulated videos with single-level(level-5), random-type distortions (std/sing), 1,000 manipulatedvideos with random-level, random-type distortions (std/rand).</p>
-<p>we combine std with std/sing, std/rand, and std/mix, 其中std/mix是end_to_end_mix_3_distortions<br>|训练|测试|<br>|—|—|<br>|std|hidden|<br>|std + std/sing|hidden|<br>|std + std/rand|shidden|<br>|std+std/mix|hidden|</p>
+<p>we combine std with std/sing, std/rand, and std/mix, 其中std/mix是end_to_end_mix_3_distortions</p>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th>训练</th>
+<th>测试</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>std</td>
+<td>hidden</td>
+</tr>
+<tr>
+<td>std + std/sing</td>
+<td>hidden</td>
+</tr>
+<tr>
+<td>std + std/rand</td>
+<td>shidden</td>
+</tr>
+<tr>
+<td>std+std/mix</td>
+<td>hidden</td>
+</tr>
+</tbody>
+</table>
+</div>
 <p align="center">
   <img src="/2020/07/08/22_DeepfakeDetection之DeeperForensics-1.0/3.PNG" width="440" height="400">
 </p>
