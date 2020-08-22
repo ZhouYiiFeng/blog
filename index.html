@@ -259,7 +259,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://zhoef.com/2020/08/15/26_GanLoss improve之lsGan WGan WGan-GP/">
+    <link itemprop="mainEntityOfPage" href="http://zhoef.com/2020/08/20/记录/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="JoeyF">
@@ -278,7 +278,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2020/08/15/26_GanLoss improve之lsGan WGan WGan-GP/" itemprop="url">Gan Loss improve之LSGan WGan WGan-GP</a></h1>
+                <a class="post-title-link" href="/2020/08/20/记录/" itemprop="url">Video Object Segmentation (VOS)</a></h1>
         
 
         <div class="post-meta">
@@ -290,8 +290,8 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-08-15T12:01:39+08:00">
-                2020-08-15
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-08-20T12:01:39+08:00">
+                2020-08-20
               </time>
             
 
@@ -330,18 +330,20 @@
       
         
           
-          导言：接上篇经典Gan Loss原理以及其实现，本篇深入探讨一下各种GanLoss。
-经典GAN loss缺点：  
+          实验记录：T0819：对作者提供的模型进行test，得到结果，使用crf对其进行后处理。使用std davis-python代码测试，其结果为：
+  
     
-  GAN loss缺点
+  第一次测试baseline模型结果
 
 
+对作者提供的结果，使用std davis-python代码进行测试，其结果为：
+  
+   
 
-在经典GAN LOSS中Disciminator是一个Binery Classifier, 对于图中所示的两种分布，二分类判别器给出的两者l
           ...
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2020/08/15/26_GanLoss improve之lsGan WGan WGan-GP/#more" rel="contents">
+            <a class="btn" href="/2020/08/20/记录/#more" rel="contents">
               Read more &raquo;
             </a>
           </div>
@@ -471,6 +473,139 @@ GANS loss原理经典GAN loss是最原始的loss：
           <!--noindex-->
           <div class="post-button text-center">
             <a class="btn" href="/2020/08/15/24_GanLoss以及其Pytorch实现/#more" rel="contents">
+              Read more &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://zhoef.com/2020/08/15/26_GanLoss improve之lsGan WGan WGan-GP/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="JoeyF">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="JoeyF's Home">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/08/15/26_GanLoss improve之lsGan WGan WGan-GP/" itemprop="url">Gan Loss improve之LSGan WGan WGan-GP</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-08-15T12:01:39+08:00">
+                2020-08-15
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+          导言：接上篇经典Gan Loss原理以及其实现，本篇深入探讨一下各种GanLoss。
+经典GAN loss缺点：  
+    
+  GAN loss缺点
+
+
+
+在经典GAN LOSS中Disciminator是一个Binery Classifier, 对于图中所示的两种分布，二分类判别器给出的两者l
+          ...
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2020/08/15/26_GanLoss improve之lsGan WGan WGan-GP/#more" rel="contents">
               Read more &raquo;
             </a>
           </div>
@@ -1409,133 +1544,6 @@ SSR下载以及配置SSR的配置完全参考上面这篇文章。其
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://zhoef.com/2019/09/30/18_Python_Parser设计/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="JoeyF">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="JoeyF's Home">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2019/09/30/18_Python_Parser设计/" itemprop="url">Pyhton Parse</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-09-30T17:08:32+08:00">
-                2019-09-30
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-          导言：对于一些功能相仿，但是其输入参数并不相同的程序，我们往往在进入main函数时使用同一个parser进行参数的解析。当然可以针对不同的.py文件写出不同的参数读取的入口，但是往往那样并不优雅。使用subparser可以重用接口。
-1. parse 以及 subparsers：parse大家都很熟
-          ...
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2019/09/30/18_Python_Parser设计/#more" rel="contents">
-              Read more &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -1588,7 +1596,7 @@ SSR下载以及配置SSR的配置完全参考上面这篇文章。其
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">26</span>
+                  <span class="site-state-item-count">27</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
@@ -1601,7 +1609,7 @@ SSR下载以及配置SSR的配置完全参考上面这篇文章。其
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">20</span>
+                  <span class="site-state-item-count">21</span>
                   <span class="site-state-item-name">tags</span>
                 </a>
               </div>

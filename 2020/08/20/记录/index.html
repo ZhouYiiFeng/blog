@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="DL,Pytorch,Python,">
+  <meta name="keywords" content="DL,Pytorch,Seg,">
 
 
 
@@ -79,18 +79,25 @@
 
 
 
-<meta name="description" content="Pytorch 中的scatter函数scatter在数据准备时构建one-hot向量有很大的作用。可以简化构建方式。本文结构为：  一维one-hot向量构建 二维one-hot向量构建 scatter函数原理  一维one-hot向量构建：本文中所说的一维one-hot向量构建是指类似于在NLP中词向量的构建，或在离散分类任务中类别one-hot向量的构建。具体地：当输入label是对应的类别">
-<meta name="keywords" content="DL,Pytorch,Python">
+<meta name="description" content="实验记录：T0819：对作者提供的模型进行test，得到结果，使用crf对其进行后处理。使用std davis-python代码测试，其结果为：           第一次测试baseline模型结果   对作者提供的结果，使用std davis-python代码进行测试，其结果为：          第一次测试baseline结果的结果            第二次测试baseline结果的结果">
+<meta name="keywords" content="DL,Pytorch,Seg">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Pytorch scatter()函数">
-<meta property="og:url" content="http://zhoef.com/2020/05/09/21_Pytorch_scatter/index.html">
+<meta property="og:title" content="Video Object Segmentation (VOS)">
+<meta property="og:url" content="http://zhoef.com/2020/08/20/记录/index.html">
 <meta property="og:site_name" content="JoeyF&#39;s Home">
-<meta property="og:description" content="Pytorch 中的scatter函数scatter在数据准备时构建one-hot向量有很大的作用。可以简化构建方式。本文结构为：  一维one-hot向量构建 二维one-hot向量构建 scatter函数原理  一维one-hot向量构建：本文中所说的一维one-hot向量构建是指类似于在NLP中词向量的构建，或在离散分类任务中类别one-hot向量的构建。具体地：当输入label是对应的类别">
+<meta property="og:description" content="实验记录：T0819：对作者提供的模型进行test，得到结果，使用crf对其进行后处理。使用std davis-python代码测试，其结果为：           第一次测试baseline模型结果   对作者提供的结果，使用std davis-python代码进行测试，其结果为：          第一次测试baseline结果的结果            第二次测试baseline结果的结果">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2020-05-09T12:49:55.768Z">
+<meta property="og:image" content="http://zhoef.com/2020/08/20/记录/0819test_results.PNG">
+<meta property="og:image" content="http://zhoef.com/2020/08/20/记录/std_results.PNG">
+<meta property="og:image" content="http://zhoef.com/2020/08/20/记录/std_results2.PNG">
+<meta property="og:image" content="http://zhoef.com/2020/08/20/记录/RVOS.PNG">
+<meta property="og:image" content="http://zhoef.com/2020/08/20/记录/AGNN.PNG">
+<meta property="og:image" content="http://zhoef.com/2020/08/20/记录/MPNet.PNG">
+<meta property="og:updated_time" content="2020-08-21T16:48:31.324Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Pytorch scatter()函数">
-<meta name="twitter:description" content="Pytorch 中的scatter函数scatter在数据准备时构建one-hot向量有很大的作用。可以简化构建方式。本文结构为：  一维one-hot向量构建 二维one-hot向量构建 scatter函数原理  一维one-hot向量构建：本文中所说的一维one-hot向量构建是指类似于在NLP中词向量的构建，或在离散分类任务中类别one-hot向量的构建。具体地：当输入label是对应的类别">
+<meta name="twitter:title" content="Video Object Segmentation (VOS)">
+<meta name="twitter:description" content="实验记录：T0819：对作者提供的模型进行test，得到结果，使用crf对其进行后处理。使用std davis-python代码测试，其结果为：           第一次测试baseline模型结果   对作者提供的结果，使用std davis-python代码进行测试，其结果为：          第一次测试baseline结果的结果            第二次测试baseline结果的结果">
+<meta name="twitter:image" content="http://zhoef.com/2020/08/20/记录/0819test_results.PNG">
 
 
 
@@ -120,13 +127,13 @@
 
 
 
-  <link rel="canonical" href="http://zhoef.com/2020/05/09/21_Pytorch_scatter/">
+  <link rel="canonical" href="http://zhoef.com/2020/08/20/记录/">
 
 
 
 
 
-  <title>Pytorch scatter()函数 | JoeyF's Home</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  <title>Video Object Segmentation (VOS) | JoeyF's Home</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
   
 
 
@@ -263,7 +270,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://zhoef.com/2020/05/09/21_Pytorch_scatter/">
+    <link itemprop="mainEntityOfPage" href="http://zhoef.com/2020/08/20/记录/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="JoeyF">
@@ -280,7 +287,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Pytorch scatter()函数</h1>
+          <h1 class="post-title" itemprop="name headline">Video Object Segmentation (VOS)</h1>
         
 
         <div class="post-meta">
@@ -292,8 +299,8 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-05-09T19:21:39+08:00">
-                2020-05-09
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-08-20T12:01:39+08:00">
+                2020-08-20
               </time>
             
 
@@ -330,45 +337,86 @@
       
 
       
-        <h1 id="Pytorch-中的scatter函数"><a href="#Pytorch-中的scatter函数" class="headerlink" title="Pytorch 中的scatter函数"></a>Pytorch 中的scatter函数</h1><p><code>scatter</code>在数据准备时构建one-hot向量有很大的作用。可以简化构建方式。本文结构为：</p>
-<ol>
-<li>一维one-hot向量构建</li>
-<li>二维one-hot向量构建</li>
-<li>scatter函数原理</li>
+        <h1 id="实验记录："><a href="#实验记录：" class="headerlink" title="实验记录："></a>实验记录：</h1><p>T0819：对作者提供的模型进行test，得到结果，使用crf对其进行后处理。使用std davis-python代码测试，其结果为：</p>
+<p align="center">  
+  <img src="/2020/08/20/记录/0819test_results.PNG" width="440">  
+  <center>第一次测试baseline模型结果</center>
+</p>
+
+<p>对作者提供的结果，使用std davis-python代码进行测试，其结果为：</p>
+<p align="center">  
+  <img src="/2020/08/20/记录/std_results.PNG" width="440"> 
+  <center>第一次测试baseline结果的结果</center>
+</p>
+
+<p align="center">  
+  <img src="/2020/08/20/记录/std_results2.PNG" width="440"> 
+  <center>第二次测试baseline结果的结果</center>
+</p>
+
+<h2 id="实验pipeline"><a href="#实验pipeline" class="headerlink" title="实验pipeline:"></a>实验pipeline:</h2><ol>
+<li>使用pwc计算光流.</li>
+<li>使用hed计算边缘+质信度，这个是用过网络计算的.</li>
+<li>Paper使用.m代码通过gt-mask计算边缘. 我使用的vid2vid中的边缘检测代码进行计算。保存为`./3rfparty/seg2edges.py文件。</li>
+<li>使用train`_MATMet.py文件。将当前帧光流(应该是前向光流)以及当前帧输入进网络。得到4张bdry图片和一样mask图片。计算分类损失(mask以及bdry)进行优化。</li>
+<li>使用<code>test_MATNet.py</code>文件。输出结果会比实际少一帧，因为光流只有N-1帧。</li>
+<li>使用<code>apply_densecrf_davis.py</code>文件对输出结果进行post-processing。获得最终的二值化mask。</li>
+<li>使用std davis-python对输出结果进行评估。</li>
 </ol>
-<h2 id="一维one-hot向量构建："><a href="#一维one-hot向量构建：" class="headerlink" title="一维one-hot向量构建："></a>一维one-hot向量构建：</h2><p>本文中所说的一维one-hot向量构建是指类似于在NLP中词向量的构建，或在离散分类任务中类别one-hot向量的构建。具体地：当输入label是对应的类别标签(这里假设是10个类别)我们的输入label是(当<code>batch_size=4</code>)$label = [[1],[2],[5],[9]]$ 我们需要构建<code>batch_size</code>个one-hot向量：</p>
-<script type="math/tex; mode=display">%开始数学环境
-\left(                 %左括号
-  \begin{array}{cccccccccc}   %该矩阵一共3列，每一列都居中放置
-    0 & 1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\  %第一行元素
-    0 & 0 & 1 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\  %第二行元素
-    0 & 0 & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 0\\  
-    0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 1\\  
-  \end{array}
-\right)                 %右括号</script><p>这时就可以使用<code>scatter</code>函数来进行构建：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">batch_size = <span class="number">4</span></span><br><span class="line">class_num = <span class="number">10</span></span><br><span class="line">oneHot_size = (batch_size,class_num)</span><br><span class="line">lable_oht = torch.FloatTensor(torch.Size(oneHot_size)).zero_()</span><br><span class="line">label = torch.tensor([[<span class="number">1</span>],[<span class="number">2</span>],[<span class="number">5</span>],[<span class="number">9</span>]])</span><br><span class="line">lable_oht = label_oht.scatter_(<span class="number">1</span>,label.long(),<span class="number">1</span>)</span><br></pre></td></tr></table></figure></p>
-<p>通过上面的代码就可以得到<code>one-hot</code>向量,<strong>特别需要注意的就是</strong>我们的label的<code>shape</code>一定要是标准的<code>(batch_size,1)</code>。</p>
-<h2 id="二维one-hot向量构建："><a href="#二维one-hot向量构建：" class="headerlink" title="二维one-hot向量构建："></a>二维one-hot向量构建：</h2><p>在instance分割时我遇到了二维one-hot的需求。具体地：当输入的是一张含有像素的类别的mask标签时，我们需要构建一个shape为<code>(batch_size,class_num,H,W)</code>的one-hot矩阵。每一个<code>channel</code>对应的是属于该类别的像素。这个应用很广泛，在cityscape数据集，对于图像中不同属性进行分类处理都是很重要的预处理操作。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">batch_size, class_num, height, width = <span class="number">1</span>, <span class="number">4</span>, <span class="number">2</span>, <span class="number">2</span></span><br><span class="line">input_map= torch.tensor([[[[<span class="number">0</span>,<span class="number">1</span>],[<span class="number">0</span>,<span class="number">3</span>]]]])           <span class="comment"># torch.Size([1, 1, 2, 2])</span></span><br><span class="line">oneHot_size = (batch_size, class_num, height, width)</span><br><span class="line">input_label = torch.FloatTensor(torch.Size(oneHot_size)).zero_()</span><br><span class="line">input_label = input_label.scatter_(<span class="number">1</span>, input_map.long(), <span class="number">1.0</span>)</span><br></pre></td></tr></table></figure></p>
-<p>此时<code>input_map</code>为：</p>
-<script type="math/tex; mode=display">
-\left(          %左括号
-  \begin{array}{cc}   %该矩阵一共3列，每一列都居中放置
-    [1 & 0 \\
-    1 & 0 ]\\
-    [0 & 1 \\
-    0 & 0] \\
-    [0 & 0 \\
-    0 & 0] \\
-    [0 & 0 \\
-    0 & 1] \\
-  \end{array}
-\right)                 %右括号</script><p>一共四个channle，每个channle对应一个类的pixel。上面的例子可以解读为，对于一个$2 \times 2$的mask图而言：其中0类的pixel在<code>input_map</code>的第一个channle中；1类的pixel在<code>input_map</code>的第二个channle中； 没有2类；3类的pixel在<code>input_map</code>的第四个channle中。</p>
-<script type="math/tex; mode=display">%开始数学环境
-\left(                 %左括号
-  \begin{array}{cc}   %该矩阵一共3列，每一列都居中放置
-    0 & 1 \\
-    0 & 3 \\
-    \end{array}
-\right)                 %右括号</script><h2 id="scatter函数原理："><a href="#scatter函数原理：" class="headerlink" title="scatter函数原理："></a>scatter函数原理：</h2><p><a href="https://www.cnblogs.com/dogecheng/p/11938009.html" target="_blank" rel="noopener">参考文章</a></p>
+<h2 id="基于baseline进行修改创造"><a href="#基于baseline进行修改创造" class="headerlink" title="基于baseline进行修改创造"></a>基于baseline进行修改创造</h2><h3 id="baseline优点，以及其他论文优缺点总结："><a href="#baseline优点，以及其他论文优缺点总结：" class="headerlink" title="baseline优点，以及其他论文优缺点总结："></a>baseline优点，以及其他论文优缺点总结：</h3><ol>
+<li><p>早期方法：</p>
+<blockquote>
+<p> Early nonlearning methods typically address this using handcrafted features, e.g. motion boundary (Papazoglou and Ferrari 2013), saliency (Wang, Shen, and Porikli 2015) and point trajectories (Ochs, Malik, and Brox 2013). </p>
+</blockquote>
+</li>
+<li><p>zero-shot solution:</p>
+<ol>
+<li><p><code>[intro][zero-shot solution][RVOS] 1903.05612</code>使用RNN and ConvLSTM to leverage the temporal feature, think at different resolutions. 同样也使用mask from previous frame as one additional channel to predict the mask of current frame.(this stratygy is design for one-shot VOS task)</p>
+<blockquote>
+<p>“The inclusion of the mask from the previous frame is especially designed for the one-shot VOS task, where the ﬁrst frame masks are given. “</p>
+</blockquote>
+<p>不同是，使用用了instance 之间的关系，以及muilty scale.</p>
+<p align="center">  
+<img src="/2020/08/20/记录/RVOS.PNG" width="440"> 
+<center>RVOS 利用纵横ConvLSTM特征</center>
+</p>
+</li>
+<li><p><code>[AGNN]Wang_Zero-Shot_Video_Object_Segmentation_via_Attentive_Graph_Neural_Networks_ICCV_2019_paper</code><br>通过在大量数据集下学习，然后adapt to the test video without any annotations.<br>this paper builds a fully connected graph to efﬁciently represent frames as nodes, and relations between arbitrary frame pairs as edges</p>
+<p align="center">  
+<img src="/2020/08/20/记录/AGNN.PNG" width="440"> 
+<center>AGNN intra-attention(内部) 以及 inter-attention(内间)</center>
+</p>
+</li>
+</ol>
+</li>
+<li><p>one-shot solution:</p>
+<ol>
+<li><code>[OSVOS]Caelles_One-Shot_Video_Object_CVPR_2017_paper</code> 通过先在大数据集中学习一个模型，根据video的第一帧来进行fine-tune学习。<br>优点：<br>缺点：每一个视频需要单独fine-tune一个。</li>
+<li><code>[MaskTrack] 1612.02646</code> 将前一帧mask与当前帧同时输入网络进行预测当前帧mask。对mask进行多种变换增强鲁棒性。use the predicted masks in the previous frames as guidance for next frames</li>
+</ol>
+</li>
+<li><p>基于motion to appearence aspects.</p>
+<ol>
+<li><code>[Mp-Net] 1612.07217</code>直接map the flow to the corresponding segmentation mask. </li>
+<li><code>[MaskTrack] 1612.02646</code> baseline<strong>作者将其归为此类不对。</strong></li>
+<li><code>[SFL] SegFlow 1709.06750</code> 同时预测flow以及seg，使得在预测flow的同时用flow的特征去cue seg模块提取seg特征。</li>
+<li><code>[FSEG] Fusionseg Learning 1701.05384</code> 这篇是将Flow +RGB组合进行seg。但是flow 与RGB同等treat.</li>
+<li><code>[MoNet] Xiao_MoNet_Deep_Motion_CVPR_2018_paper</code> two-stream 形式，内嵌了FlowNet, 同时没有将flow与RGB特征同等对待，将Motion 作为Cues进行seg</li>
+<li><code>[intro][Li]Siyang_Li_Unsupervised_Video_Object_ECCV_2018_paper</code>，与previous不同的是没有使用dual-branch去同时处理RGB,flow信息，而是提取appearance feature得到objectness,并且基于flow, 构建embedding graph，基于bilateral network (BNN) propagated the graph to ﬁnding regions that have similar motion patterns with low-objectness regions(背景)</li>
+<li><code>[Mp-Net] 1612.07217</code> 单纯的寻找了一个flow 到seg mask 的map model.<br><p align="center">  
+<img src="/2020/08/20/记录/MPNet.PNG" width="440"> 
+<center>MPNet</center>
+</p><br>这些都只考虑了single scale and ignoring the critical hierarchical structure.</li>
+</ol>
+</li>
+</ol>
+<h3 id="Baseline缺点："><a href="#Baseline缺点：" class="headerlink" title="Baseline缺点："></a>Baseline缺点：</h3><ol>
+<li>基于光流(Motion-Attentive), 光流帧数不同导致输出mask的帧数缺少了最后一帧。</li>
+<li>前期数据准备较多。flow, hed, edge.</li>
+<li>对于时序建模只是使用了flow作为cue，其本质还是predict object segmentations at each frame independently. 认为修改为blob(t,t-1)作为输入会更好。</li>
+</ol>
+<h2 id="分类："><a href="#分类：" class="headerlink" title="分类："></a>分类：</h2><h3 id="One-Shot-and-Zero-Shot-VOS"><a href="#One-Shot-and-Zero-Shot-VOS" class="headerlink" title="One-Shot and Zero-Shot VOS"></a>One-Shot and Zero-Shot VOS</h3><p>One-shot learning is understood as making use of a single annotated frame (often the first frame of the sequence) to estimate the remaining frames segmentation in the sequence.  On the other hand, zero-shot or unsupervised learning is understood as building models that do not need an initialization to generate segmentation masks of objects in the video sequence.</p>
+<h3 id="Use-Temporal-or-Not"><a href="#Use-Temporal-or-Not" class="headerlink" title="Use Temporal or Not"></a>Use Temporal or Not</h3><p>Aim to model the temporal dimension of an object segmentation through a video sequence, and those without temporal modeling that predict object segmentations at each frame independently.</p>
 
       
     </div>
@@ -390,7 +438,7 @@
           
             <a href="/tags/Pytorch/" rel="tag"># Pytorch</a>
           
-            <a href="/tags/Python/" rel="tag"># Python</a>
+            <a href="/tags/Seg/" rel="tag"># Seg</a>
           
         </div>
       
@@ -403,8 +451,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2020/05/02/20_Linux科学上网/" rel="next" title="Linux科学上网">
-                <i class="fa fa-chevron-left"></i> Linux科学上网
+              <a href="/2020/08/15/24_GanLoss以及其Pytorch实现/" rel="next" title="经典GAN loss原理以及其实现">
+                <i class="fa fa-chevron-left"></i> 经典GAN loss原理以及其实现
               </a>
             
           </div>
@@ -412,10 +460,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2020/06/29/6_Git-Github/" rel="prev" title="Git相关操作">
-                Git相关操作 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -556,7 +600,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Pytorch-中的scatter函数"><span class="nav-number">1.</span> <span class="nav-text">Pytorch 中的scatter函数</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#一维one-hot向量构建："><span class="nav-number">1.1.</span> <span class="nav-text">一维one-hot向量构建：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二维one-hot向量构建："><span class="nav-number">1.2.</span> <span class="nav-text">二维one-hot向量构建：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#scatter函数原理："><span class="nav-number">1.3.</span> <span class="nav-text">scatter函数原理：</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#实验记录："><span class="nav-number">1.</span> <span class="nav-text">实验记录：</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#实验pipeline"><span class="nav-number">1.1.</span> <span class="nav-text">实验pipeline:</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#基于baseline进行修改创造"><span class="nav-number">1.2.</span> <span class="nav-text">基于baseline进行修改创造</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#baseline优点，以及其他论文优缺点总结："><span class="nav-number">1.2.1.</span> <span class="nav-text">baseline优点，以及其他论文优缺点总结：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Baseline缺点："><span class="nav-number">1.2.2.</span> <span class="nav-text">Baseline缺点：</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#分类："><span class="nav-number">1.3.</span> <span class="nav-text">分类：</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#One-Shot-and-Zero-Shot-VOS"><span class="nav-number">1.3.1.</span> <span class="nav-text">One-Shot and Zero-Shot VOS</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Use-Temporal-or-Not"><span class="nav-number">1.3.2.</span> <span class="nav-text">Use Temporal or Not</span></a></li></ol></li></ol></li></ol></div>
             
 
           </div>
