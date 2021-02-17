@@ -93,7 +93,7 @@
 <meta property="og:image" content="http://zhoef.com/2020/08/20/记录/RVOS.PNG">
 <meta property="og:image" content="http://zhoef.com/2020/08/20/记录/AGNN.PNG">
 <meta property="og:image" content="http://zhoef.com/2020/08/20/记录/MPNet.PNG">
-<meta property="og:updated_time" content="2020-08-21T16:48:31.324Z">
+<meta property="og:updated_time" content="2020-08-31T02:47:15.532Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Video Object Segmentation (VOS)">
 <meta name="twitter:description" content="实验记录：T0819：对作者提供的模型进行test，得到结果，使用crf对其进行后处理。使用std davis-python代码测试，其结果为：           第一次测试baseline模型结果   对作者提供的结果，使用std davis-python代码进行测试，其结果为：          第一次测试baseline结果的结果            第二次测试baseline结果的结果">
@@ -417,6 +417,22 @@
 </ol>
 <h2 id="分类："><a href="#分类：" class="headerlink" title="分类："></a>分类：</h2><h3 id="One-Shot-and-Zero-Shot-VOS"><a href="#One-Shot-and-Zero-Shot-VOS" class="headerlink" title="One-Shot and Zero-Shot VOS"></a>One-Shot and Zero-Shot VOS</h3><p>One-shot learning is understood as making use of a single annotated frame (often the first frame of the sequence) to estimate the remaining frames segmentation in the sequence.  On the other hand, zero-shot or unsupervised learning is understood as building models that do not need an initialization to generate segmentation masks of objects in the video sequence.</p>
 <h3 id="Use-Temporal-or-Not"><a href="#Use-Temporal-or-Not" class="headerlink" title="Use Temporal or Not"></a>Use Temporal or Not</h3><p>Aim to model the temporal dimension of an object segmentation through a video sequence, and those without temporal modeling that predict object segmentations at each frame independently.</p>
+<h3 id="T-0829"><a href="#T-0829" class="headerlink" title="T-0829"></a>T-0829</h3><ol>
+<li><p>model: model2; bs: 1; model_name: 3tMATNet; lr:1e-3 le_cnn 1e-4; loss: loss = mask_loss + 0.2 * bdry_loss: 失败</p>
+</li>
+<li><p>model: model2; bs: 1; model_name: 3tMATNet2; lr:1e-3 le_cnn 1e-4; loss: loss = mask_loss + 0.1 * bdry_loss: 失败</p>
+</li>
+<li><p>model: model2; bs: 1; model_name: 3tMATNetlr; lr:1e-4 le_cnn 1e-4; stratgy:ADAM; loss: loss = mask_loss + 0.05 * bdry_loss: </p>
+</li>
+<li><p>model: model3; bs: 3(three gpu); model_name: frMATNet; lr:1e-3 le_cnn 1e-4; loss: loss = mask_loss + 0.2 <em> bdry_loss <em>*work</em></em></p>
+</li>
+<li><p>model: model4; bs: 2; model_name: MATNetEpoch100(与baseline测试名称重了，以时间区分，早得是bsl); lr:1e-3 le_cnn 1e-4; loss: loss = mask_loss + 0.2 <em> bdry_loss <em>*work</em></em> 测试效果没有bsl高</p>
+</li>
+<li><p>model: model4; bs: 2; model_name: MATNetmodel4; lr:1e-3 le_cnn 1e-4; loss: loss = mask_loss + 0.2 * bdry_loss 修改了decoder得refine</p>
+</li>
+<li><p>model: model4; bs: 2; model_name: model4bdlossup; lr:1e-3 le_cnn 1e-4; loss: loss = mask_loss + 0.3 * bdry_loss </p>
+</li>
+</ol>
 
       
     </div>
@@ -451,8 +467,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2020/08/15/24_GanLoss以及其Pytorch实现/" rel="next" title="经典GAN loss原理以及其实现">
-                <i class="fa fa-chevron-left"></i> 经典GAN loss原理以及其实现
+              <a href="/2020/08/15/26_GanLoss improve之lsGan WGan WGan-GP/" rel="next" title="Gan Loss improve之LSGan WGan WGan-GP">
+                <i class="fa fa-chevron-left"></i> Gan Loss improve之LSGan WGan WGan-GP
               </a>
             
           </div>
@@ -460,6 +476,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2021/02/17/去噪-2-self相关/" rel="prev" title="去噪论文阅读-2-Self Supervised">
+                去噪论文阅读-2-Self Supervised <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -538,7 +558,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">27</span>
+                  <span class="site-state-item-count">36</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
@@ -551,7 +571,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">21</span>
+                  <span class="site-state-item-count">23</span>
                   <span class="site-state-item-name">tags</span>
                 </a>
               </div>
@@ -600,7 +620,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#实验记录："><span class="nav-number">1.</span> <span class="nav-text">实验记录：</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#实验pipeline"><span class="nav-number">1.1.</span> <span class="nav-text">实验pipeline:</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#基于baseline进行修改创造"><span class="nav-number">1.2.</span> <span class="nav-text">基于baseline进行修改创造</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#baseline优点，以及其他论文优缺点总结："><span class="nav-number">1.2.1.</span> <span class="nav-text">baseline优点，以及其他论文优缺点总结：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Baseline缺点："><span class="nav-number">1.2.2.</span> <span class="nav-text">Baseline缺点：</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#分类："><span class="nav-number">1.3.</span> <span class="nav-text">分类：</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#One-Shot-and-Zero-Shot-VOS"><span class="nav-number">1.3.1.</span> <span class="nav-text">One-Shot and Zero-Shot VOS</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Use-Temporal-or-Not"><span class="nav-number">1.3.2.</span> <span class="nav-text">Use Temporal or Not</span></a></li></ol></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#实验记录："><span class="nav-number">1.</span> <span class="nav-text">实验记录：</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#实验pipeline"><span class="nav-number">1.1.</span> <span class="nav-text">实验pipeline:</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#基于baseline进行修改创造"><span class="nav-number">1.2.</span> <span class="nav-text">基于baseline进行修改创造</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#baseline优点，以及其他论文优缺点总结："><span class="nav-number">1.2.1.</span> <span class="nav-text">baseline优点，以及其他论文优缺点总结：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Baseline缺点："><span class="nav-number">1.2.2.</span> <span class="nav-text">Baseline缺点：</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#分类："><span class="nav-number">1.3.</span> <span class="nav-text">分类：</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#One-Shot-and-Zero-Shot-VOS"><span class="nav-number">1.3.1.</span> <span class="nav-text">One-Shot and Zero-Shot VOS</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Use-Temporal-or-Not"><span class="nav-number">1.3.2.</span> <span class="nav-text">Use Temporal or Not</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#T-0829"><span class="nav-number">1.3.3.</span> <span class="nav-text">T-0829</span></a></li></ol></li></ol></li></ol></div>
             
 
           </div>
@@ -620,7 +640,7 @@
 
     <footer id="footer" class="footer">
       <div class="footer-inner">
-        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2021</span>
   <span class="with-love">
     <i class="fa fa-user"></i>
   </span>

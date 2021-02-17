@@ -1,0 +1,778 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="Practical Deep Raw Image Denoising on Mobile DevicesPipeline在真是情况中，ISO在拍摄的时候会自动变化，不同的ISO引起的噪声的分布不同，本文Proposed to 提供一个ISO blind 的去噪网络，值得注意的是，网络本身是train在ISO-indpendent的数据上，网络不是blind，方法流程blind。  In real">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JoeyF&#39;s Home">
+<meta property="og:url" content="http://zhoef.com/2021/02/17/去噪-7-Practical Deep Raw Image Denoising on Mobile Devices/index.html">
+<meta property="og:site_name" content="JoeyF&#39;s Home">
+<meta property="og:description" content="Practical Deep Raw Image Denoising on Mobile DevicesPipeline在真是情况中，ISO在拍摄的时候会自动变化，不同的ISO引起的噪声的分布不同，本文Proposed to 提供一个ISO blind 的去噪网络，值得注意的是，网络本身是train在ISO-indpendent的数据上，网络不是blind，方法流程blind。  In real">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="upload://cULDIBLPAKPLgv6WT5nqwGA7eTH.png">
+<meta property="og:image" content="upload://f4ChFek126Vg9FaChm00VhDeQvd.png">
+<meta property="og:image" content="upload://5JUSNPN6mEJapCgSZtvIv8iiFrn.png">
+<meta property="og:image" content="upload://5i95CoIeoRsnJ0UfjtVpXykkP6.png">
+<meta property="og:image" content="upload://rLxjNMShmM4vDbvZcPwLlENg2wQ.png">
+<meta property="og:updated_time" content="2021-02-17T03:25:59.576Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="JoeyF&#39;s Home">
+<meta name="twitter:description" content="Practical Deep Raw Image Denoising on Mobile DevicesPipeline在真是情况中，ISO在拍摄的时候会自动变化，不同的ISO引起的噪声的分布不同，本文Proposed to 提供一个ISO blind 的去噪网络，值得注意的是，网络本身是train在ISO-indpendent的数据上，网络不是blind，方法流程blind。  In real">
+<meta name="twitter:image" content="upload://cULDIBLPAKPLgv6WT5nqwGA7eTH.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://zhoef.com/2021/02/17/去噪-7-Practical Deep Raw Image Denoising on Mobile Devices/">
+
+
+
+
+
+  <title> | JoeyF's Home</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="default">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">JoeyF's Home</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            About
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://zhoef.com/2021/02/17/去噪-7-Practical Deep Raw Image Denoising on Mobile Devices/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="JoeyF">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="JoeyF's Home">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline"></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2021-02-17T11:25:33+08:00">
+                2021-02-17
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="Practical-Deep-Raw-Image-Denoising-on-Mobile-Devices"><a href="#Practical-Deep-Raw-Image-Denoising-on-Mobile-Devices" class="headerlink" title="Practical Deep Raw Image Denoising on Mobile Devices"></a>Practical Deep Raw Image Denoising on Mobile Devices</h1><h2 id="Pipeline"><a href="#Pipeline" class="headerlink" title="Pipeline"></a>Pipeline</h2><p>在真是情况中，ISO在拍摄的时候会自动变化，不同的ISO引起的噪声的分布不同，本文Proposed to 提供一个ISO blind 的去噪网络，值得注意的是，<strong>网络本身是train在ISO-indpendent的数据上</strong>，网络不是blind，方法流程blind。</p>
+<blockquote>
+<p>In real applications the camera will automatically adjust the ISO settings according to the scene illumination, thus one has to consider different noise levels when training the denoising neural network. A straightforward solution is to train a single network to cover a wide range of ISO settings, but it puts extra burden on the network itself as the noise variation in the training data becomes quite large.</p>
+</blockquote>
+<p><img src="upload://cULDIBLPAKPLgv6WT5nqwGA7eTH.png" alt="image|690x208,75%"> </p>
+<p>针对不同的ISO，使用K-Sigma 变化将<strong>raw 图像</strong>转为ISO-independent的数据输入到网络中。 $x = f(x^<em>;k,\sigma)$ 其中 $x^</em>$ 是sensor得到的raw图， $x$ 是转换后的数据。 在 $x$ 域中进行去噪，然后使用ISO-dependent的转换函数 $f^{-1}(x; k, \sigma)$ 可以将去噪后的图片转回原ISO对应的图像。</p>
+<h2 id="Why-noise-is-ISO-dependent"><a href="#Why-noise-is-ISO-dependent" class="headerlink" title="Why noise is ISO-dependent?"></a>Why noise is ISO-dependent?</h2><p><img src="upload://f4ChFek126Vg9FaChm00VhDeQvd.png" alt="image|690x348,75%"> </p>
+<p>我们从sensor得到的图像 $x^<em>$ 在理想状态下经过光量子收集( $u^</em>$ )+模拟增益，得到实际数字信号的 $x$ .但是这个过程中往往存在Noise，我们实际得到的图像可以建模为:</p>
+<script type="math/tex; mode=display">
+x = g(\alpha u + n_d) + n_r</script><p>其中， $n_d; n_r$ 是在各个阶段加入的噪声， $u$ 是光量子的接受量， $u \sim \mathcal{P}(u^*)$ , 进一步可以得到：</p>
+<script type="math/tex; mode=display">
+x \sim (g\alpha)\mathcal{P}(\frac{x^*}{g\alpha}) + \mathcal{N}(0, \sigma^2) \\
+\mathbb{E}(\mathcal{P}(X)) = X   \\ Var(\mathcal{P}(X)) = X</script><p>泊松分布的期望方差 $g\alpha = k $ 。可以得到</p>
+<script type="math/tex; mode=display">
+\mathbb{E}(x) = x^*   \\ Var(x) = kx^* + \sigma^2</script><p>推导：</p>
+<script type="math/tex; mode=display">
+
+x \sim k\mathcal{P}(\frac{x^*}{k}) + \mathcal{N}(0, \sigma^2) \\
+\frac{x}{k} \sim \mathcal{P}(\frac{x^*}{k}) + \mathcal{N}(0, \frac{\sigma^2}{k^2}) \\
+\frac{x}{k} + \frac{\sigma^2}{k^2} \sim \mathcal{P}(\frac{x^*}{k}) + \mathcal{N}(\frac{\sigma^2}{k^2}, \frac{\sigma^2}{k^2}) \\
+\frac{x}{k} + \frac{\sigma^2}{k^2} \approx \mathcal{N}(\frac{x^*}{k}, \frac{x^*}{k}) + \mathcal{N}(\frac{\sigma^2}{k^2}, \frac{\sigma^2}{k^2}) \\
+\frac{x}{k} + \frac{\sigma^2}{k^2} \approx \mathcal{N}(\frac{x^*}{k} + \frac{\sigma^2}{k^2}, \frac{x^*}{k} + \frac{\sigma^2}{k^2}) 
+= \mathcal{N}(f(x^*), f(x^*)) \\
+f(x) \sim \mathcal{N}(f(x^*), f(x^*))</script><p>$f(x)$ 的分布只和 $f(x^<em>)$ 有关，我们可以使用 $f(x)$ 去预测 $f(\hat{x}^</em>)$ 然后使用 $f^{-1}(\cdot)$ 来得到最终结果。</p>
+<h2 id="Network"><a href="#Network" class="headerlink" title="Network"></a>Network</h2><p>网络的设计是针对mobile 来设计的，使用了separable-conv来减少计算量：<br><img src="upload://5JUSNPN6mEJapCgSZtvIv8iiFrn.png" alt="image|670x487,75%"> </p>
+<h2 id="实验"><a href="#实验" class="headerlink" title="实验"></a>实验</h2><p>对每一个ISO 都估计采样样本的方差和期望，使用</p>
+<script type="math/tex; mode=display">
+\mathbb{E}(x) = x^*   \\ Var(x) = kx^* + \sigma^2</script><p>去拟合得到 $k; \sigma$ 的值。<br><img src="upload://5i95CoIeoRsnJ0UfjtVpXykkP6.png" alt="image|690x212"><br><img src="upload://rLxjNMShmM4vDbvZcPwLlENg2wQ.png" alt="image|690x295"><br>首先得到不同的ISO的采样结果，计算该手机的 $k;\sigma$ 然后使用 k-sigma变化 $ f(x) = \frac{x}{k} + \frac{\sigma^2}{k^2}$ 得到转换后的图片，在这些图像中进行训练。换句话说，对于<strong>每个手机</strong>而言 $k; \sigma$ 是一样的， $k; \sigma$ 是<strong>同一个手机</strong>通过在<strong>不同ISO</strong>下的数据<strong>拟合</strong>得到的。然后对于所有数据集中的数据，可以任意变化、增强之，进行 k-sigma变化得到ISO-independent数据。作者假设不同的手机 $k; \sigma$, 没有对不同sensor进行实验。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2021/02/17/去噪-6-Attention的应用/" rel="next" title>
+                <i class="fa fa-chevron-left"></i> 
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2021/02/17/去噪-8-Transfer Learning from Synthetic to Real-Noise Denoising with Adaptive Instance Normalization/" rel="prev" title>
+                 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/avatar.gif" alt="JoeyF">
+            
+              <p class="site-author-name" itemprop="name">JoeyF</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">36</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">23</span>
+                  <span class="site-state-item-name">tags</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/ZhouYiiFeng" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:joeyf.z.y.wen@gmail.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Practical-Deep-Raw-Image-Denoising-on-Mobile-Devices"><span class="nav-number">1.</span> <span class="nav-text">Practical Deep Raw Image Denoising on Mobile Devices</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Pipeline"><span class="nav-number">1.1.</span> <span class="nav-text">Pipeline</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Why-noise-is-ISO-dependent"><span class="nav-number">1.2.</span> <span class="nav-text">Why noise is ISO-dependent?</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Network"><span class="nav-number">1.3.</span> <span class="nav-text">Network</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#实验"><span class="nav-number">1.4.</span> <span class="nav-text">实验</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">JoeyF</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Gemini</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+
+
+  
+
+  
+
+</body>
+</html>
