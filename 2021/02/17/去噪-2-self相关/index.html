@@ -87,17 +87,17 @@
 <meta property="og:site_name" content="JoeyF&#39;s Home">
 <meta property="og:description" content="导言：这篇文章两篇论文，Self Supervised去噪相关。 Neighbor2Neighbor: Self-Supervised Denoising from Single Noisy Images时间线：  Noise2Noise Probabilistic Noise2Void Noise2Void_ICCV2019 Noise2Self_ICML2019 Self-Guided_ICC">
 <meta property="og:locale" content="default">
-<meta property="og:image" content="upload://duFayKgg8Zxjc2i1fAovVcU4wIR.png">
-<meta property="og:image" content="upload://ostARTPJohEpcdUqpGjS7bGc168.jpeg">
-<meta property="og:image" content="upload://1IyDPTj2woBfgOBsZDnAeBFnfkh.png">
-<meta property="og:image" content="upload://hJPjWzqDck7MEPwRJFT25MwMAT3.png">
-<meta property="og:image" content="upload://t2RJ5fjWlaiHeHRv6tVoDrCZeM2.png">
-<meta property="og:image" content="upload://w8EDw3HPaGTCynQNHASZzAUJeA8.png">
-<meta property="og:updated_time" content="2021-02-17T03:23:14.998Z">
+<meta property="og:image" content="http://zhoef.com/2021/02/17/去噪-2-self相关/0.png">
+<meta property="og:image" content="http://zhoef.com/2021/02/17/去噪-2-self相关/1.jpeg">
+<meta property="og:image" content="http://zhoef.com/2021/02/17/去噪-2-self相关/2.png">
+<meta property="og:image" content="http://zhoef.com/2021/02/17/去噪-2-self相关/3.png">
+<meta property="og:image" content="http://zhoef.com/2021/02/17/去噪-2-self相关/4.png">
+<meta property="og:image" content="http://zhoef.com/2021/02/17/去噪-2-self相关/5.png">
+<meta property="og:updated_time" content="2021-02-17T03:46:07.030Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="去噪论文阅读-2-Self Supervised">
 <meta name="twitter:description" content="导言：这篇文章两篇论文，Self Supervised去噪相关。 Neighbor2Neighbor: Self-Supervised Denoising from Single Noisy Images时间线：  Noise2Noise Probabilistic Noise2Void Noise2Void_ICCV2019 Noise2Self_ICML2019 Self-Guided_ICC">
-<meta name="twitter:image" content="upload://duFayKgg8Zxjc2i1fAovVcU4wIR.png">
+<meta name="twitter:image" content="http://zhoef.com/2021/02/17/去噪-2-self相关/0.png">
 
 
 
@@ -299,7 +299,7 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2021-02-17T11:16:39+08:00">
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2021-02-17T11:17:39+08:00">
                 2021-02-17
               </time>
             
@@ -354,15 +354,15 @@
 <p>The requirement of large amounts of noisy-clean image pairs for supervision limits the wide use of these models<br>Existing self-supervised denoising approaches suffer from inefficient network training, loss of useful information, or dependence on noise modeling.</p>
 </blockquote>
 </li>
-<li>不同与Noise2Noise，this paper 假设两张noise 图片的期望并不相同。<br><img src="upload://duFayKgg8Zxjc2i1fAovVcU4wIR.png" alt="image|303x44"> <blockquote>
+<li>不同与Noise2Noise，this paper 假设两张noise 图片的期望并不相同。<br><img src="/2021/02/17/去噪-2-self相关/0.png" alt="image|303x44"> <blockquote>
 <p>The ground-truths of two noisy observations are difficult to be the same due to occlusion, motion, and lighting variation</p>
 </blockquote>
 </li>
 </ol>
 <h2 id="Method"><a href="#Method" class="headerlink" title="Method"></a>Method</h2><ol>
-<li>pipeline<br><img src="upload://ostARTPJohEpcdUqpGjS7bGc168.jpeg" alt="image|690x321,75%"> </li>
-<li>抽样方法：随机抽cell中的<strong>邻近对</strong>(4选2)，一个抽为 $g_1(y)$ 一个抽为 $g_2(y)$ (2选1)。<br><img src="upload://1IyDPTj2woBfgOBsZDnAeBFnfkh.png" alt="image|690x257,75%"> </li>
-<li>loss<br><img src="upload://hJPjWzqDck7MEPwRJFT25MwMAT3.png" alt="image|690x79"></li>
+<li>pipeline<br><img src="/2021/02/17/去噪-2-self相关/1.jpeg" alt="image|690x321,75%"> </li>
+<li>抽样方法：随机抽cell中的<strong>邻近对</strong>(4选2)，一个抽为 $g_1(y)$ 一个抽为 $g_2(y)$ (2选1)。<br><img src="/2021/02/17/去噪-2-self相关/2.png" alt="image|690x257,75%"> </li>
+<li>loss<br><img src="/2021/02/17/去噪-2-self相关/3.png" alt="image|690x79"></li>
 </ol>
 <h1 id="Noise2Noise-Learning-Image-Restoration-without-Clean-Data"><a href="#Noise2Noise-Learning-Image-Restoration-without-Clean-Data" class="headerlink" title="Noise2Noise: Learning Image Restoration without Clean Data"></a>Noise2Noise: Learning Image Restoration without Clean Data</h1><h2 id="Why-it-works"><a href="#Why-it-works" class="headerlink" title="Why it works?"></a>Why it works?</h2><ol>
 <li>疑问：<ul>
@@ -374,17 +374,17 @@
 <h2 id="一些理解"><a href="#一些理解" class="headerlink" title="一些理解"></a>一些理解</h2><p> <a href="https://www.jianshu.com/p/173f50311dc8" target="_blank" rel="noopener">参考理解</a></p>
 <p>噪声是随机的，目标是constant不变的，就像估计room的温度，每一次估计值都是充满噪声的(不精确)但是我们需要的仅仅是测完(看完)所有测试温度 ${T_1, T_2 … T_n}$ 后取其均值作为我们的最终估量值。类比于img 去噪过程。本身而言，我们取得无噪声图像GT时就是一次噪声平均值，我们只是把它当作了无噪声的img。倘若网络学习的东西并不是我们所认为的 $nosie \rightarrow cln$ 的点到点mapping，而是keep 变化中需要保留的content呢？</p>
 <p>具体来说，由于噪声是<strong>不稳定的，随机的</strong>，当网络将噪声图 $N_1$  映射至 $N_2$ 时，要让总体的 $\mathcal{L} = \mathbb{E}{ L(N_1, N_2) } $ 最小，抛去无法降低的loss，随机的噪声，网络只能让img中不变的地方保持或者更加清晰才能使得loss下降。</p>
-<h2 id="原理以及公式推导"><a href="#原理以及公式推导" class="headerlink" title="原理以及公式推导"></a>原理以及公式推导</h2><p>对于一次估计而言： $\argmin<em>{\theta} \mathbb{E_y}{\mathcal{L} (f</em>{\theta}(z), y)}$  ，我们想让每一次预测值 $f<em>{\theta(z)}$ 与观测到的采样值 $y = {y_1, y_2, …, y_n}$ 尽可能相近。也就是让其损失期望最小。一般而言我们采用L2损失，这样对 $\mathcal{L} (f</em>{\theta}(z), y)$ 求z的偏导，得到 $z = \mathbb{E_y}{y}$ 时最小。</p>
-<p>对于 $\forall x, y,z$ ，其中 $x$ 是理想无噪声图片GT， $y, z$ 都是同一场景不同噪声的采样的图片。去噪过程中我们的目标函数为： </p>
+<h2 id="原理以及公式推导"><a href="#原理以及公式推导" class="headerlink" title="原理以及公式推导"></a>原理以及公式推导</h2><p>对于一次估计而言: <script type="math/tex">\argmin_{\theta} \mathbb{E_y} \{\mathcal{L} (f_{\theta}(z), y)\}</script> ，我们想让每一次预测值 <script type="math/tex">f_{\theta(z)}</script> 与观测到的采样值 <script type="math/tex">y = {y_1, y_2, ..., y_n}</script> 尽可能相近。也就是让其损失期望最小。一般而言我们采用L2损失，这样对 <script type="math/tex">\mathcal{L} (f_{\theta}(z), y)</script> 求z的偏导，得到 $z = \mathbb{E_y}{y}$ 时最小。</p>
+<p>对于 <script type="math/tex">\forall x, y,z</script> ，其中 $x$ 是理想无噪声图片GT， $y, z$ 都是同一场景不同噪声的采样的图片。去噪过程中我们的目标函数为： </p>
 <script type="math/tex; mode=display">
 \argmin_{\theta} \mathbb{E_{y|x}}\{\mathcal{L} (f_{\theta}(y), x)\} = \argmin_{\theta} \mathbb{E_{y,z|x}}\{||f_{\theta}(y)-x||_2^2\} = \argmin_{\theta} \mathbb{E_{y,z|x}}\{||f_{\theta}(y)+z-z-x||_2^2\}</script><p>而其中</p>
 <script type="math/tex; mode=display">
 \mathbb{E_{y,z|x}}\{||f_{\theta}(y)+z-z-x||_2^2\}  = \mathbb{E_{y,z|x}}\{||f_{\theta}(y) - z||_2^2\} +  \mathbb{E_{y,z|x}}\{||z-x||_2^2\} + 2\mathbb{E_{y,z|x}}\{f_{(\theta}(y)-z)^T(z-x)\}</script><ul>
-<li>其中 $ \mathbb{E_{y,z|x}}{||z-x||_2^2} $</li>
+<li>其中 <script type="math/tex">\mathbb{E_{y,z|x}}\{||z-x||_2^2\}</script></li>
 </ul>
-<p><img src="upload://t2RJ5fjWlaiHeHRv6tVoDrCZeM2.png" alt="image|520x500,75%"><br>图片中的公式(8)的 $\hat{y<em>i}$ 是噪声图，所以可以得到 $ \mathbb{E</em>{y,z|x}}{||z-x||_2^2} = \sigma^2(\hat{y_i})$</p>
+<p><img src="/2021/02/17/去噪-2-self相关/4.png" alt="image|520x500,75%"><br>图片中的公式(8)的 <script type="math/tex">\hat{y_i}</script> 是噪声图，所以可以得到 <script type="math/tex">\mathbb{E_{y,z|x}}\{||z-x||_2^2\} = \sigma^2(\hat{y_i})</script></p>
 <ul>
-<li>其中 $2\mathbb{E<em>{y,z|x}}{(f</em>{\theta}(y)-z)^T(z-x)}$ 中， $(f_{\theta}(y)-z)^T$ 与 $(z-x)$ 不独立 无法进行计算，</li>
+<li>其中 <script type="math/tex">2\mathbb{E_{y,z|x}}\{(f_{\theta}(y)-z)^T(z-x)\}</script> 中， <script type="math/tex">(f_{\theta}(y)-z)^T</script> 与 $(z-x)$ 不独立 无法进行计算，</li>
 </ul>
 <p>进一步我们将其化为：</p>
 <script type="math/tex; mode=display">
@@ -397,7 +397,7 @@ Cov\{(x-z)^T,(z-x)\} + \mathbb{E}\{(x-z)^T\} \mathbb{E}\{(z-x)\} \\ = - (\mathbb
 <script type="math/tex; mode=display">
 \mathbb{E_{y,z|x}}\{||f_{\theta}(y)-x||_2^2\} = \mathbb{E_{y,z|x}}\{||f_{\theta}(y)-z||_2^2\}</script><p>在Neiber2Neiber中 $\mathbb{E}(x) \neq  \mathbb{E}(z)$ 所以</p>
 <script type="math/tex; mode=display">
-\mathbb{E_{y,z|x}}\{||f_{\theta}(y)-x||_2^2\} = \mathbb{E_{y,z|x}}\{||f_{\theta}(y)-z||_2^2\} - \sigma^2(\hat{y}_i) + 2\mathbb{E_{y,z|x}}\{(f_{\theta}(y) -x)^T(z-x)</script><p>这样就可以获得论文中的(10)-(11):<br><img src="upload://w8EDw3HPaGTCynQNHASZzAUJeA8.png" alt="image|690x137"></p>
+\mathbb{E_{y,z|x}}\{||f_{\theta}(y)-x||_2^2\} = \mathbb{E_{y,z|x}}\{||f_{\theta}(y)-z||_2^2\} - \sigma^2(\hat{y}_i) + 2\mathbb{E_{y,z|x}}\{(f_{\theta}(y) -x)^T(z-x)</script><p>这样就可以获得论文中的(10)-(11):<br><img src="/2021/02/17/去噪-2-self相关/5.png" alt="image|690x137"></p>
 
       
     </div>
@@ -430,8 +430,8 @@ Cov\{(x-z)^T,(z-x)\} + \mathbb{E}\{(x-z)^T\} \mathbb{E}\{(z-x)\} \\ = - (\mathbb
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2020/08/20/记录/" rel="next" title="Video Object Segmentation (VOS)">
-                <i class="fa fa-chevron-left"></i> Video Object Segmentation (VOS)
+              <a href="/2021/02/17/去噪-1-DA相关/" rel="next" title="去噪论文阅读-1">
+                <i class="fa fa-chevron-left"></i> 去噪论文阅读-1
               </a>
             
           </div>
@@ -440,8 +440,8 @@ Cov\{(x-z)^T,(z-x)\} + \mathbb{E}\{(x-z)^T\} \mathbb{E}\{(z-x)\} \\ = - (\mathbb
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2021/02/17/去噪-1-DA相关/" rel="prev" title="去噪论文阅读-1">
-                去噪论文阅读-1 <i class="fa fa-chevron-right"></i>
+              <a href="/2021/02/17/面经/" rel="prev" title="面经">
+                面经 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -521,7 +521,7 @@ Cov\{(x-z)^T,(z-x)\} + \mathbb{E}\{(x-z)^T\} \mathbb{E}\{(z-x)\} \\ = - (\mathbb
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">36</span>
+                  <span class="site-state-item-count">37</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
@@ -534,7 +534,7 @@ Cov\{(x-z)^T,(z-x)\} + \mathbb{E}\{(x-z)^T\} \mathbb{E}\{(z-x)\} \\ = - (\mathbb
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">23</span>
+                  <span class="site-state-item-count">25</span>
                   <span class="site-state-item-name">tags</span>
                 </a>
               </div>

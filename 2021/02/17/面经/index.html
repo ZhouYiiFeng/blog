@@ -1,0 +1,857 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="面经,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="剑指犀牛鸟问答题Attention Attention机制 SEnet (注意力机制了解吗、SENet)由输入 X 得到输出feature U 以后，对U的每个通道进行全局平均池化得到通道描述子（Squeeze），再利用两层 FC 得到每个通道的权重值，对 U 按通道进行重新加权得到最终输出（Excitation），这个过程称之为 feature recalibration，通过引入 attent">
+<meta name="keywords" content="面经">
+<meta property="og:type" content="article">
+<meta property="og:title" content="面经">
+<meta property="og:url" content="http://zhoef.com/2021/02/17/面经/index.html">
+<meta property="og:site_name" content="JoeyF&#39;s Home">
+<meta property="og:description" content="剑指犀牛鸟问答题Attention Attention机制 SEnet (注意力机制了解吗、SENet)由输入 X 得到输出feature U 以后，对U的每个通道进行全局平均池化得到通道描述子（Squeeze），再利用两层 FC 得到每个通道的权重值，对 U 按通道进行重新加权得到最终输出（Excitation），这个过程称之为 feature recalibration，通过引入 attent">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2021-02-17T03:48:35.626Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="面经">
+<meta name="twitter:description" content="剑指犀牛鸟问答题Attention Attention机制 SEnet (注意力机制了解吗、SENet)由输入 X 得到输出feature U 以后，对U的每个通道进行全局平均池化得到通道描述子（Squeeze），再利用两层 FC 得到每个通道的权重值，对 U 按通道进行重新加权得到最终输出（Excitation），这个过程称之为 feature recalibration，通过引入 attent">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://zhoef.com/2021/02/17/面经/">
+
+
+
+
+
+  <title>面经 | JoeyF's Home</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="default">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">JoeyF's Home</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            About
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://zhoef.com/2021/02/17/面经/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="JoeyF">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="JoeyF's Home">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">面经</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2021-02-17T11:17:39+08:00">
+                2021-02-17
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="剑指犀牛鸟"><a href="#剑指犀牛鸟" class="headerlink" title="剑指犀牛鸟"></a>剑指犀牛鸟</h1><h2 id="问答题"><a href="#问答题" class="headerlink" title="问答题"></a>问答题</h2><h3 id="Attention"><a href="#Attention" class="headerlink" title="Attention"></a>Attention</h3><ol>
+<li>Attention机制 SEnet (注意力机制了解吗、SENet)<br>由输入 X 得到输出feature U 以后，对U的每个通道进行全局平均池化得到通道描述子（Squeeze），再利用两层 FC 得到每个通道的权重值，对 U 按通道进行重新加权得到最终输出（Excitation），这个过程称之为 feature recalibration，通过引入 attention 重新加权，可以得到抑制无效特征，提升有效特征的权重</li>
+</ol>
+<h3 id="Network"><a href="#Network" class="headerlink" title="Network"></a>Network</h3><ol>
+<li><p>Bn平均值是什么的平均,训练和测试时的bn计算不一样</p>
+<ol>
+<li>BN了解吗？说一下BN。BN在解决什么问题？</li>
+<li>bn的均值和方差，在测试和训练时是怎么获得的</li>
+</ol>
+</li>
+<li><p>轻量级网络 mobilenet</p>
+</li>
+<li><p>卷机层的计算复杂度</p>
+</li>
+<li><p>deepwise 卷积了解吗</p>
+</li>
+<li><p>感受野大小计算</p>
+</li>
+<li><p>Unet上采样采用什么方法</p>
+<ol>
+<li>上采样方法：(四种采样方法)[<a href="https://kakuguo.ink/2020-06-18-PyTorch-UnSample/" target="_blank" rel="noopener">https://kakuguo.ink/2020-06-18-PyTorch-UnSample/</a>]</li>
+</ol>
+</li>
+</ol>
+<ol>
+<li><p>Unet结构特点 上采样、下采样还有哪些类型<br>下采样：resblock 上采样：PixelShuffle、临近插值、双线性插值</p>
+</li>
+<li><p>VGG结构特点</p>
+</li>
+<li><p>讲一下目标检测网络，介绍R-CNNs系列</p>
+</li>
+<li><p>最新的分割网络框架了解吗</p>
+</li>
+<li>ResNet在解决什么问题，怎么解决的？</li>
+</ol>
+<h3 id="Loss-Function"><a href="#Loss-Function" class="headerlink" title="Loss Function"></a>Loss Function</h3><ol>
+<li>focal loss了解吗</li>
+</ol>
+<h3 id="Data"><a href="#Data" class="headerlink" title="Data"></a>Data</h3><ol>
+<li>数据增强怎么做</li>
+<li>问图像的随机剪裁怎么做</li>
+</ol>
+<h3 id="Math"><a href="#Math" class="headerlink" title="Math"></a>Math</h3><ol>
+<li>凸边形的面积 怎么计算</li>
+<li>9^100 100^99哪个大 可以用取对数求解：ln 99/99 &gt; ln 100/100 &lt;-&gt; 99^100 &gt; 100^99</li>
+</ol>
+<h3 id="Pytorch-TF"><a href="#Pytorch-TF" class="headerlink" title="Pytorch TF"></a>Pytorch TF</h3><ol>
+<li>pytorch generate 多线程</li>
+<li>pytorch 多卡训练 同步还是异步</li>
+<li>Pytorch多GPU数据流</li>
+<li>pytorch和tensorflow的区别</li>
+</ol>
+<h3 id="Traditional-Image-Processing-OpenCV"><a href="#Traditional-Image-Processing-OpenCV" class="headerlink" title="Traditional Image Processing (OpenCV)"></a>Traditional Image Processing (OpenCV)</h3><ol>
+<li>图像处理边缘检测算子</li>
+<li>图像处理滤波方法</li>
+<li>滤波器</li>
+</ol>
+<h3 id="Others"><a href="#Others" class="headerlink" title="Others"></a>Others</h3><ol>
+<li>了解维度爆炸吗</li>
+<li>BN前向、后向计算</li>
+<li>给一幅图像，怎么识别图像中有哪些颜色？</li>
+<li>卷积神经网络的平移不变性</li>
+<li>滤波器和卷积核的区别？</li>
+<li>消除过拟合？</li>
+<li>L1/L2正则化的区别。</li>
+<li>小batch size的坏处</li>
+<li>soft nms和nms的区别，解决了什么问题。soft nms的具体过程</li>
+<li>梯度下降和随机梯度下降的区别</li>
+<li>GBDT和XGBoost的区别（至少3方面）</li>
+<li>介绍常用的聚类算法（KMeans、DBSCAN、Mean Shift）</li>
+<li>常见激活函数：sigmoid，softmax，relu；relu不可导的问题咋处理（之前没注意过，应该是采用次梯解决）<br>由于这出现的0值的概率极低，任意选择一个子梯度就OK了，在0处的次微分集合是【0，1】；即选择其中一个就OK了；一般默认是0；</li>
+</ol>
+<h2 id="编程题"><a href="#编程题" class="headerlink" title="编程题"></a>编程题</h2><h3 id><a href="#" class="headerlink" title=" "></a> </h3><ol>
+<li><code>将矩阵元素为0的行、列置0</code></li>
+<li><code>给定N（0&lt;N&lt;20）个物品和一个空间为M的背包，每个物品i包含属性重量w[i]和价值v[i]，试求该背包最多能装下多少价值的东西？M为浮点数，要求用暴力法</code></li>
+<li><code>Given an n x n matrix and a number x, find position of x in the matrix if it is present in it. Else print “Not Found”. In the given matrix, every row and column is sorted in increasing order.</code></li>
+<li><code>十进制转二进制，不增加空间复杂度</code></li>
+<li><code>在n个数中取前k个数（n远大于k） 取出的k不用是排好序的</code></li>
+<li><code>有一个字符串它的构成是词+空格的组合，如“北京 杭州 杭州 北京”，要求输入一个匹配模式（简单的以字符来写,比如aabb,来判断该字符串是否符合该模式，举个例子：1. pattern = “abba”, str=“北京 杭州 杭州 北京” 返回 ture 2. pattern = “aabb”, str=“北京 杭州 杭州 北京” 返回 false 3.pattern = “baab”, str=“北京 杭州 杭州 北京” 返回 ture</code></li>
+<li>理解堆排序吗</li>
+<li>二进制转换</li>
+<li>三数之和</li>
+<li>一次编辑距离</li>
+<li>图像闭合处理</li>
+<li><code>给定一个整数数组[a0，a1，……an-1]，判断是否存在0&lt;=i，j，k&lt;n，使得ai-aj=ak，存在返回1，不存在返回0.</code></li>
+<li><code>有一类正整数至少包含因子2、3和5的其中两个，其他因子无限制，例如6，10，12。如果把6算作第一个此类正整数，按照从小到大的顺序，求第1231个此类正整数并打印出来。</code></li>
+<li><code>了解哪些边缘检测算子、用sobel边缘检测处理图像</code></li>
+<li>旋转矩阵</li>
+<li>两数之和</li>
+<li>无向图找环路</li>
+<li><a href="https://www.nowcoder.com/practice/3911a20b3f8743058214ceaa099eeb45?tpId=117" target="_blank" rel="noopener">换钱的最少货币数</a></li>
+<li>矩阵快速幂</li>
+<li><a href="https://www.nowcoder.com/practice/b56799ebfd684fb394bd315e89324fb4?tpId=117" target="_blank" rel="noopener">找到字符串的最长无重复字符子串</a></li>
+<li><a href="https://www.nowcoder.com/practice/e0cc33a83afe4530bcec46eba3325116?tpId=117" target="_blank" rel="noopener">在二叉树中找到两个节点的最近公共祖先</a></li>
+<li><a href="https://leetcode-cn.com/problems/increasing-triplet-subsequence/" target="_blank" rel="noopener">递增的三元子序列</a></li>
+<li><code>给定2个数组 x y，都是float，且都大于0. 问是否存在一对（x，y），满足 x y &gt; y x.</code>  (lnx/x &gt; lny/y)</li>
+<li>iou计算编写</li>
+<li>两个数组求交集</li>
+<li>因式分解</li>
+<li>并查集</li>
+<li>两个有序数组，求第k大，时间复杂度尽可能低（log(m+n））</li>
+<li>最长彩虹子序列（魔改最长递增子序列）</li>
+<li>设计一个函数，用于以下规则的转换：A=1,B=2,C=3,…,Z=26,AA=27,AB=28,…,AAA=53</li>
+<li>数组内最大递增数据的长度</li>
+<li><a href="https://www.nowcoder.com/practice/fe6b651b66ae47d7acce78ffdd9a96c7?tpId=117" target="_blank" rel="noopener">字符串的排列</a></li>
+</ol>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/面经/" rel="tag"># 面经</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2021/02/17/去噪-2-self相关/" rel="next" title="去噪论文阅读-2-Self Supervised">
+                <i class="fa fa-chevron-left"></i> 去噪论文阅读-2-Self Supervised
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2021/02/17/去噪-3/" rel="prev" title="去噪论文阅读-3">
+                去噪论文阅读-3 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/avatar.gif" alt="JoeyF">
+            
+              <p class="site-author-name" itemprop="name">JoeyF</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">37</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">25</span>
+                  <span class="site-state-item-name">tags</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/ZhouYiiFeng" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:joeyf.z.y.wen@gmail.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#剑指犀牛鸟"><span class="nav-number">1.</span> <span class="nav-text">剑指犀牛鸟</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#问答题"><span class="nav-number">1.1.</span> <span class="nav-text">问答题</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Attention"><span class="nav-number">1.1.1.</span> <span class="nav-text">Attention</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Network"><span class="nav-number">1.1.2.</span> <span class="nav-text">Network</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Loss-Function"><span class="nav-number">1.1.3.</span> <span class="nav-text">Loss Function</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Data"><span class="nav-number">1.1.4.</span> <span class="nav-text">Data</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Math"><span class="nav-number">1.1.5.</span> <span class="nav-text">Math</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Pytorch-TF"><span class="nav-number">1.1.6.</span> <span class="nav-text">Pytorch TF</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Traditional-Image-Processing-OpenCV"><span class="nav-number">1.1.7.</span> <span class="nav-text">Traditional Image Processing (OpenCV)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Others"><span class="nav-number">1.1.8.</span> <span class="nav-text">Others</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#编程题"><span class="nav-number">1.2.</span> <span class="nav-text">编程题</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#null"><span class="nav-number">1.2.1.</span> <span class="nav-text"> </span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">JoeyF</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Gemini</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+
+
+  
+
+  
+
+</body>
+</html>

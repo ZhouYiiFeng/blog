@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="Hexo, NexT">
+  <meta name="keywords" content="Denoise,Paper,">
 
 
 
@@ -80,18 +80,19 @@
 
 
 <meta name="description" content="Attention 在去噪中的理解：在刷比赛的时候，我发现很多方法没有Unet的范化性高(在所有数据集都有很好的结果)。其中实验了一些关于attention的模型，主要的改进是在Unet的上菜样的过程中加入attention的模块。  为什么在上采样阶段使用Attention而不是在下采样or Both？这样做是考虑到，网络在下采样阶段是来采集提取图像的特征的，使用卷积+感受野已经可以对特征有很好">
+<meta name="keywords" content="Denoise,Paper">
 <meta property="og:type" content="article">
-<meta property="og:title" content="JoeyF&#39;s Home">
+<meta property="og:title" content="去噪论文阅读-6">
 <meta property="og:url" content="http://zhoef.com/2021/02/17/去噪-6-Attention的应用/index.html">
 <meta property="og:site_name" content="JoeyF&#39;s Home">
 <meta property="og:description" content="Attention 在去噪中的理解：在刷比赛的时候，我发现很多方法没有Unet的范化性高(在所有数据集都有很好的结果)。其中实验了一些关于attention的模型，主要的改进是在Unet的上菜样的过程中加入attention的模块。  为什么在上采样阶段使用Attention而不是在下采样or Both？这样做是考虑到，网络在下采样阶段是来采集提取图像的特征的，使用卷积+感受野已经可以对特征有很好">
 <meta property="og:locale" content="default">
-<meta property="og:image" content="upload://pVp582rRoHs0anMopjV0BEP3oXT.png">
-<meta property="og:updated_time" content="2021-02-17T03:25:10.609Z">
+<meta property="og:image" content="http://zhoef.com/2021/02/17/去噪-6-Attention的应用/1.png">
+<meta property="og:updated_time" content="2021-02-17T03:46:18.835Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="JoeyF&#39;s Home">
+<meta name="twitter:title" content="去噪论文阅读-6">
 <meta name="twitter:description" content="Attention 在去噪中的理解：在刷比赛的时候，我发现很多方法没有Unet的范化性高(在所有数据集都有很好的结果)。其中实验了一些关于attention的模型，主要的改进是在Unet的上菜样的过程中加入attention的模块。  为什么在上采样阶段使用Attention而不是在下采样or Both？这样做是考虑到，网络在下采样阶段是来采集提取图像的特征的，使用卷积+感受野已经可以对特征有很好">
-<meta name="twitter:image" content="upload://pVp582rRoHs0anMopjV0BEP3oXT.png">
+<meta name="twitter:image" content="http://zhoef.com/2021/02/17/去噪-6-Attention的应用/1.png">
 
 
 
@@ -127,7 +128,7 @@
 
 
 
-  <title> | JoeyF's Home</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  <title>去噪论文阅读-6 | JoeyF's Home</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
   
 
 
@@ -281,7 +282,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline"></h1>
+          <h1 class="post-title" itemprop="name headline">去噪论文阅读-6</h1>
         
 
         <div class="post-meta">
@@ -293,7 +294,7 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2021-02-17T11:24:58+08:00">
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2021-02-17T11:26:39+08:00">
                 2021-02-17
               </time>
             
@@ -345,7 +346,7 @@
 </ul>
 </li>
 </ul>
-<h1 id="SA-NET-SHUFFLE-ATTENTION-FOR-DEEP-CONVOLUTIONAL-NEURAL-NETWORKS"><a href="#SA-NET-SHUFFLE-ATTENTION-FOR-DEEP-CONVOLUTIONAL-NEURAL-NETWORKS" class="headerlink" title="SA-NET: SHUFFLE ATTENTION FOR DEEP CONVOLUTIONAL NEURAL NETWORKS"></a>SA-NET: SHUFFLE ATTENTION FOR DEEP CONVOLUTIONAL NEURAL NETWORKS</h1><p>文章目的是减少网络的计算量。<br><img src="upload://pVp582rRoHs0anMopjV0BEP3oXT.png" alt="image|690x211"> </p>
+<h1 id="SA-NET-SHUFFLE-ATTENTION-FOR-DEEP-CONVOLUTIONAL-NEURAL-NETWORKS"><a href="#SA-NET-SHUFFLE-ATTENTION-FOR-DEEP-CONVOLUTIONAL-NEURAL-NETWORKS" class="headerlink" title="SA-NET: SHUFFLE ATTENTION FOR DEEP CONVOLUTIONAL NEURAL NETWORKS"></a>SA-NET: SHUFFLE ATTENTION FOR DEEP CONVOLUTIONAL NEURAL NETWORKS</h1><p>文章目的是减少网络的计算量。<br><img src="/2021/02/17/去噪-6-Attention的应用/1.png" alt="image|690x211"> </p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">sa_layer</span><span class="params">(nn.Module)</span>:</span></span><br><span class="line">    <span class="string">"""Constructs a Channel Spatial Group module.</span></span><br><span class="line"><span class="string">    Args:</span></span><br><span class="line"><span class="string">        k_size: Adaptive selection of kernel size</span></span><br><span class="line"><span class="string">    """</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, channel, groups=<span class="number">64</span>)</span>:</span></span><br><span class="line">        super(sa_layer, self).__init__()</span><br><span class="line">        self.groups = groups</span><br><span class="line">        self.avg_pool = nn.AdaptiveAvgPool2d(<span class="number">1</span>)</span><br><span class="line">        self.cweight = Parameter(torch.zeros(<span class="number">1</span>, channel // (<span class="number">2</span> * groups), <span class="number">1</span>, <span class="number">1</span>))</span><br><span class="line">        self.cbias = Parameter(torch.ones(<span class="number">1</span>, channel // (<span class="number">2</span> * groups), <span class="number">1</span>, <span class="number">1</span>))</span><br><span class="line">        self.sweight = Parameter(torch.zeros(<span class="number">1</span>, channel // (<span class="number">2</span> * groups), <span class="number">1</span>, <span class="number">1</span>))</span><br><span class="line">        self.sbias = Parameter(torch.ones(<span class="number">1</span>, channel // (<span class="number">2</span> * groups), <span class="number">1</span>, <span class="number">1</span>))</span><br><span class="line"></span><br><span class="line">        self.sigmoid = nn.Sigmoid()</span><br><span class="line">        self.gn = nn.GroupNorm(channel // (<span class="number">2</span> * groups), channel // (<span class="number">2</span> * groups))</span><br><span class="line"></span><br><span class="line"><span class="meta">    @staticmethod</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">channel_shuffle</span><span class="params">(x, groups)</span>:</span></span><br><span class="line">        b, c, h, w = x.shape</span><br><span class="line"></span><br><span class="line">        x = x.reshape(b, groups, <span class="number">-1</span>, h, w)</span><br><span class="line">        x = x.permute(<span class="number">0</span>, <span class="number">2</span>, <span class="number">1</span>, <span class="number">3</span>, <span class="number">4</span>)</span><br><span class="line"></span><br><span class="line">        <span class="comment"># flatten</span></span><br><span class="line">        x = x.reshape(b, <span class="number">-1</span>, h, w)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> x</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">forward</span><span class="params">(self, x)</span>:</span></span><br><span class="line">        b, c, h, w = x.shape</span><br><span class="line"></span><br><span class="line">        x = x.reshape(b * self.groups, <span class="number">-1</span>, h, w)</span><br><span class="line">        x_0, x_1 = x.chunk(<span class="number">2</span>, dim=<span class="number">1</span>)</span><br><span class="line"></span><br><span class="line">        <span class="comment"># channel attention</span></span><br><span class="line">        xn = self.avg_pool(x_0)</span><br><span class="line">        xn = self.cweight * xn + self.cbias</span><br><span class="line">        xn = x_0 * self.sigmoid(xn)</span><br><span class="line"></span><br><span class="line">        <span class="comment"># spatial attention</span></span><br><span class="line">        xs = self.gn(x_1)</span><br><span class="line">        xs = self.sweight * xs + self.sbias</span><br><span class="line">        xs = x_1 * self.sigmoid(xs)</span><br><span class="line"></span><br><span class="line">        <span class="comment"># concatenate along channel axis</span></span><br><span class="line">        out = torch.cat([xn, xs], dim=<span class="number">1</span>)</span><br><span class="line">        out = out.reshape(b, <span class="number">-1</span>, h, w)</span><br><span class="line"></span><br><span class="line">        out = self.channel_shuffle(out, <span class="number">2</span>)</span><br><span class="line">        <span class="keyword">return</span> out</span><br></pre></td></tr></table></figure>
 <p>与之前不同的是：</p>
 <ol>
@@ -369,6 +370,14 @@
 
     <footer class="post-footer">
       
+        <div class="post-tags">
+          
+            <a href="/tags/Denoise/" rel="tag"># Denoise</a>
+          
+            <a href="/tags/Paper/" rel="tag"># Paper</a>
+          
+        </div>
+      
 
       
       
@@ -378,8 +387,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2021/02/17/去噪-5-CycleISP/" rel="next" title>
-                <i class="fa fa-chevron-left"></i> 
+              <a href="/2021/02/17/去噪-5-CycleISP/" rel="next" title="去噪论文阅读-5">
+                <i class="fa fa-chevron-left"></i> 去噪论文阅读-5
               </a>
             
           </div>
@@ -388,8 +397,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2021/02/17/去噪-7-Practical Deep Raw Image Denoising on Mobile Devices/" rel="prev" title>
-                 <i class="fa fa-chevron-right"></i>
+              <a href="/2021/02/17/去噪-7-Practical Deep Raw Image Denoising on Mobile Devices/" rel="prev" title="去噪论文阅读-7">
+                去噪论文阅读-7 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -469,7 +478,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">36</span>
+                  <span class="site-state-item-count">37</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
@@ -482,7 +491,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">23</span>
+                  <span class="site-state-item-count">25</span>
                   <span class="site-state-item-name">tags</span>
                 </a>
               </div>
