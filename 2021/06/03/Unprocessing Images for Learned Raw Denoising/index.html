@@ -1,0 +1,778 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="Unprocessing Images for Learned Raw Denoising文章贡献有两点：  Unprocess操作：转一个Clean图像到RAW。Process操作：逆Unprocess。 添加dataset-dependent noise 噪声，生成与真实噪图相同的噪图。     训练：数据集： million images of the MIR Flickr extended">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JoeyF&#39;s Home">
+<meta property="og:url" content="http://zhoef.com/2021/06/03/Unprocessing Images for Learned Raw Denoising/index.html">
+<meta property="og:site_name" content="JoeyF&#39;s Home">
+<meta property="og:description" content="Unprocessing Images for Learned Raw Denoising文章贡献有两点：  Unprocess操作：转一个Clean图像到RAW。Process操作：逆Unprocess。 添加dataset-dependent noise 噪声，生成与真实噪图相同的噪图。     训练：数据集： million images of the MIR Flickr extended">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="upload://hdfr5ldTChcRde1MLE9WwWPjCgo.jpeg">
+<meta property="og:image" content="upload://1mLCsbxfgElpUhs9rnnftVOC8zM.png">
+<meta property="og:image" content="upload://q3BHbM7XlKvUcCXmogWYrCMRkXN.png">
+<meta property="og:image" content="upload://9EpC1j8TX6WLH8LRfpqDXB0LW5u.png">
+<meta property="og:image" content="upload://zMijPtBc3dVzFVBdmD0c5d9gYH7.png">
+<meta property="og:updated_time" content="2021-05-24T10:33:30.515Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="JoeyF&#39;s Home">
+<meta name="twitter:description" content="Unprocessing Images for Learned Raw Denoising文章贡献有两点：  Unprocess操作：转一个Clean图像到RAW。Process操作：逆Unprocess。 添加dataset-dependent noise 噪声，生成与真实噪图相同的噪图。     训练：数据集： million images of the MIR Flickr extended">
+<meta name="twitter:image" content="upload://hdfr5ldTChcRde1MLE9WwWPjCgo.jpeg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://zhoef.com/2021/06/03/Unprocessing Images for Learned Raw Denoising/">
+
+
+
+
+
+  <title> | JoeyF's Home</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="default">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">JoeyF's Home</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            About
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://zhoef.com/2021/06/03/Unprocessing Images for Learned Raw Denoising/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="JoeyF">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="JoeyF's Home">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline"></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2021-06-03T21:46:41+08:00">
+                2021-06-03
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="Unprocessing-Images-for-Learned-Raw-Denoising"><a href="#Unprocessing-Images-for-Learned-Raw-Denoising" class="headerlink" title="Unprocessing Images for Learned Raw Denoising"></a>Unprocessing Images for Learned Raw Denoising</h1><p>文章贡献有两点：</p>
+<ul>
+<li>Unprocess操作：转一个Clean图像到RAW。Process操作：逆Unprocess。</li>
+<li>添加dataset-dependent noise 噪声，生成与真实噪图相同的噪图。</li>
+</ul>
+<p><img src="upload://hdfr5ldTChcRde1MLE9WwWPjCgo.jpeg" alt="image|690x409,75%"> <img src="upload://1mLCsbxfgElpUhs9rnnftVOC8zM.png" alt="image|510x209"> </p>
+<h2 id="训练："><a href="#训练：" class="headerlink" title="训练："></a>训练：</h2><h3 id="数据集："><a href="#数据集：" class="headerlink" title="数据集："></a>数据集：</h3><ol>
+<li>million images of the MIR Flickr extended dataset setting aside 5% of the dataset for validation and 5% for<br>testing</li>
+<li>将每一张来自Internet的数据集图像，这里使用的是来自MIR Flickr的图像。对其进行Unprocess，得到Raw Image，作者说该Unprocess pipeline是可逆的，可逆操作为Process。</li>
+<li>在得到Raw Image后根据数据集的特征参数来添加shot and read噪声(<strong>Thus the values of λread and λshot can be calculated by the camera for a particular exposure and are usually stored as part of the metadata accompanying a raw image file</strong>.)。</li>
+<li><p>在添加了噪声的RAW图像中进行去噪器的训练得到RAW的去噪结果，For both experiments, we minimize L1 loss between the output and ground-truth images.</p>
+<ul>
+<li>针对SRGB模型，our “sRGB” model the network output and synthetic ground-truth are both transformed <strong>to sRGB space before computing the loss</strong>，</li>
+<li>针对RAW模型， Our “Raw” model instead computes the loss <strong>directly between our network output</strong> and <strong>our raw synthetic ground-truth</strong>, without this processing. 直接RAW对应loss计算，不转为sRGB。</li>
+</ul>
+</li>
+<li><p>测试在DND上进行测试。</p>
+</li>
+</ol>
+<h2 id="噪声，以及domain-aimed-噪声添加"><a href="#噪声，以及domain-aimed-噪声添加" class="headerlink" title="噪声，以及domain-aimed 噪声添加"></a>噪声，以及domain-aimed 噪声添加</h2><p>RAW域的噪声分为两种噪声：1.是<strong>光子到达噪声</strong>，2.是<strong>sensor读取噪声</strong>。Sensor noise primarily comes from two sources: photon arrival statistics (“shot” noise) and imprecision in the readout circuitry (“read” noise) </p>
+<p>两者结合，噪声图像可以看作：其中 $y$ 是观测后验。<br><img src="upload://q3BHbM7XlKvUcCXmogWYrCMRkXN.png" alt="image|470x67,75%"> </p>
+<p>$\lambda<em>{read} = g_d^2 \sigma_r^2$  , $\lambda</em>{shot}=g<em>d g_a$  是由sensor’s 模拟，数字增益，以及固定读取方差 $\sigma_r^2$ 决定的。 $\lambda</em>{read}$  $\lambda_{shot}$ 是可以通过相机的particular exposure and are usually stored as part of the metadata accompanying a raw image file.</p>
+<p>作者计算了DND的所有 $log \lambda<em>{read}$  $log\lambda</em>{shot}$ ,下图蓝色所示，对其拟合得到红色线（加置信度）。<br> <img src="upload://9EpC1j8TX6WLH8LRfpqDXB0LW5u.png" alt="image|552x500,50%"><br><img src="upload://zMijPtBc3dVzFVBdmD0c5d9gYH7.png" alt="image|664x217,75%"><br>从其中抽样各个噪声，添加到RAW图中进行生成。</p>
+<details>
+<summary> code of read and shot add->dataset </summary>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">random_noise_levels</span><span class="params">()</span>:</span></span><br><span class="line">  <span class="string">"""Generates random noise levels from a log-log linear distribution."""</span></span><br><span class="line">  log_min_shot_noise = tf.log(<span class="number">0.0001</span>)</span><br><span class="line">  log_max_shot_noise = tf.log(<span class="number">0.012</span>)</span><br><span class="line">  log_shot_noise = tf.random_uniform((), log_min_shot_noise, log_max_shot_noise)</span><br><span class="line">  shot_noise = tf.exp(log_shot_noise)</span><br><span class="line"></span><br><span class="line">  line = <span class="keyword">lambda</span> x: <span class="number">2.18</span> * x + <span class="number">1.20</span></span><br><span class="line">  log_read_noise = line(log_shot_noise) + tf.random_normal((), stddev=<span class="number">0.26</span>)</span><br><span class="line">  read_noise = tf.exp(log_read_noise)</span><br><span class="line">  <span class="keyword">return</span> shot_noise, read_noise</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">add_noise</span><span class="params">(image, shot_noise=<span class="number">0.01</span>, read_noise=<span class="number">0.0005</span>)</span>:</span></span><br><span class="line">  <span class="string">"""Adds random shot (proportional to image) and read (independent) noise."""</span></span><br><span class="line">  variance = image * shot_noise + read_noise</span><br><span class="line">  noise = tf.random_normal(tf.shape(image), stddev=tf.sqrt(variance))</span><br><span class="line">  <span class="keyword">return</span> image + noise</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">create_example</span><span class="params">(image)</span>:</span></span><br><span class="line">  <span class="string">"""Creates training example of inputs and labels from `image`."""</span></span><br><span class="line">  image.shape.assert_is_compatible_with([<span class="literal">None</span>, <span class="literal">None</span>, <span class="number">3</span>])</span><br><span class="line">  image, metadata = unprocess.unprocess(image)</span><br><span class="line">  shot_noise, read_noise = unprocess.random_noise_levels()</span><br><span class="line">  noisy_img = unprocess.add_noise(image, shot_noise, read_noise)</span><br><span class="line">  <span class="comment"># Approximation of variance is calculated using noisy image (rather than clean</span></span><br><span class="line">  <span class="comment"># image), since that is what will be avaiable during evaluation.</span></span><br><span class="line">  variance = shot_noise * noisy_img + read_noise</span><br><span class="line"></span><br><span class="line">  inputs = &#123;</span><br><span class="line">      <span class="string">'noisy_img'</span>: noisy_img,</span><br><span class="line">      <span class="string">'variance'</span>: variance,</span><br><span class="line">  &#125;</span><br><span class="line">  inputs.update(metadata)</span><br><span class="line">  labels = image</span><br><span class="line">  <span class="keyword">return</span> inputs, labels</span><br></pre></td></tr></table></figure>
+
+</details>
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2021/06/03/Swin transformer 学习2 /" rel="next" title>
+                <i class="fa fa-chevron-left"></i> 
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2021/06/03/VIT transformer 学习1 /" rel="prev" title>
+                 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/avatar.gif" alt="JoeyF">
+            
+              <p class="site-author-name" itemprop="name">JoeyF</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">53</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">25</span>
+                  <span class="site-state-item-name">tags</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/ZhouYiiFeng" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:joeyf.z.y.wen@gmail.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Unprocessing-Images-for-Learned-Raw-Denoising"><span class="nav-number">1.</span> <span class="nav-text">Unprocessing Images for Learned Raw Denoising</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#训练："><span class="nav-number">1.1.</span> <span class="nav-text">训练：</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#数据集："><span class="nav-number">1.1.1.</span> <span class="nav-text">数据集：</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#噪声，以及domain-aimed-噪声添加"><span class="nav-number">1.2.</span> <span class="nav-text">噪声，以及domain-aimed 噪声添加</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">JoeyF</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Gemini</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="Pseudo-ISP: Learning Pseudo In-camera Signal Processing Pipeline from A Color Image Denoiser这文章写的很混乱，读着不容易懂， 但是收获很多。 图像的噪声在raw域可以看作与空域无关，将图像投影到raw域，在raw域加高斯噪声，再投影回来得到新数据。  Albeit the rawRGB noise mode">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JoeyF&#39;s Home">
+<meta property="og:url" content="http://zhoef.com/2021/06/03/PseudoISP SOTA/index.html">
+<meta property="og:site_name" content="JoeyF&#39;s Home">
+<meta property="og:description" content="Pseudo-ISP: Learning Pseudo In-camera Signal Processing Pipeline from A Color Image Denoiser这文章写的很混乱，读着不容易懂， 但是收获很多。 图像的噪声在raw域可以看作与空域无关，将图像投影到raw域，在raw域加高斯噪声，再投影回来得到新数据。  Albeit the rawRGB noise mode">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="http://zhoef.com/2021/06/03/PseudoISP%20SOTA/1.png">
+<meta property="og:image" content="http://zhoef.com/2021/06/03/PseudoISP%20SOTA/2.png">
+<meta property="og:image" content="http://zhoef.com/2021/06/03/PseudoISP%20SOTA/3.png">
+<meta property="og:image" content="http://zhoef.com/2021/06/03/PseudoISP%20SOTA/4.png">
+<meta property="og:image" content="http://zhoef.com/2021/06/03/PseudoISP%20SOTA/5.png">
+<meta property="og:image" content="http://zhoef.com/2021/06/03/PseudoISP%20SOTA/6.png">
+<meta property="og:image" content="http://zhoef.com/2021/06/03/PseudoISP%20SOTA/7.png">
+<meta property="og:image" content="http://zhoef.com/2021/06/03/PseudoISP%20SOTA/8.png">
+<meta property="og:image" content="http://zhoef.com/2021/06/03/PseudoISP%20SOTA/9.png">
+<meta property="og:image" content="http://zhoef.com/2021/06/03/PseudoISP%20SOTA/9p.png">
+<meta property="og:image" content="http://zhoef.com/2021/06/03/PseudoISP%20SOTA/9pp.png">
+<meta property="og:image" content="http://zhoef.com/2021/06/03/PseudoISP%20SOTA/10.jpeg">
+<meta property="og:image" content="http://zhoef.com/2021/06/03/PseudoISP%20SOTA/11.jpeg">
+<meta property="og:image" content="http://zhoef.com/2021/06/03/PseudoISP%20SOTA/12.jpeg">
+<meta property="og:image" content="http://zhoef.com/2021/06/03/PseudoISP%20SOTA/13.jpeg">
+<meta property="og:updated_time" content="2021-05-24T10:39:43.674Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="JoeyF&#39;s Home">
+<meta name="twitter:description" content="Pseudo-ISP: Learning Pseudo In-camera Signal Processing Pipeline from A Color Image Denoiser这文章写的很混乱，读着不容易懂， 但是收获很多。 图像的噪声在raw域可以看作与空域无关，将图像投影到raw域，在raw域加高斯噪声，再投影回来得到新数据。  Albeit the rawRGB noise mode">
+<meta name="twitter:image" content="http://zhoef.com/2021/06/03/PseudoISP%20SOTA/1.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://zhoef.com/2021/06/03/PseudoISP SOTA/">
+
+
+
+
+
+  <title> | JoeyF's Home</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="default">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">JoeyF's Home</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            About
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://zhoef.com/2021/06/03/PseudoISP SOTA/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="JoeyF">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="JoeyF's Home">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline"></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2021-06-03T21:46:41+08:00">
+                2021-06-03
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="Pseudo-ISP-Learning-Pseudo-In-camera-Signal-Processing-Pipeline-from-A-Color-Image-Denoiser"><a href="#Pseudo-ISP-Learning-Pseudo-In-camera-Signal-Processing-Pipeline-from-A-Color-Image-Denoiser" class="headerlink" title="Pseudo-ISP: Learning Pseudo In-camera Signal Processing Pipeline from A Color Image Denoiser"></a>Pseudo-ISP: Learning Pseudo In-camera Signal Processing Pipeline from A Color Image Denoiser</h1><p>这文章写的很混乱，读着不容易懂， 但是收获很多。</p>
+<p>图像的噪声在raw域可以看作与空域无关，将图像投影到raw域，在raw域加高斯噪声，再投影回来得到新数据。</p>
+<blockquote>
+<p>Albeit the rawRGB noise model is unknown, it generally can be assumed to be signal-dependent and spatially independent [2].</p>
+</blockquote>
+<p>进一步假设ISP是可逆的，使用一个NN去学ISP过程，输入重构输入.</p>
+<h2 id="Method"><a href="#Method" class="headerlink" title="Method"></a>Method</h2><p><img src="/2021/06/03/PseudoISP SOTA/1.png" alt="image|690x257"> </p>
+<ul>
+<li><p>训练PseudoISP ：<br>给出一张来自test(真实数据集没有GT的噪声图) $Y$ , 以及该图 $Y$ 经过pre-train denoiser的假去噪后的图像：pseudo clean image $\hat{X}$ , 进行训练. 将图像投影到RAW域，其噪声应该是可分离且空域无关的(至于单个pixel的值有关。) 将 $\hat{X}$ 输入到噪声估计网络中 $1\times1$ 的卷积网络该噪声强度 如果这个noise是符合高斯分布，那么这个sRGB-&gt;RAW的投影就是成功的。具体来说 $Y<em>{raw}^{GT} - {X}</em>{raw}^{GT} = n$ 其中 $n$ 是加性空域无关噪声且符合高斯分布，(raw域噪声)。<br><img src="/2021/06/03/PseudoISP SOTA/2.png" alt="image|650x72"><br>$\sigma$ 是Noise level net的输出。<br>对于每一张完整的 $Y$ 来说，DND的一张大图。会分割为20张 $512\times 512$ 的图像。每一个512的图像会被分为 $60 \times 60$ 的小patch， $\hat{X}$ 也会做同样的尺寸对齐处理。从而来进行训练。得到50个模型。We randomly crop 12, 000 × 32 patches with size 60 × 60 to train Pseudo-ISP</p>
+</li>
+<li><p>生成数据：<br><img src="/2021/06/03/PseudoISP SOTA/3.png" alt="image|690x161,75%"><br><img src="/2021/06/03/PseudoISP SOTA/4.png" alt="image|370x62"><br>从800张DIV数据集中sample200张出来，抽512大小，每一个512大小的图像用随机使用一个ISP来生成noise图像，以160大小存储。</p>
+</li>
+<li><p>训练AdaptiveDenoiser:<br>使用了pseudo image and synthetic image pair.<br>L2 loss。</p>
+</li>
+</ul>
+<h2 id="实验："><a href="#实验：" class="headerlink" title="实验："></a>实验：</h2><p>数据集：<strong>DND</strong>, <strong>SIDD</strong> , <strong>SIDDPlus</strong> , <strong>CC15</strong>  and <strong>MIT-IP8</strong>  as the sets of test noisy images.</p>
+<p><img src="/2021/06/03/PseudoISP SOTA/5.png" alt="image|667x211"> </p>
+<ul>
+<li>实验一：<br>第一个实验是关于weight share的实验，作者指出pseudo-ISP对noise图像和clean图像都是weight share的，是否使用两个不同的网络来区别噪声图和干净图会更加有效？</li>
+<li>实验二：<br>对于每一个patch模型都是share weights的，即对于DND所有图像而言，才成patch后，都使用同一组pseudo-ISP的模型来进行增强。</li>
+<li>实验三：<br>对于每一张DND的图像来说，来自不同图像的patch使用不同的ISP进行增强。</li>
+<li>实验四：<br>对于任意图像来自于同一个数据集，使用不同的ISP进行增强。</li>
+</ul>
+<p>最后发现对于不同的image进行weight share是最好的，作者的解释是：</p>
+<blockquote>
+<p>DND images are captured using four different cameras which intrinsically do not share the ISP and noise models. Thus, image-specific Pseudo-ISP is adopted as the default.</p>
+</blockquote>
+<p><img src="/2021/06/03/PseudoISP SOTA/6.png" alt="image|668x215,50%">  <img src="/2021/06/03/PseudoISP SOTA/7.png" alt="image|509x499,100%"><br>实验：对比生成数据和伪数据的训练结果。</p>
+<blockquote>
+<p>It can be seen that the inclusion of synthetic-noisy set is beneficial to denoising performance. For traditional and unsupervised methods, the synthetic paired set plays a pivotal role and the best performance is attained by only using synthetic noisy images. As for pre-trained deep denoisers, the pseudo paired set can serve as a kind of regularization to avoid the over- fitting to synthetic paired set and thus is required.</p>
+</blockquote>
+<p>实验：不同模型的提升，以及模型在不同数据集上的提升，以及原模型与增强模型的对比：<br><img src="/2021/06/03/PseudoISP SOTA/8.png" alt="image|690x499"><br><img src="/2021/06/03/PseudoISP SOTA/9.png" alt="image|690x106"></p>
+<h1 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h1><p>PseudoISP 中， 将Noise 图片 $Y<em>{sRGB}^{noise}$ 经过 NN 得到去噪后的伪去噪图像 $Y</em>{sRGB}^{psd}$ ，<strong>假设在RAW 域中噪声独立分布</strong>， 将 $Y<em>{sRGB}^{psd}$ 以及 $Y</em>{sRGB}^{noise}$ 投影到RAW域时的noise空域无关。<br>RAW中Noise空域无关也可以参考void2noise中的挖掉中心点。(对中心点致盲，然后重构中心点，如果假设成立，只能重构空域相关的信息：即只能重构原图信息，不能重构噪声信息)</p>
+<p><img src="/2021/06/03/PseudoISP SOTA/9p.png" alt="image|618x59">  <img src="/2021/06/03/PseudoISP SOTA/9pp.png" alt="image|565x40"> </p>
+<p><strong>核心:</strong> 则 $Y<em>{raw}^{psd} \approx X</em>{raw}^{psd} + h(X<em>{raw}^{psd})\cdot n_0$, 其中 $h(\cdot) = f’(f^{-1}(X</em>{raw}^{psd})) \cdot g(f^{-1}(x_{raw}^{psd}))$  , $f^{-1}() ,f()$ 是GT RAW到Pseudo RAW的转换函数。</p>
+<p>告诉我们，在pseudo 域中，仍可以让noise 空域无关。</p>
+<p>使核心公式成立需要证明两点：</p>
+<ul>
+<li>是否能学到 $f()$ 使pseudo raw 到 GT raw的投影？ 即：没有RAW 的GT标签，两个image不一定被NN投影到RAW 域， 那么噪声不一定独立，泰勒展开式也不能展开。如果可以，RAW域的noise独立性就可以用泰勒换到psd域。</li>
+<li>网络能否很好的估计 $h()$ ？如果可以，noisze可以直接添加。</li>
+</ul>
+<p><img src="/2021/06/03/PseudoISP SOTA/10.jpeg" alt="image|690x231"></p>
+<p><img src="/2021/06/03/PseudoISP SOTA/11.jpeg" alt="image|689x226"></p>
+<p>DIV img No. : 601, Patch No. : 0<br><img src="/2021/06/03/PseudoISP SOTA/12.jpeg" alt="image|690x229"><br>DIV img No. : 340, Patch No. : 0<br><img src="/2021/06/03/PseudoISP SOTA/13.jpeg" alt="image|690x230"></p>
+<p>总结一下：<br>UIP -&gt; Cycle-ISP -&gt; Pseudo-ISP</p>
+<ul>
+<li>Cycle-ISP：将UIP中Uprocess和Process操作换成了NN去实现。</li>
+<li>Pseudo-ISP： 基于Cycle-ISP将噪声添加换成了NN并从另一个角度去实现。</li>
+</ul>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2021/06/03/Multi-patch Network for Image Deblurring 1/" rel="next" title>
+                <i class="fa fa-chevron-left"></i> 
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2021/06/03/SA-NET 论文分析-没什么用/" rel="prev" title>
+                 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/avatar.gif" alt="JoeyF">
+            
+              <p class="site-author-name" itemprop="name">JoeyF</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">53</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">25</span>
+                  <span class="site-state-item-name">tags</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/ZhouYiiFeng" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:joeyf.z.y.wen@gmail.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Pseudo-ISP-Learning-Pseudo-In-camera-Signal-Processing-Pipeline-from-A-Color-Image-Denoiser"><span class="nav-number">1.</span> <span class="nav-text">Pseudo-ISP: Learning Pseudo In-camera Signal Processing Pipeline from A Color Image Denoiser</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Method"><span class="nav-number">1.1.</span> <span class="nav-text">Method</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#实验："><span class="nav-number">1.2.</span> <span class="nav-text">实验：</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#分析"><span class="nav-number">2.</span> <span class="nav-text">分析</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">JoeyF</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Gemini</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+
+
+  
+
+  
+
+</body>
+</html>

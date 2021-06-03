@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="Self-Supervised Denoise Method:Introduction使用noise 和cln作为GT的图像训练对比较难获得，延长曝光时间多次拍摄得到的AVE cln img也不一定是很好的cln GT，这种拍摄困难，要求拍摄主体不移动(人像眨眼睛，颤抖等)，在某些情况下在实验环境可以获得，但是对于wild img是不好实现的。 基于以上的观点，提出了只给noise img然后进行">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JoeyF&#39;s Home">
+<meta property="og:url" content="http://zhoef.com/2021/06/03/Self-superviced denoise 新思路/index.html">
+<meta property="og:site_name" content="JoeyF&#39;s Home">
+<meta property="og:description" content="Self-Supervised Denoise Method:Introduction使用noise 和cln作为GT的图像训练对比较难获得，延长曝光时间多次拍摄得到的AVE cln img也不一定是很好的cln GT，这种拍摄困难，要求拍摄主体不移动(人像眨眼睛，颤抖等)，在某些情况下在实验环境可以获得，但是对于wild img是不好实现的。 基于以上的观点，提出了只给noise img然后进行">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="http://zhoef.com/2021/06/03/Self-superviced%20denoise%20新思路/1.jpeg">
+<meta property="og:updated_time" content="2021-05-24T09:33:41.828Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="JoeyF&#39;s Home">
+<meta name="twitter:description" content="Self-Supervised Denoise Method:Introduction使用noise 和cln作为GT的图像训练对比较难获得，延长曝光时间多次拍摄得到的AVE cln img也不一定是很好的cln GT，这种拍摄困难，要求拍摄主体不移动(人像眨眼睛，颤抖等)，在某些情况下在实验环境可以获得，但是对于wild img是不好实现的。 基于以上的观点，提出了只给noise img然后进行">
+<meta name="twitter:image" content="http://zhoef.com/2021/06/03/Self-superviced%20denoise%20新思路/1.jpeg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://zhoef.com/2021/06/03/Self-superviced denoise 新思路/">
+
+
+
+
+
+  <title> | JoeyF's Home</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="default">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">JoeyF's Home</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            About
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://zhoef.com/2021/06/03/Self-superviced denoise 新思路/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="JoeyF">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="JoeyF's Home">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline"></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2021-06-03T21:46:41+08:00">
+                2021-06-03
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="Self-Supervised-Denoise-Method"><a href="#Self-Supervised-Denoise-Method" class="headerlink" title="Self-Supervised Denoise Method:"></a>Self-Supervised Denoise Method:</h1><h2 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h2><p>使用noise 和cln作为GT的图像训练对比较难获得，延长曝光时间多次拍摄得到的AVE cln img也不一定是很好的cln GT，这种拍摄困难，要求拍摄主体不移动(人像眨眼睛，颤抖等)，在某些情况下在实验环境可以获得，但是对于wild img是不好实现的。</p>
+<p>基于以上的观点，提出了只给noise img然后进行去噪。在理论上进行论证可以参考章节： <strong>Noise2Noise: Learning Image Restoration without Clean Data</strong> 的原理以及公式推导部分。</p>
+<h2 id="Related-Work"><a href="#Related-Work" class="headerlink" title="Related Work"></a>Related Work</h2><p><strong>在N2N中</strong>，主要假设为： $\mathbb{E}{ x + n’ }  = \mathbb{E}{ x + n’’ } = x $ 其中 $x$ 为<strong>不可获得</strong>的<strong>干净</strong>图片。基于次假设可以推出：</p>
+<script type="math/tex; mode=display">
+\argmin_{\theta} \mathbb{E_{y|x}}\{\mathcal{L} (f_{\theta}(y), x)\} = \argmin_{\theta} \mathbb{E_{y|x}}\{\mathcal{L} (f_{\theta}(y), z)\}</script><p>其中， $y = x + n’, z = x + n’’$, $ \mathcal{L} $ 是 $L_2$ 损失。换句话说，在这条件下，要想网络tends to output the $ \mathbb{E}{x}$ ，理论上可以证明上面两个损失函数都可以，故，在我们没有GT时，采用第二个损失也是可以的。</p>
+<p><strong>在Nei2Nei中</strong>，主要假设为： $\mathbb{E}{ y }  = x; \mathbb{E}{ z }  = x + \epsilon $ 其中 $x$ 为不可获得的干净图片;  $ \mathbb{E}{y} \neq \mathbb{E}{z}, y; z$ 是对于同一个sence的真实抽样(抖动，遮挡，光照变化)。基于次假设可以推出：</p>
+<script type="math/tex; mode=display">
+\mathbb{E_{y,z|x}}\{||f_{\theta}(y)-x||_2^2\} = \mathbb{E_{y,z|x}}\{||f_{\theta}(y)-z||_2^2\} - \sigma^2(\hat{y}_i) + 2\epsilon \mathbb{E_{y,z|x}}\{(f_{\theta}(y) -x)^T\}</script><h2 id="Motivation"><a href="#Motivation" class="headerlink" title="Motivation"></a>Motivation</h2><h3 id="Discovery-1"><a href="#Discovery-1" class="headerlink" title="Discovery 1:"></a>Discovery 1:</h3><p>不论是N2N还是Nei2Nei还是其他的去噪方法考虑的是加性噪声： $y = x + n$, 其中 $x$ 是GT无噪声图， $n$ 是加性噪声。如果考虑到ISP的非线性操作，在基于N2N 这类self-supervised training 方法中影响到了其basic 假设即： $\mathbb{E}{ x + n’ }  = \mathbb{E}{ x + n’’ } = x $ 。我们实际采样到的图片是 $x + n’$ 进过ISP (非线性操作)后的图片即:  $x’ = ISP(x+n’)$ 而N2N based method 都直接在 $x’$ domain中假设加性噪声期望等于0，但是实际上 $n’$ 在进过 $ISP(\cdot)$ 这种spatial-correlation 非线性操作后，其噪声没有了噪声空间无关性，换句话说噪声变得depend on the spatial，尽管原来的 $\mathbb{E}{x + n’} = x$ 在进过ISP处理后， $\mathbb{E}{ISP(x + n’)} \neq x$.</p>
+<h3 id="Discovery-2"><a href="#Discovery-2" class="headerlink" title="Discovery 2:"></a>Discovery 2:</h3><p>As demonstrated in Nei2Nei, 我们无法没差别地进行 scenes 一致并且 noise independent 的两次抽样。所有原来假设我们更倾向于Nei2Nei的推导结果，那么怎么去生成 $x+n’$ 和 $x+n’’$ 成为了本文的关键。</p>
+<h3 id="Summery："><a href="#Summery：" class="headerlink" title="Summery："></a>Summery：</h3><p>[x] 考虑ISP的非线性变化，我们得到的img不是直接的img与加性噪声的和， $\mathbb{E}{ISP(x + n’)} \neq x$.<br>[x] 我们需要构造 $x+n’$ 和 $x+n’’$ ，使用NN去拟合 $ISP^{-1}(\cdot)$ 将我们得到的图片逆投影原加性噪声图像的空间中，然后用生成的图片pair (完全满足N2N的假设：无抖动，无光照差…) 去train N2N网络。</p>
+<h2 id="Method"><a href="#Method" class="headerlink" title="Method"></a>Method</h2><p>生成噪声图，Inverse the ISP processing. 构建一个NN去生成满足N2N条件的数据对。进行训练。<br>在测试的时候，只用输入噪声图，加上不同的噪声，生成不同的加性域的 $x+n’$ 和 $x+n’’$ ，输入到N2N网络中进行去噪。<br><img src="/2021/06/03/Self-superviced denoise 新思路/1.jpeg" alt="image|690x360"></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2021/06/03/SA-NET 论文分析-没什么用/" rel="next" title>
+                <i class="fa fa-chevron-left"></i> 
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2021/06/03/Swin transformer 学习2 /" rel="prev" title>
+                 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/avatar.gif" alt="JoeyF">
+            
+              <p class="site-author-name" itemprop="name">JoeyF</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">53</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">25</span>
+                  <span class="site-state-item-name">tags</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/ZhouYiiFeng" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:joeyf.z.y.wen@gmail.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Self-Supervised-Denoise-Method"><span class="nav-number">1.</span> <span class="nav-text">Self-Supervised Denoise Method:</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Introduction"><span class="nav-number">1.1.</span> <span class="nav-text">Introduction</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Related-Work"><span class="nav-number">1.2.</span> <span class="nav-text">Related Work</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Motivation"><span class="nav-number">1.3.</span> <span class="nav-text">Motivation</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Discovery-1"><span class="nav-number">1.3.1.</span> <span class="nav-text">Discovery 1:</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Discovery-2"><span class="nav-number">1.3.2.</span> <span class="nav-text">Discovery 2:</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Summery："><span class="nav-number">1.3.3.</span> <span class="nav-text">Summery：</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Method"><span class="nav-number">1.4.</span> <span class="nav-text">Method</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">JoeyF</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Gemini</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+
+
+  
+
+  
+
+</body>
+</html>
