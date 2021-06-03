@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="Hexo, NexT">
+  <meta name="keywords" content="Denoise,Image Restoration,">
 
 
 
@@ -80,21 +80,22 @@
 
 
 <meta name="description" content="Multi-Stage Progressive Image RestorationMulti-stage networks are effective in high-level vision problems such as pose-estimation, action recognization. 但是目前的的multi-stage的NN要么采用encoder-decoder arch, t">
+<meta name="keywords" content="Denoise,Image Restoration">
 <meta property="og:type" content="article">
-<meta property="og:title" content="JoeyF&#39;s Home">
+<meta property="og:title" content="MPRNet Paper Reading">
 <meta property="og:url" content="http://zhoef.com/2021/06/03/MPRNet CVPR2020 image restoration SOTA/index.html">
 <meta property="og:site_name" content="JoeyF&#39;s Home">
 <meta property="og:description" content="Multi-Stage Progressive Image RestorationMulti-stage networks are effective in high-level vision problems such as pose-estimation, action recognization. 但是目前的的multi-stage的NN要么采用encoder-decoder arch, t">
 <meta property="og:locale" content="default">
-<meta property="og:image" content="upload://9aeWy6w9ViJjMLfLYFtB4C9R6R7.png">
-<meta property="og:image" content="upload://3yBzjv1fH7Ts0LPpBpDrbNyH59N.png">
-<meta property="og:image" content="upload://2O0qKz1Rn6sLvmD1ybT093eA0Xq.jpeg">
-<meta property="og:image" content="upload://7S08jsl7N5u8m84JvDkdalSER51.png">
-<meta property="og:updated_time" content="2021-05-24T09:47:15.070Z">
+<meta property="og:image" content="http://zhoef.com/2021/06/03/MPRNet%20CVPR2020%20image%20restoration%20SOTA/1.png">
+<meta property="og:image" content="http://zhoef.com/2021/06/03/MPRNet%20CVPR2020%20image%20restoration%20SOTA/2.png">
+<meta property="og:image" content="http://zhoef.com/2021/06/03/MPRNet%20CVPR2020%20image%20restoration%20SOTA/3.jpeg">
+<meta property="og:image" content="http://zhoef.com/2021/06/03/MPRNet%20CVPR2020%20image%20restoration%20SOTA/4.png">
+<meta property="og:updated_time" content="2021-06-03T14:56:58.477Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="JoeyF&#39;s Home">
+<meta name="twitter:title" content="MPRNet Paper Reading">
 <meta name="twitter:description" content="Multi-Stage Progressive Image RestorationMulti-stage networks are effective in high-level vision problems such as pose-estimation, action recognization. 但是目前的的multi-stage的NN要么采用encoder-decoder arch, t">
-<meta name="twitter:image" content="upload://9aeWy6w9ViJjMLfLYFtB4C9R6R7.png">
+<meta name="twitter:image" content="http://zhoef.com/2021/06/03/MPRNet%20CVPR2020%20image%20restoration%20SOTA/1.png">
 
 
 
@@ -130,7 +131,7 @@
 
 
 
-  <title> | JoeyF's Home</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  <title>MPRNet Paper Reading | JoeyF's Home</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
   
 
 
@@ -284,7 +285,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline"></h1>
+          <h1 class="post-title" itemprop="name headline">MPRNet Paper Reading</h1>
         
 
         <div class="post-meta">
@@ -296,7 +297,7 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2021-06-03T21:46:41+08:00">
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2021-06-03T21:49:22+08:00">
                 2021-06-03
               </time>
             
@@ -342,21 +343,21 @@
 <p>A supervised attention module (SAM) is plugged between every two stages to enable progressive learning. With the guidance of ground-truth image, this module exploits the previous stage prediction to compute attention maps that are in turn used to refine the previous stage features before being passed to the next stage</p>
 <p> A mechanism of cross-stage feature fusion (CSFF) is added that helps propagating multi-scale contextualized features from the earlier to later stages.</p>
 </blockquote>
-<p><img src="upload://9aeWy6w9ViJjMLfLYFtB4C9R6R7.png" alt="image|673x395"> </p>
-<p><img src="upload://3yBzjv1fH7Ts0LPpBpDrbNyH59N.png" alt="image|690x181"> </p>
+<p><img src="/2021/06/03/MPRNet CVPR2020 image restoration SOTA/1.png" alt="image|673x395"> </p>
+<p><img src="/2021/06/03/MPRNet CVPR2020 image restoration SOTA/2.png" alt="image|690x181"> </p>
 <h3 id="Encoder-decoder-Network"><a href="#Encoder-decoder-Network" class="headerlink" title="Encoder decoder Network:"></a>Encoder decoder Network:</h3><ol>
 <li>Channel attention blocks (CABs) </li>
 <li>The feature maps at U-Net skip connections are also processed with the CAB</li>
 <li>Bilinear upsampling followed by a convolution layer</li>
 </ol>
 <h3 id="Original-Resolution-Subnetwork"><a href="#Original-Resolution-Subnetwork" class="headerlink" title="Original Resolution Subnetwork:"></a>Original Resolution Subnetwork:</h3><p>In order to preserve fine details from the input image to the output image, generates spatially-enriched high-resolution features.</p>
-<h3 id="Supervised-Attention-Module"><a href="#Supervised-Attention-Module" class="headerlink" title="Supervised Attention Module"></a>Supervised Attention Module</h3><p><img src="upload://2O0qKz1Rn6sLvmD1ybT093eA0Xq.jpeg" alt="image|690x398,50%"><br>网络中不同stage中会将上一个stage的信息添加到该层stage 中，通过模块Cross-stage Feature Fusion module. 这样做有3个好处：</p>
+<h3 id="Supervised-Attention-Module"><a href="#Supervised-Attention-Module" class="headerlink" title="Supervised Attention Module"></a>Supervised Attention Module</h3><p><img src="/2021/06/03/MPRNet CVPR2020 image restoration SOTA/3.jpeg" alt="image|690x398,50%"><br>网络中不同stage中会将上一个stage的信息添加到该层stage 中，通过模块Cross-stage Feature Fusion module. 这样做有3个好处：</p>
 <ol>
 <li>可以补充一些由于Up- down sample而丢失的信息。</li>
 <li>上一阶段的特征可以丰富该阶段的特征。</li>
 <li>网络变得更加的稳定。</li>
 </ol>
-<h2 id="消融实验"><a href="#消融实验" class="headerlink" title="消融实验"></a>消融实验</h2><p><img src="upload://7S08jsl7N5u8m84JvDkdalSER51.png" alt="image|635x360,75%"><br>只用unet + unet; 只用SAM; …</p>
+<h2 id="消融实验"><a href="#消融实验" class="headerlink" title="消融实验"></a>消融实验</h2><p><img src="/2021/06/03/MPRNet CVPR2020 image restoration SOTA/4.png" alt="image|635x360,75%"><br>只用unet + unet; 只用SAM; …</p>
 
       
     </div>
@@ -372,6 +373,14 @@
 
     <footer class="post-footer">
       
+        <div class="post-tags">
+          
+            <a href="/tags/Denoise/" rel="tag"># Denoise</a>
+          
+            <a href="/tags/Image-Restoration/" rel="tag"># Image Restoration</a>
+          
+        </div>
+      
 
       
       
@@ -381,8 +390,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2021/06/03/MM2021-paper/" rel="next" title>
-                <i class="fa fa-chevron-left"></i> 
+              <a href="/2021/06/03/VIT transformer/" rel="next" title="VIT Paper Reading">
+                <i class="fa fa-chevron-left"></i> VIT Paper Reading
               </a>
             
           </div>
@@ -390,10 +399,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2021/06/03/Multi-patch Network for Image Deblurring 1/" rel="prev" title>
-                 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -485,7 +490,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">25</span>
+                  <span class="site-state-item-count">31</span>
                   <span class="site-state-item-name">tags</span>
                 </a>
               </div>

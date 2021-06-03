@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="Hexo, NexT">
+  <meta name="keywords" content="Denoise,">
 
 
 
@@ -80,17 +80,18 @@
 
 
 <meta name="description" content="Learning Enriched Features for Real Image Restoration and Enhancement The MRB whose main branch is dedicated to maintaining spatially-precise high-resolution representations through the entire network">
+<meta name="keywords" content="Denoise">
 <meta property="og:type" content="article">
-<meta property="og:title" content="JoeyF&#39;s Home">
+<meta property="og:title" content="MIRNet Paper Reading">
 <meta property="og:url" content="http://zhoef.com/2021/06/03/MIRNet ECCV2020 SOTA/index.html">
 <meta property="og:site_name" content="JoeyF&#39;s Home">
 <meta property="og:description" content="Learning Enriched Features for Real Image Restoration and Enhancement The MRB whose main branch is dedicated to maintaining spatially-precise high-resolution representations through the entire network">
 <meta property="og:locale" content="default">
 <meta property="og:image" content="http://zhoef.com/2021/06/03/MIRNet%20ECCV2020%20SOTA/1.jpeg">
 <meta property="og:image" content="http://zhoef.com/2021/06/03/MIRNet%20ECCV2020%20SOTA/2.png">
-<meta property="og:updated_time" content="2021-05-24T10:19:06.347Z">
+<meta property="og:updated_time" content="2021-06-03T13:52:33.216Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="JoeyF&#39;s Home">
+<meta name="twitter:title" content="MIRNet Paper Reading">
 <meta name="twitter:description" content="Learning Enriched Features for Real Image Restoration and Enhancement The MRB whose main branch is dedicated to maintaining spatially-precise high-resolution representations through the entire network">
 <meta name="twitter:image" content="http://zhoef.com/2021/06/03/MIRNet%20ECCV2020%20SOTA/1.jpeg">
 
@@ -128,7 +129,7 @@
 
 
 
-  <title> | JoeyF's Home</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  <title>MIRNet Paper Reading | JoeyF's Home</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
   
 
 
@@ -282,7 +283,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline"></h1>
+          <h1 class="post-title" itemprop="name headline">MIRNet Paper Reading</h1>
         
 
         <div class="post-meta">
@@ -294,7 +295,7 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2021-06-03T21:46:41+08:00">
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2021-06-03T21:49:22+08:00">
                 2021-06-03
               </time>
             
@@ -337,13 +338,7 @@
 </blockquote>
 <p>主支路采用的是full-size的卷积，在每一个串联的block中，将feat进行下采，然后过DAU，然后进行SKFF。</p>
 <p><img src="/2021/06/03/MIRNet ECCV2020 SOTA/1.jpeg" alt="image|690x328"> </p>
-<details>
-<summary>MRB</summary>
-
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">forward</span><span class="params">(self, x)</span>:</span></span><br><span class="line">    inp = x.clone()</span><br><span class="line">    <span class="comment">#col 1 only</span></span><br><span class="line">    blocks_out = []</span><br><span class="line">    <span class="keyword">for</span> j <span class="keyword">in</span> range(self.height):</span><br><span class="line">        <span class="keyword">if</span> j==<span class="number">0</span>:</span><br><span class="line">            inp = self.blocks[j][<span class="number">0</span>](inp)</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            inp = self.blocks[j][<span class="number">0</span>](self.down[<span class="string">f'<span class="subst">&#123;inp.size(<span class="number">1</span>)&#125;</span>_<span class="subst">&#123;<span class="number">2</span>&#125;</span>'</span>](inp))</span><br><span class="line">        blocks_out.append(inp)</span><br><span class="line"></span><br><span class="line">    <span class="comment">#rest of grid</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">1</span>,self.width):</span><br><span class="line">        <span class="comment">#Mesh</span></span><br><span class="line">        <span class="comment"># Replace condition(i%2!=0) with True(Mesh) or False(Plain)</span></span><br><span class="line">        <span class="comment"># if i%2!=0:</span></span><br><span class="line">        <span class="keyword">if</span> <span class="literal">True</span>:</span><br><span class="line">            tmp=[]</span><br><span class="line">            <span class="keyword">for</span> j <span class="keyword">in</span> range(self.height):</span><br><span class="line">                TENSOR = []</span><br><span class="line">                nfeats = (<span class="number">2</span>**j)*self.n_feat</span><br><span class="line">                <span class="keyword">for</span> k <span class="keyword">in</span> range(self.height):</span><br><span class="line">                    TENSOR.append(self.select_up_down(blocks_out[k], j, k)) </span><br><span class="line"></span><br><span class="line">                selective_kernel_fusion = self.selective_kernel[j](TENSOR)</span><br><span class="line">                tmp.append(selective_kernel_fusion)</span><br><span class="line">        <span class="comment">#Plain</span></span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            tmp = blocks_out</span><br><span class="line">        <span class="comment">#Forward through either mesh or plain</span></span><br><span class="line">        <span class="keyword">for</span> j <span class="keyword">in</span> range(self.height):</span><br><span class="line">            blocks_out[j] = self.blocks[j][i](tmp[j])</span><br><span class="line"></span><br><span class="line">    <span class="comment">#Sum after grid</span></span><br><span class="line">    out=[]</span><br><span class="line">    <span class="keyword">for</span> k <span class="keyword">in</span> range(self.height):</span><br><span class="line">        out.append(self.select_last_up(blocks_out[k], k))  </span><br><span class="line"></span><br><span class="line">    out = self.selective_kernel[<span class="number">0</span>](out)</span><br><span class="line"></span><br><span class="line">    out = self.conv_out(out)</span><br><span class="line">    out = out + x</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> out</span><br></pre></td></tr></table></figure>
-
-</details>
-
+<p>MRB<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">forward</span><span class="params">(self, x)</span>:</span></span><br><span class="line">    inp = x.clone()</span><br><span class="line">    <span class="comment">#col 1 only</span></span><br><span class="line">    blocks_out = []</span><br><span class="line">    <span class="keyword">for</span> j <span class="keyword">in</span> range(self.height):</span><br><span class="line">        <span class="keyword">if</span> j==<span class="number">0</span>:</span><br><span class="line">            inp = self.blocks[j][<span class="number">0</span>](inp)</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            inp = self.blocks[j][<span class="number">0</span>](self.down[<span class="string">f'<span class="subst">&#123;inp.size(<span class="number">1</span>)&#125;</span>_<span class="subst">&#123;<span class="number">2</span>&#125;</span>'</span>](inp))</span><br><span class="line">        blocks_out.append(inp)</span><br><span class="line"></span><br><span class="line">    <span class="comment">#rest of grid</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">1</span>,self.width):</span><br><span class="line">        <span class="comment">#Mesh</span></span><br><span class="line">        <span class="comment"># Replace condition(i%2!=0) with True(Mesh) or False(Plain)</span></span><br><span class="line">        <span class="comment"># if i%2!=0:</span></span><br><span class="line">        <span class="keyword">if</span> <span class="literal">True</span>:</span><br><span class="line">            tmp=[]</span><br><span class="line">            <span class="keyword">for</span> j <span class="keyword">in</span> range(self.height):</span><br><span class="line">                TENSOR = []</span><br><span class="line">                nfeats = (<span class="number">2</span>**j)*self.n_feat</span><br><span class="line">                <span class="keyword">for</span> k <span class="keyword">in</span> range(self.height):</span><br><span class="line">                    TENSOR.append(self.select_up_down(blocks_out[k], j, k)) </span><br><span class="line"></span><br><span class="line">                selective_kernel_fusion = self.selective_kernel[j](TENSOR)</span><br><span class="line">                tmp.append(selective_kernel_fusion)</span><br><span class="line">        <span class="comment">#Plain</span></span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            tmp = blocks_out</span><br><span class="line">        <span class="comment">#Forward through either mesh or plain</span></span><br><span class="line">        <span class="keyword">for</span> j <span class="keyword">in</span> range(self.height):</span><br><span class="line">            blocks_out[j] = self.blocks[j][i](tmp[j])</span><br><span class="line"></span><br><span class="line">    <span class="comment">#Sum after grid</span></span><br><span class="line">    out=[]</span><br><span class="line">    <span class="keyword">for</span> k <span class="keyword">in</span> range(self.height):</span><br><span class="line">        out.append(self.select_last_up(blocks_out[k], k))  </span><br><span class="line"></span><br><span class="line">    out = self.selective_kernel[<span class="number">0</span>](out)</span><br><span class="line"></span><br><span class="line">    out = self.conv_out(out)</span><br><span class="line">    out = out + x</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> out</span><br></pre></td></tr></table></figure></p>
 <p>每一个MRB看作2维的table，用height 和width表示层数和每层经过的卷积数。值得注意的是每个特征的scale不同，具体fuse方法是在SKFF中。</p>
 <h2 id="SKFF："><a href="#SKFF：" class="headerlink" title="SKFF："></a>SKFF：</h2><p>在输入SKFF之前，每一个SKFF都会选择3个scale的特征，以当前height为例，上层的下采，下层的上采，3个大小一致的输入到SKFF中。</p>
 <p><details></details></p>
@@ -367,6 +362,12 @@
 
     <footer class="post-footer">
       
+        <div class="post-tags">
+          
+            <a href="/tags/Denoise/" rel="tag"># Denoise</a>
+          
+        </div>
+      
 
       
       
@@ -376,8 +377,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2021/06/03/Local Relation Networks for Image Recognition/" rel="next" title>
-                <i class="fa fa-chevron-left"></i> 
+              <a href="/2021/06/03/Deep Universal Blind Image Denoising/" rel="next" title="Deep Universal Blind Image Denoising">
+                <i class="fa fa-chevron-left"></i> Deep Universal Blind Image Denoising
               </a>
             
           </div>
@@ -386,8 +387,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2021/06/03/MM2021-paper/" rel="prev" title>
-                 <i class="fa fa-chevron-right"></i>
+              <a href="/2021/06/03/Local Relation Networks for Image Recognition/" rel="prev" title="Local Relation Networks for Image Recognition Paper Reading">
+                Local Relation Networks for Image Recognition Paper Reading <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -480,7 +481,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">25</span>
+                  <span class="site-state-item-count">31</span>
                   <span class="site-state-item-name">tags</span>
                 </a>
               </div>
