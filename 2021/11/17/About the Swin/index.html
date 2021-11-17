@@ -1,0 +1,850 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Transformer,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="SwinTransformer: Hierarchical Vision Transformer using Shifted Windows  提出了一个Hierarchical 架构的Transformer，让patch大小从小到大进行增加。为了减少计算cost，transformer的计算只在每一个window里面进行，并且为了消除只在window进行self-attention的操作，提出了">
+<meta name="keywords" content="Transformer">
+<meta property="og:type" content="article">
+<meta property="og:title" content="About The Swin">
+<meta property="og:url" content="http://zhoef.com/2021/11/17/About the Swin/index.html">
+<meta property="og:site_name" content="JoeyF&#39;s Home">
+<meta property="og:description" content="SwinTransformer: Hierarchical Vision Transformer using Shifted Windows  提出了一个Hierarchical 架构的Transformer，让patch大小从小到大进行增加。为了减少计算cost，transformer的计算只在每一个window里面进行，并且为了消除只在window进行self-attention的操作，提出了">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="http://zhoef.com/2021/11/17/About%20the%20Swin/swin_1.jpeg">
+<meta property="og:image" content="http://zhoef.com/2021/11/17/About%20the%20Swin/swin_2.png">
+<meta property="og:image" content="http://zhoef.com/2021/11/17/About%20the%20Swin/swin_3.png">
+<meta property="og:image" content="http://zhoef.com/2021/11/17/About%20the%20Swin/swin_4.png">
+<meta property="og:image" content="http://zhoef.com/2021/11/17/About%20the%20Swin/swin_5.png">
+<meta property="og:image" content="http://zhoef.com/2021/11/17/About%20the%20Swin/zyf/doc/daliy/Month-9/imgs/swin_6.png">
+<meta property="og:image" content="http://zhoef.com/2021/11/17/About%20the%20Swin/swin_7.png">
+<meta property="og:updated_time" content="2021-11-17T09:55:58.770Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="About The Swin">
+<meta name="twitter:description" content="SwinTransformer: Hierarchical Vision Transformer using Shifted Windows  提出了一个Hierarchical 架构的Transformer，让patch大小从小到大进行增加。为了减少计算cost，transformer的计算只在每一个window里面进行，并且为了消除只在window进行self-attention的操作，提出了">
+<meta name="twitter:image" content="http://zhoef.com/2021/11/17/About%20the%20Swin/swin_1.jpeg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://zhoef.com/2021/11/17/About the Swin/">
+
+
+
+
+
+  <title>About The Swin | JoeyF's Home</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="default">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">JoeyF's Home</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            About
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://zhoef.com/2021/11/17/About the Swin/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="JoeyF">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="JoeyF's Home">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">About The Swin</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2021-11-17T21:49:22+08:00">
+                2021-11-17
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>SwinTransformer: Hierarchical Vision Transformer using Shifted Windows</p>
+<ul>
+<li>提出了一个Hierarchical 架构的Transformer，让patch大小从小到大进行增加。为了减少计算cost，transformer的计算只在每一个window里面进行，并且为了消除只在window进行self-attention的操作，提出了使用shift-win的操作方式，让不同patch能够不局限于当前相邻的win分块。<ol>
+<li>提出了一种Hierarchical transformer， 每一层的patch大小不同，每一层会融合相邻patch得到一个更大的patch。</li>
+<li>提出了一种win-shift方式，让网络的关注不limit到固定win中。</li>
+</ol>
+</li>
+<li>主要区别如文章teaser所示：</li>
+</ul>
+<p><img src="/2021/11/17/About the Swin/swin_1.jpeg" width="500px"><br><!-- <img src=D:\zyf\doc\daliy\Month-9\imgs\swin_1.jpeg width="500px"> --></p>
+<h2 id="Method"><a href="#Method" class="headerlink" title="Method"></a>Method</h2><p>输入图像首先进行patch partition, 每个patch大小是 $4 \times 4$ 大小，经过线性映射后输入到transformer中。<br><img src="/2021/11/17/About the Swin/swin_2.png" width="800px"><br><!-- <img src=D:\zyf\doc\daliy\Month-9\imgs\swin_2.png width="800px"> --></p>
+<p>奇数层的Transformer 中的win不进行偏移（对应shift_size=0），每一个patch在win内部做self-attention。</p>
+<h2 id="Shift-Win"><a href="#Shift-Win" class="headerlink" title="Shift Win"></a>Shift Win</h2><p>具体的将原来的图像feat.进行roll 操作，然后取win。这样每一个win所用于计算attention的patch就不局限与之前的win。增加了transformer的感受野。</p>
+<blockquote>
+<p>After this shift,a batched window may be composed of several sub-windows that are not adjacent in the feature map, so a masking mechanism is employed to limit self-attention computation to within each sub-window. </p>
+</blockquote>
+<p><img src="/2021/11/17/About the Swin/swin_3.png" width="800px"><br><!-- <img src=D:\zyf\doc\daliy\Month-9\imgs\swin_3.png width="700px"> --></p>
+<p><img src="/2021/11/17/About the Swin/swin_4.png" width="800px"><br><!-- <img src=D:\zyf\doc\daliy\Month-9\imgs\swin_4.png width="500px"> --></p>
+<h2 id="Code-Analysis"><a href="#Code-Analysis" class="headerlink" title="Code Analysis"></a>Code Analysis</h2><p><strong>Framework：</strong></p>
+<ul>
+<li>patch_embed(x) 将  img embed 到特征空间， </li>
+<li>然后 layers 依次过 BasicLayer ，最后实现分类</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">SwinTransformer</span><span class="params">(nn.Module)</span>:</span></span><br><span class="line">    ...</span><br><span class="line">	<span class="function"><span class="keyword">def</span> <span class="title">forward_features</span><span class="params">(self, x)</span>:</span></span><br><span class="line">        x = self.patch_embed(x)</span><br><span class="line">        <span class="keyword">if</span> self.ape:</span><br><span class="line">            x = x + self.absolute_pos_embed</span><br><span class="line">        x = self.pos_drop(x)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> layer <span class="keyword">in</span> self.layers:</span><br><span class="line">            x = layer(x)</span><br><span class="line"></span><br><span class="line">        x = self.norm(x)  <span class="comment"># B L C</span></span><br><span class="line">        x = self.avgpool(x.transpose(<span class="number">1</span>, <span class="number">2</span>))  <span class="comment"># B C 1</span></span><br><span class="line">        x = torch.flatten(x, <span class="number">1</span>)</span><br><span class="line">        <span class="keyword">return</span> x  <span class="comment"># </span></span><br><span class="line">    ...</span><br><span class="line">	<span class="comment"># self.head = nn.Linear(self.num_features, num_classes) if num_classes &gt; 0 else nn.Identity()</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">forward</span><span class="params">(self, x)</span>:</span></span><br><span class="line">        x = self.forward_features(x)</span><br><span class="line">        x = self.head(x)</span><br><span class="line">        <span class="keyword">return</span> x</span><br></pre></td></tr></table></figure>
+<p><strong>PatchEmbed:</strong></p>
+<ul>
+<li><p>首先是对 patch 的 embed ，patch 之间没有重叠 <code>self.proj = nn.Conv2d(in_chans, embed_dim, kernel_size=patch_size, stride=patch_size)</code></p>
+</li>
+<li><p>其次是对 window 进行位置编码，每一个 window 不同</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">self.absolute_pos_embed = nn.Parameter(torch.zeros(<span class="number">1</span>, num_patches, embed_dim))</span><br><span class="line">            trunc_normal_(self.absolute_pos_embed, std=<span class="number">.02</span>)</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>值得注意的是，<code>x = self.proj(x).flatten(2).transpose(1, 2)  # B Ph*Pw C</code> 在之后的传播都是基于 token 来进行传播的，<code>token [1, 96]</code>。有 Ph * Pw 个token <strong>这里 x 是 [B, H/4* W/4, C]</strong></p>
+</li>
+</ul>
+<p><strong>SwinTransformerBlock：</strong></p>
+<ul>
+<li><p>对于任意一个输入 feature </p>
+<ul>
+<li><p>先对其划分 window ： <code>x_windows = window_partition(shifted_x, self.window_size); self.window_size=7</code> 得到 <code>nW*B, window_size, window_size, C</code> 的输出。每一个 window 都被放在了 batch 中因为他们会经过相同的处理。</p>
+</li>
+<li><p>如果 <code>self.shift_size</code> 即 window 需要偏移，那么需要对特征图 x 进行 roll 处理。并且在 <code>__init__</code> 中构 maks：作者在偶数层 SwinTransformerBlock 中会 roll 一次。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> self.shift_size &gt; <span class="number">0</span>:</span><br><span class="line">    <span class="comment"># calculate attention mask for SW-MSA</span></span><br><span class="line">    H, W = self.input_resolution</span><br><span class="line">    img_mask = torch.zeros((<span class="number">1</span>, H, W, <span class="number">1</span>))  <span class="comment"># 1 H W 1</span></span><br><span class="line">    h_slices = (slice(<span class="number">0</span>, -self.window_size),</span><br><span class="line">                slice(-self.window_size, -self.shift_size),</span><br><span class="line">                slice(-self.shift_size, <span class="literal">None</span>))</span><br><span class="line">    w_slices = (slice(<span class="number">0</span>, -self.window_size),</span><br><span class="line">                slice(-self.window_size, -self.shift_size),</span><br><span class="line">                slice(-self.shift_size, <span class="literal">None</span>))</span><br><span class="line">    cnt = <span class="number">0</span></span><br><span class="line">    <span class="keyword">for</span> h <span class="keyword">in</span> h_slices:</span><br><span class="line">        <span class="keyword">for</span> w <span class="keyword">in</span> w_slices:</span><br><span class="line">            img_mask[:, h, w, :] = cnt</span><br><span class="line">            cnt += <span class="number">1</span></span><br><span class="line">    </span><br><span class="line">    mask_windows = window_partition(img_mask, self.window_size)  <span class="comment"># nW, window_size, window_size, 1</span></span><br><span class="line">    mask_windows = mask_windows.view(<span class="number">-1</span>, self.window_size * self.window_size)</span><br><span class="line">    attn_mask = mask_windows.unsqueeze(<span class="number">1</span>) - mask_windows.unsqueeze(<span class="number">2</span>)</span><br><span class="line">    attn_mask = attn_mask.masked_fill(attn_mask != <span class="number">0</span>, float(<span class="number">-100.0</span>)).masked_fill(attn_mask == <span class="number">0</span>, float(<span class="number">0.0</span>))</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>下一步就是将一个 window 中的所有值都换成列向量 <code>x_windows = nW*B, window_size*window_size, C</code> 然后对该向量做 attention，相当于 window 中每一个点做attention。</p>
+</li>
+<li><p>最后将特征还原</p>
+</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">forward</span><span class="params">(self, x)</span>:</span></span><br><span class="line">    H, W = self.input_resolution</span><br><span class="line">    B, L, C = x.shape</span><br><span class="line">    <span class="keyword">assert</span> L == H * W, <span class="string">"input feature has wrong size"</span></span><br><span class="line"></span><br><span class="line">    shortcut = x</span><br><span class="line">    x = self.norm1(x)</span><br><span class="line">    x = x.view(B, H, W, C)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># cyclic shift</span></span><br><span class="line">    <span class="keyword">if</span> self.shift_size &gt; <span class="number">0</span>:</span><br><span class="line">        shifted_x = torch.roll(x, shifts=(-self.shift_size, -self.shift_size), dims=(<span class="number">1</span>, <span class="number">2</span>))</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        shifted_x = x</span><br><span class="line"></span><br><span class="line">    <span class="comment"># partition windows</span></span><br><span class="line">    x_windows = window_partition(shifted_x, self.window_size)  <span class="comment"># nW*B, window_size, window_size, C</span></span><br><span class="line">    x_windows = x_windows.view(<span class="number">-1</span>, self.window_size * self.window_size, C)  <span class="comment"># nW*B, window_size*window_size, C</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># W-MSA/SW-MSA</span></span><br><span class="line">    attn_windows = self.attn(x_windows, mask=self.attn_mask)  <span class="comment"># nW*B, window_size*window_size, C</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># merge windows</span></span><br><span class="line">    attn_windows = attn_windows.view(<span class="number">-1</span>, self.window_size, self.window_size, C)</span><br><span class="line">    shifted_x = window_reverse(attn_windows, self.window_size, H, W)  <span class="comment"># B H' W' C</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># reverse cyclic shift</span></span><br><span class="line">    <span class="keyword">if</span> self.shift_size &gt; <span class="number">0</span>:</span><br><span class="line">        x = torch.roll(shifted_x, shifts=(self.shift_size, self.shift_size), dims=(<span class="number">1</span>, <span class="number">2</span>))</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        x = shifted_x</span><br><span class="line">    x = x.view(B, H * W, C)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># FFN</span></span><br><span class="line">    x = shortcut + self.drop_path(x)</span><br><span class="line">    x = x + self.drop_path(self.mlp(self.norm2(x)))</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> x</span><br></pre></td></tr></table></figure>
+<p><strong>WindowAttention:</strong></p>
+<ul>
+<li><p>qkv 计算：输出 channel 大小为3倍，对应了不同的 qkv</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">self.qkv = nn.Linear(dim, dim * <span class="number">3</span>, bias=qkv_bias)</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>计算，dim 中包含了 num_heads 的分组。</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">qkv = self.qkv(x).reshape(B_, N, <span class="number">3</span>, self.num_heads, C // self.num_heads).permute(<span class="number">2</span>, <span class="number">0</span>, <span class="number">3</span>, <span class="number">1</span>, <span class="number">4</span>)</span><br><span class="line">q, k, v = qkv[<span class="number">0</span>], qkv[<span class="number">1</span>], qkv[<span class="number">2</span>]</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>multi-head <code>attn=[-1, 3, 49, 49]</code> <code>q=[-1, 3, 49, 32]</code></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">attn = (q @ k.transpose(<span class="number">-2</span>, <span class="number">-1</span>))</span><br></pre></td></tr></table></figure>
+<p>高维矩阵乘法：<a href="https://zhuanlan.zhihu.com/p/337829793" target="_blank" rel="noopener">知乎</a></p>
+<p>两个高维矩阵@ <code>a:shape=[2,2,3]</code>和 <code>b:shape=[2,3,2]</code> 计算的时候把 a 的第一个 shape=[2,3] 的矩阵和 b 的第一个 shape=[3,2] 的矩阵相乘，得到的shape=[2,2]，同理，再把 a，b 的第二个 shape=[2,3] 的矩阵相乘，得到的 shape=[2,2] 。 最终把结果堆叠在一起，就是2个 shape=[2,2] 的矩阵堆叠在一起</p>
+</li>
+</ul>
+<p><strong>Attention Mask：</strong></p>
+<ul>
+<li><p>仅仅使用固定模式的 window， 缺少了 window 与 window 之间的相关性，作者提出使用 shifted window partitioning 。当使用 shift window 操作的时候，需要计算 attention mask 来进行对 attention 的修改。<a href="https://zhuanlan.zhihu.com/p/367111046" target="_blank" rel="noopener">知乎</a></p>
+<ul>
+<li><p>为什么需要 maks 对 attention 进行修改 ？</p>
+<p><img src="/2021/11/17/About the Swin/swin_5.png" width="500"></p>
+<!-- <img src=D:\zyf\doc\daliy\Month-9\imgs\swin_5.png width="500px"> -->
+<p><strong>window的个数翻倍了</strong>，由原本四个窗口变成了9个窗口。而作者并没有区别地去实现 9 窗的代码，而是利用了 mask 来进行 对  方式一 得到的 attn 进行再处理最终得到 方式二的每一个 window 的 attention。(<em>注意图方式中，红色框内部计算 self attention</em>)</p>
+</li>
+</ul>
+</li>
+<li><p>我们需要计算每个块中的 self attention (块0， 块1 …..) 最直接的方式是把每一个不同大小的块 (window) 给 partitioning 出来，然后计算。但是每个块所含的pixel 数量不同，这无法并行。于是采用方式二。</p>
+<p><img src="/2021/11/17/About the Swin/zyf\doc\daliy\Month-9\imgs\swin_6.png" width="500px"></p>
+<ul>
+<li><p>先对原 feature 进行 roll 操作得到图右边的样式。然后依旧计算 <code>2x2</code> 的 window 的 self attention </p>
+<ol>
+<li><p>对于 4号 window，其计算的就是其本身的self attention，不用改变，</p>
+</li>
+<li><p>对于 5，3号 window，我们之前计算了该合并窗口 (5,3 所组成的那个 1/4 窗口) 但是需要的其实是 5、3号内部的 S.A.  对于该窗口而言，我们已得到两两之间的attention，但是我们只需要各自内部 (inner 5, inner 3) 的不需要交叉的 (inter 5,3) 。所以<br> <img src="/2021/11/17/About the Swin/swin_7.png" width="500"></p>
+<!-- <img src=D:\zyf\doc\daliy\Month-9\imgs\swin_7.png width="500px"> -->
+</li>
+</ol>
+</li>
+</ul>
+</li>
+</ul>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Transformer/" rel="tag"># Transformer</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2021/11/17/About The TransformerVSR/" rel="next" title="About The TransformerVSR">
+                <i class="fa fa-chevron-left"></i> About The TransformerVSR
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2021/11/17/About the Register in Py/" rel="prev" title="Python 中的动态注册">
+                Python 中的动态注册 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/avatar.gif" alt="JoeyF">
+            
+              <p class="site-author-name" itemprop="name">JoeyF</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">60</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">36</span>
+                  <span class="site-state-item-name">tags</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/ZhouYiiFeng" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:joeyf.z.y.wen@gmail.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Method"><span class="nav-number">1.</span> <span class="nav-text">Method</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Shift-Win"><span class="nav-number">2.</span> <span class="nav-text">Shift Win</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Code-Analysis"><span class="nav-number">3.</span> <span class="nav-text">Code Analysis</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">JoeyF</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Gemini</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+
+
+  
+
+  
+
+</body>
+</html>

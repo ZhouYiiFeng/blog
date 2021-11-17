@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Transformer,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="Uformer“”” Uformer: A General U-Shaped Transformer for Image RestorationZhendong Wang, Xiaodong Cun, Jianmin Bao, Jianzhuang Liuhttps://arxiv.org/abs/2106.03106“”” 123456789101112131415161718192021222">
+<meta name="keywords" content="Transformer">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Uformer">
+<meta property="og:url" content="http://zhoef.com/2021/11/17/Uformer/index.html">
+<meta property="og:site_name" content="JoeyF&#39;s Home">
+<meta property="og:description" content="Uformer“”” Uformer: A General U-Shaped Transformer for Image RestorationZhendong Wang, Xiaodong Cun, Jianmin Bao, Jianzhuang Liuhttps://arxiv.org/abs/2106.03106“”” 123456789101112131415161718192021222">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2021-11-17T09:56:55.388Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Uformer">
+<meta name="twitter:description" content="Uformer“”” Uformer: A General U-Shaped Transformer for Image RestorationZhendong Wang, Xiaodong Cun, Jianmin Bao, Jianzhuang Liuhttps://arxiv.org/abs/2106.03106“”” 123456789101112131415161718192021222">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://zhoef.com/2021/11/17/Uformer/">
+
+
+
+
+
+  <title>Uformer | JoeyF's Home</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="default">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">JoeyF's Home</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            About
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://zhoef.com/2021/11/17/Uformer/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="JoeyF">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="JoeyF's Home">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Uformer</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2021-11-17T21:49:22+08:00">
+                2021-11-17
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="Uformer"><a href="#Uformer" class="headerlink" title="Uformer"></a>Uformer</h1><p>“””</p>
+<h2 id="Uformer-A-General-U-Shaped-Transformer-for-Image-Restoration"><a href="#Uformer-A-General-U-Shaped-Transformer-for-Image-Restoration" class="headerlink" title="Uformer: A General U-Shaped Transformer for Image Restoration"></a>Uformer: A General U-Shaped Transformer for Image Restoration</h2><h2 id="Zhendong-Wang-Xiaodong-Cun-Jianmin-Bao-Jianzhuang-Liu"><a href="#Zhendong-Wang-Xiaodong-Cun-Jianmin-Bao-Jianzhuang-Liu" class="headerlink" title="Zhendong Wang, Xiaodong Cun, Jianmin Bao, Jianzhuang Liu"></a>Zhendong Wang, Xiaodong Cun, Jianmin Bao, Jianzhuang Liu</h2><h2 id="https-arxiv-org-abs-2106-03106"><a href="#https-arxiv-org-abs-2106-03106" class="headerlink" title="https://arxiv.org/abs/2106.03106"></a><a href="https://arxiv.org/abs/2106.03106" target="_blank" rel="noopener">https://arxiv.org/abs/2106.03106</a></h2><p>“””</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Uformer</span><span class="params">(nn.Module)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, img_size=<span class="number">128</span>, in_chans=<span class="number">3</span>,</span></span></span><br><span class="line"><span class="function"><span class="params">                 embed_dim=<span class="number">32</span>, depths=[<span class="number">2</span>, <span class="number">2</span>, <span class="number">2</span>, <span class="number">2</span>, <span class="number">2</span>, <span class="number">2</span>, <span class="number">2</span>, <span class="number">2</span>, <span class="number">2</span>], num_heads=[<span class="number">1</span>, <span class="number">2</span>, <span class="number">4</span>, <span class="number">8</span>, <span class="number">16</span>, <span class="number">16</span>, <span class="number">8</span>, <span class="number">4</span>, <span class="number">2</span>],</span></span></span><br><span class="line"><span class="function"><span class="params">                 win_size=<span class="number">8</span>, mlp_ratio=<span class="number">4.</span>, qkv_bias=True, qk_scale=None,</span></span></span><br><span class="line"><span class="function"><span class="params">                 drop_rate=<span class="number">0.</span>, attn_drop_rate=<span class="number">0.</span>, drop_path_rate=<span class="number">0.1</span>,</span></span></span><br><span class="line"><span class="function"><span class="params">                 norm_layer=nn.LayerNorm, patch_norm=True,</span></span></span><br><span class="line"><span class="function"><span class="params">                 use_checkpoint=False, token_projection=<span class="string">'linear'</span>, token_mlp=<span class="string">'ffn'</span>, se_layer=False,</span></span></span><br><span class="line"><span class="function"><span class="params">                 dowsample=Downsample, upsample=Upsample, **kwargs)</span>:</span></span><br><span class="line">        super().__init__()</span><br><span class="line">        ...</span><br><span class="line">        </span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">forward</span><span class="params">(self, x, mask=None)</span>:</span></span><br><span class="line">        <span class="comment"># Input Projection</span></span><br><span class="line">        y = self.input_proj(x)</span><br><span class="line">        y = self.pos_drop(y)</span><br><span class="line">        <span class="comment"># Encoder</span></span><br><span class="line">        conv0 = self.encoderlayer_0(y, mask=mask)</span><br><span class="line">        pool0 = self.dowsample_0(conv0)</span><br><span class="line">        conv1 = self.encoderlayer_1(pool0, mask=mask)</span><br><span class="line">        pool1 = self.dowsample_1(conv1)</span><br><span class="line">        conv2 = self.encoderlayer_2(pool1, mask=mask)</span><br><span class="line">        pool2 = self.dowsample_2(conv2)</span><br><span class="line">        conv3 = self.encoderlayer_3(pool2, mask=mask)</span><br><span class="line">        pool3 = self.dowsample_3(conv3)</span><br><span class="line"></span><br><span class="line">        <span class="comment"># Bottleneck</span></span><br><span class="line">        conv4 = self.conv(pool3, mask=mask)</span><br><span class="line"></span><br><span class="line">        <span class="comment"># Decoder</span></span><br><span class="line">        up0 = self.upsample_0(conv4)</span><br><span class="line">        deconv0 = torch.cat([up0, conv3], <span class="number">-1</span>)</span><br><span class="line">        deconv0 = self.decoderlayer_0(deconv0, mask=mask)</span><br><span class="line"></span><br><span class="line">        up1 = self.upsample_1(deconv0)</span><br><span class="line">        deconv1 = torch.cat([up1, conv2], <span class="number">-1</span>)</span><br><span class="line">        deconv1 = self.decoderlayer_1(deconv1, mask=mask)</span><br><span class="line"></span><br><span class="line">        up2 = self.upsample_2(deconv1)</span><br><span class="line">        deconv2 = torch.cat([up2, conv1], <span class="number">-1</span>)</span><br><span class="line">        deconv2 = self.decoderlayer_2(deconv2, mask=mask)</span><br><span class="line"></span><br><span class="line">        up3 = self.upsample_3(deconv2)</span><br><span class="line">        deconv3 = torch.cat([up3, conv0], <span class="number">-1</span>)</span><br><span class="line">        deconv3 = self.decoderlayer_3(deconv3, mask=mask)</span><br><span class="line"></span><br><span class="line">        <span class="comment"># Output Projection</span></span><br><span class="line">        y = self.output_proj(deconv3)</span><br><span class="line">        <span class="keyword">return</span> x + y</span><br></pre></td></tr></table></figure>
+<p>整体结构为Unet, 每一层Encoder stage 后跟下采，下采是kernel_size=4的，步长2的卷积，<strong>注意网络是采用的B,*H*W, C来传播的</strong>, HW是window的大小，这里取得是8*8。这里需要打破自己之前网络传输以HW来传播，其实HW(2D)和1D是一样得，而1D更加方便理解计算ATTention。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Downsample</span><span class="params">(nn.Module)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, in_channel, out_channel)</span>:</span></span><br><span class="line">        super(Downsample, self).__init__()</span><br><span class="line">        self.conv = nn.Sequential(</span><br><span class="line">            nn.Conv2d(in_channel, out_channel, kernel_size=<span class="number">4</span>, stride=<span class="number">2</span>, padding=<span class="number">1</span>),</span><br><span class="line"></span><br><span class="line">        )</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">forward</span><span class="params">(self, x)</span>:</span></span><br><span class="line">        B, L, C = x.shape</span><br><span class="line">        <span class="comment"># import pdb;pdb.set_trace()</span></span><br><span class="line">        H = int(math.sqrt(L))</span><br><span class="line">        W = int(math.sqrt(L))</span><br><span class="line">        x = x.transpose(<span class="number">1</span>, <span class="number">2</span>).contiguous().view(B, C, H, W)</span><br><span class="line">        out = self.conv(x).flatten(<span class="number">2</span>).transpose(<span class="number">1</span>, <span class="number">2</span>).contiguous()  <span class="comment"># B H*W C</span></span><br><span class="line">        <span class="keyword">return</span> out</span><br></pre></td></tr></table></figure></p>
+<p>每一个Encoder、Decoder stage由<code>BasicUformerLayer</code>组成。由Decoder的skip操作不同，分为3中:<code>Concat</code>, <code>Cross</code>, <code>ConcatCross</code>, 最优结achieved by <code>Uformer32-Concat-&gt;39.77</code>. Encoder都是 <code>BasicUformerLayer</code>组成。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">BasicUformerLayer</span><span class="params">(nn.Module)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, dim, output_dim, input_resolution, depth, num_heads, win_size,</span></span></span><br><span class="line"><span class="function"><span class="params">                 mlp_ratio=<span class="number">4.</span>, qkv_bias=True, qk_scale=None, drop=<span class="number">0.</span>, attn_drop=<span class="number">0.</span>,</span></span></span><br><span class="line"><span class="function"><span class="params">                 drop_path=<span class="number">0.</span>, norm_layer=nn.LayerNorm, use_checkpoint=False,</span></span></span><br><span class="line"><span class="function"><span class="params">                 token_projection=<span class="string">'linear'</span>, token_mlp=<span class="string">'ffn'</span>, se_layer=False)</span>:</span></span><br><span class="line"></span><br><span class="line">        super().__init__()</span><br><span class="line">        ...</span><br><span class="line">        <span class="comment"># build blocks</span></span><br><span class="line">        self.blocks = nn.ModuleList([</span><br><span class="line">            LeWinTransformerBlock(dim=dim, input_resolution=input_resolution,</span><br><span class="line">                                  num_heads=num_heads, win_size=win_size,</span><br><span class="line">                                  shift_size=<span class="number">0</span> <span class="keyword">if</span> (i % <span class="number">2</span> == <span class="number">0</span>) <span class="keyword">else</span> win_size // <span class="number">2</span>,</span><br><span class="line">                                  mlp_ratio=mlp_ratio,</span><br><span class="line">                                  qkv_bias=qkv_bias, qk_scale=qk_scale,</span><br><span class="line">                                  drop=drop, attn_drop=attn_drop,</span><br><span class="line">                                  drop_path=drop_path[i] <span class="keyword">if</span> isinstance(drop_path, list) <span class="keyword">else</span> drop_path,</span><br><span class="line">                                  norm_layer=norm_layer, token_projection=token_projection, token_mlp=token_mlp,</span><br><span class="line">                                  se_layer=se_layer)</span><br><span class="line">            <span class="keyword">for</span> i <span class="keyword">in</span> range(depth)])</span><br><span class="line">   ...</span><br></pre></td></tr></table></figure></p>
+<p>文章主要propose 的模块：<code>LeWinTransformerBlock</code>, 计算win 内部的self-attention. <strong>注意不是win之间的att</strong>，只计算win:<code>8*8</code>的attention。这里和crop操作类似，可以参考，这种方式更加优雅，将patch放到Batch中，增加Batch_size的大小，因为win可以同等处理，即每一个win share了同一组参数。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">LeWinTransformerBlock</span><span class="params">(nn.Module)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, dim, input_resolution, num_heads, win_size=<span class="number">8</span>, shift_size=<span class="number">0</span>,</span></span></span><br><span class="line"><span class="function"><span class="params">                 mlp_ratio=<span class="number">4.</span>, qkv_bias=True, qk_scale=None, drop=<span class="number">0.</span>, attn_drop=<span class="number">0.</span>, drop_path=<span class="number">0.</span>,</span></span></span><br><span class="line"><span class="function"><span class="params">                 act_layer=nn.GELU, norm_layer=nn.LayerNorm, token_projection=<span class="string">'linear'</span>, token_mlp=<span class="string">'leff'</span>,</span></span></span><br><span class="line"><span class="function"><span class="params">                 se_layer=False)</span>:</span></span><br><span class="line">        super().__init__()</span><br><span class="line">        ...</span><br><span class="line">  </span><br><span class="line">        self.attn = WindowAttention(</span><br><span class="line">            dim, win_size=to_2tuple(self.win_size), num_heads=num_heads,</span><br><span class="line">            qkv_bias=qkv_bias, qk_scale=qk_scale, attn_drop=attn_drop, proj_drop=drop,</span><br><span class="line">            token_projection=token_projection, se_layer=se_layer)</span><br><span class="line"></span><br><span class="line">       ...</span><br><span class="line">        self.mlp = Mlp(in_features=dim, hidden_features=mlp_hidden_dim, act_layer=act_layer,</span><br><span class="line">                       drop=drop) <span class="keyword">if</span> token_mlp == <span class="string">'ffn'</span> <span class="keyword">else</span> LeFF(dim, mlp_hidden_dim, act_layer=act_layer, drop=drop)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">forward</span><span class="params">(self, x, mask=None)</span>:</span></span><br><span class="line">        B, L, C = x.shape</span><br><span class="line">        H = int(math.sqrt(L))</span><br><span class="line">        W = int(math.sqrt(L))</span><br><span class="line"></span><br><span class="line">        <span class="comment">## input mask</span></span><br><span class="line">        <span class="keyword">if</span> mask != <span class="literal">None</span>:</span><br><span class="line">            input_mask = F.interpolate(mask, size=(H, W)).permute(<span class="number">0</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">1</span>)</span><br><span class="line">            input_mask_windows = window_partition(input_mask, self.win_size)  <span class="comment"># nW, window_size, window_size, 1</span></span><br><span class="line">            attn_mask = input_mask_windows.view(<span class="number">-1</span>, self.win_size * self.win_size)  <span class="comment"># nW, window_size*window_size</span></span><br><span class="line">            attn_mask = attn_mask.unsqueeze(<span class="number">2</span>) * attn_mask.unsqueeze(</span><br><span class="line">                <span class="number">1</span>)  <span class="comment"># nW, window_size*window_size, window_size*window_size</span></span><br><span class="line">            attn_mask = attn_mask.masked_fill(attn_mask != <span class="number">0</span>, float(<span class="number">-100.0</span>)).masked_fill(attn_mask == <span class="number">0</span>, float(<span class="number">0.0</span>))</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            attn_mask = <span class="literal">None</span></span><br><span class="line"></span><br><span class="line">        shortcut = x</span><br><span class="line">        x = self.norm1(x)</span><br><span class="line">        x = x.view(B, H, W, C)</span><br><span class="line"></span><br><span class="line">        ...</span><br><span class="line"></span><br><span class="line">        <span class="comment"># partition windows</span></span><br><span class="line">        x_windows = window_partition(shifted_x, self.win_size)  <span class="comment"># nW*B, win_size, win_size, C</span></span><br><span class="line">        x_windows = x_windows.view(<span class="number">-1</span>, self.win_size * self.win_size, C)  <span class="comment"># nW*B, win_size*win_size, C</span></span><br><span class="line"></span><br><span class="line">        <span class="comment"># W-MSA/SW-MSA</span></span><br><span class="line">        attn_windows = self.attn(x_windows, mask=attn_mask)  <span class="comment"># nW*B, win_size*win_size, C</span></span><br><span class="line"></span><br><span class="line">        <span class="comment"># merge windows</span></span><br><span class="line">        attn_windows = attn_windows.view(<span class="number">-1</span>, self.win_size, self.win_size, C)</span><br><span class="line">        shifted_x = window_reverse(attn_windows, self.win_size, H, W)  <span class="comment"># B H' W' C</span></span><br><span class="line"></span><br><span class="line">        ...</span><br><span class="line"></span><br><span class="line">        <span class="comment"># FFN</span></span><br><span class="line">        x = shortcut + self.drop_path(x)</span><br><span class="line">        x = x + self.drop_path(self.mlp(self.norm2(x)))</span><br><span class="line">        <span class="keyword">del</span> attn_mask</span><br><span class="line">        <span class="keyword">return</span> x</span><br></pre></td></tr></table></figure></p>
+<p>windowAttention 和 Swin 一样, win每个位置由position embedding, 也就是说这里每一个win都 treat equally!</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">WindowAttention</span><span class="params">(nn.Module)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, dim, win_size, num_heads, token_projection=<span class="string">'linear'</span>, qkv_bias=True, qk_scale=None, attn_drop=<span class="number">0.</span>,</span></span></span><br><span class="line"><span class="function"><span class="params">                 proj_drop=<span class="number">0.</span>, se_layer=False)</span>:</span></span><br><span class="line"></span><br><span class="line">        super().__init__()</span><br><span class="line">        self.dim = dim</span><br><span class="line">        self.win_size = win_size  <span class="comment"># Wh, Ww</span></span><br><span class="line">        self.num_heads = num_heads</span><br><span class="line">        head_dim = dim // num_heads</span><br><span class="line">        self.scale = qk_scale <span class="keyword">or</span> head_dim ** <span class="number">-0.5</span></span><br><span class="line"></span><br><span class="line">        <span class="comment"># define a parameter table of relative position bias</span></span><br><span class="line">        self.relative_position_bias_table = nn.Parameter(</span><br><span class="line">            torch.zeros((<span class="number">2</span> * win_size[<span class="number">0</span>] - <span class="number">1</span>) * (<span class="number">2</span> * win_size[<span class="number">1</span>] - <span class="number">1</span>), num_heads))  <span class="comment"># 2*Wh-1 * 2*Ww-1, nH</span></span><br><span class="line"></span><br><span class="line">        <span class="comment"># get pair-wise relative position index for each token inside the window</span></span><br><span class="line">        coords_h = torch.arange(self.win_size[<span class="number">0</span>])  <span class="comment"># [0,...,Wh-1]</span></span><br><span class="line">        coords_w = torch.arange(self.win_size[<span class="number">1</span>])  <span class="comment"># [0,...,Ww-1]</span></span><br><span class="line">        coords = torch.stack(torch.meshgrid([coords_h, coords_w]))  <span class="comment"># 2, Wh, Ww</span></span><br><span class="line">        coords_flatten = torch.flatten(coords, <span class="number">1</span>)  <span class="comment"># 2, Wh*Ww</span></span><br><span class="line">        relative_coords = coords_flatten[:, :, <span class="literal">None</span>] - coords_flatten[:, <span class="literal">None</span>, :]  <span class="comment"># 2, Wh*Ww, Wh*Ww</span></span><br><span class="line">        relative_coords = relative_coords.permute(<span class="number">1</span>, <span class="number">2</span>, <span class="number">0</span>).contiguous()  <span class="comment"># Wh*Ww, Wh*Ww, 2</span></span><br><span class="line">        relative_coords[:, :, <span class="number">0</span>] += self.win_size[<span class="number">0</span>] - <span class="number">1</span>  <span class="comment"># shift to start from 0</span></span><br><span class="line">        relative_coords[:, :, <span class="number">1</span>] += self.win_size[<span class="number">1</span>] - <span class="number">1</span></span><br><span class="line">        relative_coords[:, :, <span class="number">0</span>] *= <span class="number">2</span> * self.win_size[<span class="number">1</span>] - <span class="number">1</span></span><br><span class="line">        relative_position_index = relative_coords.sum(<span class="number">-1</span>)  <span class="comment"># Wh*Ww, Wh*Ww</span></span><br><span class="line">        self.register_buffer(<span class="string">"relative_position_index"</span>, relative_position_index)</span><br><span class="line"></span><br><span class="line">        <span class="comment"># self.qkv = nn.Linear(dim, dim * 3, bias=qkv_bias)</span></span><br><span class="line">        <span class="keyword">if</span> token_projection == <span class="string">'conv'</span>:</span><br><span class="line">            self.qkv = ConvProjection(dim, num_heads, dim // num_heads, bias=qkv_bias)</span><br><span class="line">        <span class="keyword">elif</span> token_projection == <span class="string">'linear_concat'</span>:</span><br><span class="line">            self.qkv = LinearProjection_Concat_kv(dim, num_heads, dim // num_heads, bias=qkv_bias)</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            self.qkv = LinearProjection(dim, num_heads, dim // num_heads, bias=qkv_bias)</span><br><span class="line"></span><br><span class="line">        self.attn_drop = nn.Dropout(attn_drop)</span><br><span class="line">        self.proj = nn.Linear(dim, dim)</span><br><span class="line">        self.se_layer = SELayer(dim) <span class="keyword">if</span> se_layer <span class="keyword">else</span> nn.Identity()</span><br><span class="line">        self.proj_drop = nn.Dropout(proj_drop)</span><br><span class="line"></span><br><span class="line">        trunc_normal_(self.relative_position_bias_table, std=<span class="number">.02</span>)</span><br><span class="line">        self.softmax = nn.Softmax(dim=<span class="number">-1</span>)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">forward</span><span class="params">(self, x, attn_kv=None, mask=None)</span>:</span></span><br><span class="line">        B_, N, C = x.shape</span><br><span class="line">        q, k, v = self.qkv(x, attn_kv)</span><br><span class="line">        q = q * self.scale</span><br><span class="line">        attn = (q @ k.transpose(<span class="number">-2</span>, <span class="number">-1</span>))</span><br><span class="line"></span><br><span class="line">        relative_position_bias = self.relative_position_bias_table[self.relative_position_index.view(<span class="number">-1</span>)].view(</span><br><span class="line">            self.win_size[<span class="number">0</span>] * self.win_size[<span class="number">1</span>], self.win_size[<span class="number">0</span>] * self.win_size[<span class="number">1</span>], <span class="number">-1</span>)  <span class="comment"># Wh*Ww,Wh*Ww,nH</span></span><br><span class="line">        relative_position_bias = relative_position_bias.permute(<span class="number">2</span>, <span class="number">0</span>, <span class="number">1</span>).contiguous()  <span class="comment"># nH, Wh*Ww, Wh*Ww</span></span><br><span class="line">        ratio = attn.size(<span class="number">-1</span>) // relative_position_bias.size(<span class="number">-1</span>)</span><br><span class="line">        relative_position_bias = repeat(relative_position_bias, <span class="string">'nH l c -&gt; nH l (c d)'</span>, d=ratio)</span><br><span class="line"></span><br><span class="line">        attn = attn + relative_position_bias.unsqueeze(<span class="number">0</span>)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> mask <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span>:</span><br><span class="line">            nW = mask.shape[<span class="number">0</span>]</span><br><span class="line">            mask = repeat(mask, <span class="string">'nW m n -&gt; nW m (n d)'</span>, d=ratio)</span><br><span class="line">            attn = attn.view(B_ // nW, nW, self.num_heads, N, N * ratio) + mask.unsqueeze(<span class="number">1</span>).unsqueeze(<span class="number">0</span>)</span><br><span class="line">            attn = attn.view(<span class="number">-1</span>, self.num_heads, N, N * ratio)</span><br><span class="line">            attn = self.softmax(attn)</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            attn = self.softmax(attn)</span><br><span class="line"></span><br><span class="line">        attn = self.attn_drop(attn)</span><br><span class="line"></span><br><span class="line">        x = (attn @ v).transpose(<span class="number">1</span>, <span class="number">2</span>).reshape(B_, N, C)</span><br><span class="line">        x = self.proj(x)</span><br><span class="line">        x = self.se_layer(x)</span><br><span class="line">        x = self.proj_drop(x)</span><br><span class="line">        <span class="keyword">return</span> x</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">extra_repr</span><span class="params">(self)</span> -&gt; str:</span></span><br><span class="line">        <span class="keyword">return</span> <span class="string">f'dim=<span class="subst">&#123;self.dim&#125;</span>, win_size=<span class="subst">&#123;self.win_size&#125;</span>, num_heads=<span class="subst">&#123;self.num_heads&#125;</span>'</span></span><br></pre></td></tr></table></figure>
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Transformer/" rel="tag"># Transformer</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2021/11/17/About the Register in Py/" rel="next" title="Python 中的动态注册">
+                <i class="fa fa-chevron-left"></i> Python 中的动态注册
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/avatar.gif" alt="JoeyF">
+            
+              <p class="site-author-name" itemprop="name">JoeyF</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">60</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">36</span>
+                  <span class="site-state-item-name">tags</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/ZhouYiiFeng" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:joeyf.z.y.wen@gmail.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Uformer"><span class="nav-number">1.</span> <span class="nav-text">Uformer</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Uformer-A-General-U-Shaped-Transformer-for-Image-Restoration"><span class="nav-number">1.1.</span> <span class="nav-text">Uformer: A General U-Shaped Transformer for Image Restoration</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Zhendong-Wang-Xiaodong-Cun-Jianmin-Bao-Jianzhuang-Liu"><span class="nav-number">1.2.</span> <span class="nav-text">Zhendong Wang, Xiaodong Cun, Jianmin Bao, Jianzhuang Liu</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#https-arxiv-org-abs-2106-03106"><span class="nav-number">1.3.</span> <span class="nav-text">https://arxiv.org/abs/2106.03106</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">JoeyF</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Gemini</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+
+
+  
+
+  
+
+</body>
+</html>

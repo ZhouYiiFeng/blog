@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Transformer,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="Video Super-Resolution Transformer方法： 每一帧都用卷积提取特征，(放于 batch 中独立进行)，所有输入帧都进行 unfold 操作得到 TWH/(WpHp) 个小 patch 视为 token，计算这些小 patch 之间的 attention。  输入5连续帧，先提取特征  Transformer + Bi flow 1234567891011121314">
+<meta name="keywords" content="Transformer">
+<meta property="og:type" content="article">
+<meta property="og:title" content="About The TransformerVSR">
+<meta property="og:url" content="http://zhoef.com/2021/11/17/About The TransformerVSR/index.html">
+<meta property="og:site_name" content="JoeyF&#39;s Home">
+<meta property="og:description" content="Video Super-Resolution Transformer方法： 每一帧都用卷积提取特征，(放于 batch 中独立进行)，所有输入帧都进行 unfold 操作得到 TWH/(WpHp) 个小 patch 视为 token，计算这些小 patch 之间的 attention。  输入5连续帧，先提取特征  Transformer + Bi flow 1234567891011121314">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="http://zhoef.com/2021/11/17/About%20The%20TransformerVSR/TSVR_1.PNG">
+<meta property="og:image" content="http://zhoef.com/2021/11/17/About%20The%20TransformerVSR/TSVR_2.PNG">
+<meta property="og:updated_time" content="2021-11-17T09:53:53.689Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="About The TransformerVSR">
+<meta name="twitter:description" content="Video Super-Resolution Transformer方法： 每一帧都用卷积提取特征，(放于 batch 中独立进行)，所有输入帧都进行 unfold 操作得到 TWH/(WpHp) 个小 patch 视为 token，计算这些小 patch 之间的 attention。  输入5连续帧，先提取特征  Transformer + Bi flow 1234567891011121314">
+<meta name="twitter:image" content="http://zhoef.com/2021/11/17/About%20The%20TransformerVSR/TSVR_1.PNG">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://zhoef.com/2021/11/17/About The TransformerVSR/">
+
+
+
+
+
+  <title>About The TransformerVSR | JoeyF's Home</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="default">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">JoeyF's Home</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            About
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://zhoef.com/2021/11/17/About The TransformerVSR/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="JoeyF">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="JoeyF's Home">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">About The TransformerVSR</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2021-11-17T21:49:22+08:00">
+                2021-11-17
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="Video-Super-Resolution-Transformer"><a href="#Video-Super-Resolution-Transformer" class="headerlink" title="Video Super-Resolution Transformer"></a>Video Super-Resolution Transformer</h1><h2 id="方法："><a href="#方法：" class="headerlink" title="方法："></a>方法：</h2><p><img src="/2021/11/17/About The TransformerVSR/TSVR_1.PNG" width="500px"><br><!-- <img src=D:\zyf\doc\daliy\Month-10\imgs\TSVR_1.PNG width="900px" > --></p>
+<p>每一帧都用卷积提取特征，(放于 batch 中独立进行)，所有输入帧都进行 unfold 操作得到 TWH/(WpHp) 个小 patch 视为 token，计算这些小 patch 之间的 attention。</p>
+<ol>
+<li><p>输入5连续帧，先提取特征</p>
+</li>
+<li><p>Transformer + Bi flow</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Transformer</span><span class="params">(nn.Module)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, num_feat, feat_size, depth, patch_size, heads)</span>:</span></span><br><span class="line">        super().__init__()</span><br><span class="line">        self.layers = nn.ModuleList([])</span><br><span class="line">        <span class="keyword">for</span> _ <span class="keyword">in</span> range(depth):</span><br><span class="line">            self.layers.append(nn.ModuleList([</span><br><span class="line">                Residual(PreNorm(num_feat, feat_size, globalAttention(num_feat, patch_size, heads))),</span><br><span class="line">                Residual(PreNorm(num_feat, feat_size, FeedForward(num_feat)))</span><br><span class="line">            ]))</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">forward</span><span class="params">(self, x, lrs=None, flows=None)</span>:</span></span><br><span class="line">        <span class="keyword">for</span> attn, ff <span class="keyword">in</span> self.layers:</span><br><span class="line">            x = attn(x)</span><br><span class="line">            x = ff(x, lrs=lrs, flows=flows)</span><br><span class="line">        <span class="keyword">return</span> x</span><br></pre></td></tr></table></figure>
+<ol>
+<li><p>由 Transformer 类实现，每层经过一个transformer，layer Norm，冗余层：</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Residual(PreNorm(num_feat, feat_size, globalAttention(num_feat, patch_size, heads)))</span><br></pre></td></tr></table></figure>
+<ol>
+<li><p>分析 <code>globalAttention</code>, 在这个模块中，输入（<code>B*(T=5)*C*64*64</code>）被切为 Patch_size 大小（<code>8*8</code>）的块，一共有<code>5 * 8 * 8</code> 个</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line">class globalAttention(nn.Module):</span><br><span class="line">    def __init__(self, num_feat=64, patch_size=8, heads=1):</span><br><span class="line">        super(globalAttention, self).__init__()</span><br><span class="line">        self.heads = heads</span><br><span class="line">        self.dim = patch_size ** 2 * num_feat</span><br><span class="line">        self.hidden_dim = self.dim // heads</span><br><span class="line">        self.num_patch = (64 // patch_size) ** 2</span><br><span class="line"></span><br><span class="line">        self.to_q = nn.Conv2d(in_channels=num_feat, out_channels=num_feat, kernel_size=3, padding=1, groups=num_feat)</span><br><span class="line">        self.to_k = nn.Conv2d(in_channels=num_feat, out_channels=num_feat, kernel_size=3, padding=1, groups=num_feat)</span><br><span class="line">        self.to_v = nn.Conv2d(in_channels=num_feat, out_channels=num_feat, kernel_size=3, padding=1)</span><br><span class="line"></span><br><span class="line">        self.conv = nn.Conv2d(in_channels=num_feat, out_channels=num_feat, kernel_size=3, padding=1)</span><br><span class="line"></span><br><span class="line">        self.feat2patch = torch.nn.Unfold(kernel_size=patch_size, padding=0, stride=patch_size)</span><br><span class="line">        self.patch2feat = torch.nn.Fold(output_size=(64, 64), kernel_size=patch_size, padding=0, stride=patch_size)</span><br><span class="line"></span><br><span class="line">    def forward(self, x):</span><br><span class="line">        b, t, c, h, w = x.shape  # B, 5, 64, 64, 64</span><br><span class="line">        H, D = self.heads, self.dim</span><br><span class="line">        n, d = self.num_patch, self.hidden_dim</span><br><span class="line"></span><br><span class="line">        q = self.to_q(x.view(-1, c, h, w))  # [B*5, 64, 64, 64]</span><br><span class="line">        k = self.to_k(x.view(-1, c, h, w))  # [B*5, 64, 64, 64]</span><br><span class="line">        v = self.to_v(x.view(-1, c, h, w))  # [B*5, 64, 64, 64]</span><br><span class="line"></span><br><span class="line">        unfold_q = self.feat2patch(q)  # [B*5, 8*8*64, 8*8]</span><br><span class="line">        unfold_k = self.feat2patch(k)  # [B*5, 8*8*64, 8*8]</span><br><span class="line">        unfold_v = self.feat2patch(v)  # [B*5, 8*8*64, 8*8]</span><br><span class="line">        </span><br><span class="line">        unfold_q = unfold_q.view(b, t, H, d, n)  # [B, 5, H, 8*8*64/H, 8*8]</span><br><span class="line">        unfold_k = unfold_k.view(b, t, H, d, n)  # [B, 5, H, 8*8*64/H, 8*8]</span><br><span class="line">        unfold_v = unfold_v.view(b, t, H, d, n)  # [B, 5, H, 8*8*64/H, 8*8]</span><br><span class="line"></span><br><span class="line">        unfold_q = unfold_q.permute(0, 2, 3, 1, 4).contiguous()  # [B, H, 8*8*64/H, 5, 8*8]</span><br><span class="line">        unfold_k = unfold_k.permute(0, 2, 3, 1, 4).contiguous()  # [B, H, 8*8*64/H, 5, 8*8]</span><br><span class="line">        unfold_v = unfold_v.permute(0, 2, 3, 1, 4).contiguous()  # [B, H, 8*8*64/H, 5, 8*8]</span><br><span class="line"></span><br><span class="line">        unfold_q = unfold_q.view(b, H, d, t * n)  # [B, H, 8*8*64/H, 5*8*8]</span><br><span class="line">        unfold_k = unfold_k.view(b, H, d, t * n)  # [B, H, 8*8*64/H, 5*8*8]</span><br><span class="line">        unfold_v = unfold_v.view(b, H, d, t * n)  # [B, H, 8*8*64/H, 5*8*8]</span><br></pre></td></tr></table></figure>
+<p>注意，<code>Unfold</code> 提取的滑动窗口是堆在 <code>8*8*64/H</code> 维度的。<code>5*8*8</code> 指的是各个窗口。我们需要计算各个窗口之间的 attention。这个注意力是包含了5帧之间的注意力，不仅仅是</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">attn = torch.matmul(unfold_q.transpose(2, 3), unfold_k)  # [B, H, 5*8*8, 5*8*8]</span><br><span class="line">    attn = attn * (d ** (-0.5))  # [B, H, 5*8*8, 5*8*8]</span><br><span class="line">    attn = F.softmax(attn, dim=-1)  # [B, H, 5*8*8, 5*8*8]</span><br><span class="line">         </span><br><span class="line">    attn_x = torch.matmul(attn, unfold_v.transpose(2, 3))  # [B, H, 5*8*8, 8*8*64/H]</span><br><span class="line">    attn_x = attn_x.view(b, H, t, n, d)  # [B, H, 5, 8*8, 8*8*64/H]</span><br><span class="line">    attn_x = attn_x.permute(0, 2, 1, 4, 3).contiguous()  # [B, 5, H, 8*8*64/H, 8*8]</span><br><span class="line">    attn_x = attn_x.view(b * t, D, n)  # [B*5, 8*8*64, 8*8]</span><br><span class="line">    feat = self.patch2feat(attn_x)  # [B*5, 64, 64, 64]</span><br><span class="line">         </span><br><span class="line">    out = self.conv(feat).view(x.shape)  # [B, 5, 64, 64, 64]</span><br><span class="line">    out += x  # [B, 5, 64, 64, 64]</span><br><span class="line">         </span><br><span class="line">    return out</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+</li>
+</ol>
+</li>
+</ol>
+<ol>
+<li><p>Bi flow，这里会用到已经计算好的光流作为输入 :</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Residual(PreNorm(num_feat, feat_size, FeedForward(num_feat)))</span><br></pre></td></tr></table></figure>
+<p><img src="/2021/11/17/About The TransformerVSR/TSVR_2.PNG" width="500px"></p>
+</li>
+</ol>
+<pre><code>  这里使用了首帧和首帧，尾帧和尾帧的 identity 光流来获得相同尺寸的特征。
+
+  <figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">FeedForward</span><span class="params">(nn.Module)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, num_feat)</span>:</span></span><br><span class="line">        super().__init__()</span><br><span class="line"></span><br><span class="line">        self.backward_resblocks = ResidualBlocksWithInputConv(num_feat + <span class="number">3</span>, num_feat, num_blocks=<span class="number">30</span>)</span><br><span class="line">        self.forward_resblocks = ResidualBlocksWithInputConv(num_feat + <span class="number">3</span>, num_feat, num_blocks=<span class="number">30</span>)</span><br><span class="line">        self.fusion = nn.Conv2d(num_feat * <span class="number">2</span>, num_feat, <span class="number">1</span>, <span class="number">1</span>, <span class="number">0</span>, bias=<span class="literal">True</span>)</span><br><span class="line">        self.lrelu = nn.LeakyReLU(negative_slope=<span class="number">0.1</span>, inplace=<span class="literal">True</span>)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">forward</span><span class="params">(self, x, lrs=None, flows=None)</span>:</span></span><br><span class="line">        b, t, c, h, w = x.shape</span><br><span class="line">        x1 = torch.cat([x[:, <span class="number">1</span>:, :, :, :], x[:, <span class="number">-1</span>, :, :, :].unsqueeze(<span class="number">1</span>)], dim=<span class="number">1</span>)  <span class="comment"># [B, 5, 64, 64, 64]</span></span><br><span class="line">        flow1 = flows[<span class="number">1</span>].contiguous().view(<span class="number">-1</span>, <span class="number">2</span>, h, w).permute(<span class="number">0</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">1</span>)  <span class="comment"># [B*5, 64, 64, 2]</span></span><br><span class="line">        x1 = flow_warp(x1.view(<span class="number">-1</span>, c, h, w), flow1)  <span class="comment"># [B*5, 64, 64, 64]</span></span><br><span class="line">        x1 = torch.cat([lrs.view(b * t, <span class="number">-1</span>, h, w), x1], dim=<span class="number">1</span>)  <span class="comment"># [B*5, 67, 64, 64]</span></span><br><span class="line">        x1 = self.backward_resblocks(x1)  <span class="comment"># [B*5, 64, 64, 64]</span></span><br><span class="line"></span><br><span class="line">        x2 = torch.cat([x[:, <span class="number">0</span>, :, :, :].unsqueeze(<span class="number">1</span>), x[:, :<span class="number">-1</span>, :, :, :]], dim=<span class="number">1</span>)  <span class="comment"># [B, 5, 64, 64, 64]</span></span><br><span class="line">        flow2 = flows[<span class="number">0</span>].contiguous().view(<span class="number">-1</span>, <span class="number">2</span>, h, w).permute(<span class="number">0</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">1</span>)  <span class="comment"># [B*5, 64, 64, 2]</span></span><br><span class="line">        x2 = flow_warp(x2.view(<span class="number">-1</span>, c, h, w), flow2)  <span class="comment"># [B*5, 64, 64, 64]</span></span><br><span class="line">        x2 = torch.cat([lrs.view(b * t, <span class="number">-1</span>, h, w), x2], dim=<span class="number">1</span>)  <span class="comment"># [B*5, 67, 64, 64]</span></span><br><span class="line">        x2 = self.forward_resblocks(x2)  <span class="comment"># [B*5, 64, 64, 64]</span></span><br><span class="line"></span><br><span class="line">        <span class="comment"># fusion the backward and forward features</span></span><br><span class="line">        out = torch.cat([x1, x2], dim=<span class="number">1</span>)  <span class="comment"># [B*5, 128, 64, 64]</span></span><br><span class="line">        out = self.lrelu(self.fusion(out))  <span class="comment"># [B*5, 64, 64, 64]</span></span><br><span class="line">        out = out.view(x.shape)  <span class="comment"># [B, 5, 64, 64, 64]</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> out</span><br></pre></td></tr></table></figure>
+</code></pre><ol>
+<li><p>关于数据流，在训练过程中，有些 tensor 需要 64 大小，这对各种尺寸的输入图像不适应，所以在源码中，作者 crop 了大于 64 的 图片，将整个图片定在 64 大小， patch 之间存在 overlap 。</p>
+<ol>
+<li><p>存在尺寸写死的地方有：<code>layer_norm</code> 的地方，需要提供 tensor 的 size ，我们使用 <code>nn.functional.layer_norm(x, x.size()[1:])</code> 可以避免</p>
+</li>
+<li><p><code>GlobalAttention</code> 中的 <code>unfold</code> 和 <code>fold</code> 中，由于图像的大小不能被 <code>patch_size</code> 整除，且作者将大小写死 <code>torch.nn.Fold(output_size=(64, 64),...)</code> 我们先将输入 pad 到合适大小然后进行操作。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">feat = torch.nn.functional.fold(attn_x, output_size=(h, w),</span><br><span class="line">                                        kernel_size=self.patch_size, padding=<span class="number">0</span>,</span><br><span class="line">                                        stride=self.patch_size)</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>pad 后的特征会比之前大，在返回的时候需要裁剪 <code>out_nopad = out[:, :, :, pad_len_h:h-pad_len_h, pad_len_w:w-pad_len_w]</code></p>
+</li>
+</ol>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">test</span><span class="params">(self)</span>:</span></span><br><span class="line">        self.net_g.eval()</span><br><span class="line">        <span class="keyword">with</span> torch.no_grad():</span><br><span class="line">            <span class="keyword">if</span> self.opt[<span class="string">'crop'</span>]:</span><br><span class="line">                <span class="comment"># if self.opt['train'].get('flow_opt'):</span></span><br><span class="line">                <span class="comment">#     self.output = forward_crop(self.lq, self.net_g, flow_opt=self.opt['train'].get('flow_opt'))</span></span><br><span class="line">                <span class="comment"># else:</span></span><br><span class="line">                <span class="keyword">if</span> <span class="string">'train'</span> <span class="keyword">in</span> self.opt[<span class="string">'datasets'</span>]:</span><br><span class="line">                    lq_size = self.opt[<span class="string">'datasets'</span>][<span class="string">'train'</span>][<span class="string">'gt_size'</span>] // <span class="number">4</span></span><br><span class="line">                <span class="keyword">if</span> <span class="string">'test'</span> <span class="keyword">in</span> self.opt[<span class="string">'datasets'</span>]:</span><br><span class="line">                    lq_size = self.opt[<span class="string">'datasets'</span>][<span class="string">'test'</span>][<span class="string">'lq_size'</span>]</span><br><span class="line">                overlap = lq_size // <span class="number">2</span>   <span class="comment"># TODO</span></span><br><span class="line">                self.output = forward_crop(self.lq, self.net_g, lq_size=lq_size, overlap=overlap)</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>   裁剪方法如下，将所有的图片裁剪成：</p>
+   <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">forward_crop</span><span class="params">(x, model, lq_size=<span class="number">64</span>, scale=<span class="number">4</span>, overlap=<span class="number">16</span>, flow_opt=False)</span>:</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># Assert the required dimension.</span></span><br><span class="line">    <span class="keyword">assert</span> lq_size == <span class="number">64</span> <span class="keyword">or</span> <span class="number">48</span>, <span class="string">"Default patch size of LR images during training and validation should be &#123;&#125;."</span>.format(lq_size)</span><br><span class="line">    <span class="keyword">assert</span> overlap == <span class="number">16</span> <span class="keyword">or</span> <span class="number">12</span>, <span class="string">"Default overlap of patches during validation should be &#123;&#125;."</span>.format(overlap)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># Prepare for the image crops.</span></span><br><span class="line">    <span class="comment"># print(x.shape)</span></span><br><span class="line">    base_size = lq_size - overlap</span><br><span class="line">    B, T, C, H, W = x.shape</span><br><span class="line">    <span class="comment"># print(x.shape)</span></span><br><span class="line"></span><br><span class="line">    I = H // base_size</span><br><span class="line">    Hmod = H % base_size</span><br><span class="line">    <span class="keyword">if</span> Hmod &gt; overlap:</span><br><span class="line">        I += <span class="number">1</span></span><br><span class="line"></span><br><span class="line">    J = W // base_size</span><br><span class="line">    Wmod = W % base_size</span><br><span class="line">    <span class="keyword">if</span> Wmod &gt; overlap:</span><br><span class="line">        J += <span class="number">1</span></span><br><span class="line"></span><br><span class="line">   </span><br><span class="line">    <span class="comment"># Crop the entire image into 64 x 64 patches. Concatenate the crops along the batch dimension.</span></span><br><span class="line">    x_crops = []</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(I):</span><br><span class="line">        i_start, i_end = lr_crop_index(i, I, H, base_size, overlap)</span><br><span class="line">        <span class="keyword">for</span> j <span class="keyword">in</span> range(J):</span><br><span class="line">            j_start, j_end = lr_crop_index(j, J, W, base_size, overlap)</span><br><span class="line">            x_crop = x[:, :, :, i_start: i_end, j_start: j_end]</span><br><span class="line">            <span class="keyword">if</span> flow_opt:</span><br><span class="line">                x_crop, _ = model(x_crop)</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                x_crop = model(x_crop)</span><br><span class="line">            x_crops.append(x_crop)</span><br><span class="line">            </span><br><span class="line">    x_crops = torch.cat(x_crops, dim=<span class="number">0</span>)</span><br><span class="line">  </span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> len(x_crops.shape) == <span class="number">5</span>:</span><br><span class="line">        x_crops = x_crops[:, T//<span class="number">2</span>, :, :, :]</span><br><span class="line"></span><br><span class="line">    <span class="comment"># Calculate the enlarged dimension.</span></span><br><span class="line">    H, W = H * scale, W * scale</span><br><span class="line">    Hmod, Wmod = Hmod * scale, Wmod * scale</span><br><span class="line">    base_size, overlap = base_size * scale, overlap * scale</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># print(H, W, Hmod, Wmod, base_size, overlap)</span></span><br><span class="line">    <span class="comment"># print('Second')</span></span><br><span class="line">    <span class="comment"># Convert the SR crops to an entire image</span></span><br><span class="line">    <span class="keyword">if</span> len(x_crops.shape) == <span class="number">4</span>:</span><br><span class="line">        x = torch.zeros(B, C, H, W)</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range(I):</span><br><span class="line">            i_start, i_end, pi_start, pi_end = hr_crop_index(i, I, H, Hmod, base_size, overlap)</span><br><span class="line">            <span class="keyword">for</span> j <span class="keyword">in</span> range(J):</span><br><span class="line">                j_start, j_end, pj_start, pj_end = hr_crop_index(j, J, W, Wmod, base_size, overlap)</span><br><span class="line">                <span class="comment"># print(i_start, i_end, j_start, j_end)</span></span><br><span class="line">                <span class="comment"># print(pi_start, pi_end, pj_start, pj_end)</span></span><br><span class="line">                B_start = B * (i * J + j)</span><br><span class="line">                B_end = B_start + B</span><br><span class="line">                <span class="comment"># print(B_start, B_end)</span></span><br><span class="line">                x[:, :, i_start: i_end, j_start: j_end] \</span><br><span class="line">                    = x_crops[B_start: B_end, :, pi_start: pi_end, pj_start: pj_end]</span><br><span class="line">   </span><br><span class="line">    <span class="keyword">return</span> x</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Transformer/" rel="tag"># Transformer</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2021/11/17/About the Deformable Conv/" rel="next" title="Deformable Convolution">
+                <i class="fa fa-chevron-left"></i> Deformable Convolution
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2021/11/17/About the Swin/" rel="prev" title="About The Swin">
+                About The Swin <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/avatar.gif" alt="JoeyF">
+            
+              <p class="site-author-name" itemprop="name">JoeyF</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">60</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">36</span>
+                  <span class="site-state-item-name">tags</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/ZhouYiiFeng" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:joeyf.z.y.wen@gmail.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Video-Super-Resolution-Transformer"><span class="nav-number">1.</span> <span class="nav-text">Video Super-Resolution Transformer</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#方法："><span class="nav-number">1.1.</span> <span class="nav-text">方法：</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">JoeyF</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Gemini</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+
+
+  
+
+  
+
+</body>
+</html>

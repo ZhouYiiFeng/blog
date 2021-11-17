@@ -79,22 +79,22 @@
 
 
 
-<meta name="description" content="导言：接上篇经典Gan Loss原理以及其实现，本篇深入探讨一下各种GanLoss。 经典GAN loss缺点：          GAN loss缺点    在经典GAN LOSS中Disciminator是一个Binery Classifier, 对于图中所示的两种分布，二分类判别器给出的两者loss是相同的，但是实际上G_1的损失应该要小一点(距离P_{data}近).   二分类判别器给出">
+<meta name="description" content="导言：接上篇经典Gan Loss原理以及其实现，本篇深入探讨一下各种GanLoss。 经典GAN loss缺点：  在经典GAN LOSS中Disciminator是一个Binery Classifier, 对于图中所示的两种分布，二分类判别器给出的两者loss是相同的，但是实际上G_1的损失应该要小一点(距离P_{data}近).   二分类判别器给出的两者loss是相同的  解释:当Disci">
 <meta name="keywords" content="DL,Pytorch,GAN">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Gan Loss improve之LSGan WGan WGan-GP">
 <meta property="og:url" content="http://zhoef.com/2020/08/15/26_GanLoss improve之lsGan WGan WGan-GP/index.html">
 <meta property="og:site_name" content="JoeyF&#39;s Home">
-<meta property="og:description" content="导言：接上篇经典Gan Loss原理以及其实现，本篇深入探讨一下各种GanLoss。 经典GAN loss缺点：          GAN loss缺点    在经典GAN LOSS中Disciminator是一个Binery Classifier, 对于图中所示的两种分布，二分类判别器给出的两者loss是相同的，但是实际上G_1的损失应该要小一点(距离P_{data}近).   二分类判别器给出">
+<meta property="og:description" content="导言：接上篇经典Gan Loss原理以及其实现，本篇深入探讨一下各种GanLoss。 经典GAN loss缺点：  在经典GAN LOSS中Disciminator是一个Binery Classifier, 对于图中所示的两种分布，二分类判别器给出的两者loss是相同的，但是实际上G_1的损失应该要小一点(距离P_{data}近).   二分类判别器给出的两者loss是相同的  解释:当Disci">
 <meta property="og:locale" content="default">
-<meta property="og:image" content="http://zhoef.com/2020/08/15/26_GanLoss%20improve之lsGan%20WGan%20WGan-GP/GANLOSS_Fate.PNG">
+<meta property="og:image" content="http://zhoef.com/2020/08/15/26_GanLoss%20improve之lsGan%20WGan%20WGan-GP/1.png">
 <meta property="og:image" content="http://zhoef.com/2020/08/15/26_GanLoss%20improve之lsGan%20WGan%20WGan-GP/WGAN.PNG">
 <meta property="og:image" content="http://zhoef.com/2020/08/15/26_GanLoss%20improve之lsGan%20WGan%20WGan-GP/WGAN_form.PNG">
-<meta property="og:updated_time" content="2020-08-15T08:02:41.549Z">
+<meta property="og:updated_time" content="2021-11-17T09:45:13.995Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Gan Loss improve之LSGan WGan WGan-GP">
-<meta name="twitter:description" content="导言：接上篇经典Gan Loss原理以及其实现，本篇深入探讨一下各种GanLoss。 经典GAN loss缺点：          GAN loss缺点    在经典GAN LOSS中Disciminator是一个Binery Classifier, 对于图中所示的两种分布，二分类判别器给出的两者loss是相同的，但是实际上G_1的损失应该要小一点(距离P_{data}近).   二分类判别器给出">
-<meta name="twitter:image" content="http://zhoef.com/2020/08/15/26_GanLoss%20improve之lsGan%20WGan%20WGan-GP/GANLOSS_Fate.PNG">
+<meta name="twitter:description" content="导言：接上篇经典Gan Loss原理以及其实现，本篇深入探讨一下各种GanLoss。 经典GAN loss缺点：  在经典GAN LOSS中Disciminator是一个Binery Classifier, 对于图中所示的两种分布，二分类判别器给出的两者loss是相同的，但是实际上G_1的损失应该要小一点(距离P_{data}近).   二分类判别器给出的两者loss是相同的  解释:当Disci">
+<meta name="twitter:image" content="http://zhoef.com/2020/08/15/26_GanLoss%20improve之lsGan%20WGan%20WGan-GP/1.png">
 
 
 
@@ -335,12 +335,7 @@
 
       
         <p>导言：接上篇经典Gan Loss原理以及其实现，本篇深入探讨一下各种GanLoss。</p>
-<h2 id="经典GAN-loss缺点："><a href="#经典GAN-loss缺点：" class="headerlink" title="经典GAN loss缺点："></a>经典GAN loss缺点：</h2><p align="center">  
-  <img src="/2020/08/15/26_GanLoss improve之lsGan WGan WGan-GP/GANLOSS_Fate.PNG" width="440">  
-  <center>GAN loss缺点</center>
-</p>
-
-
+<h2 id="经典GAN-loss缺点："><a href="#经典GAN-loss缺点：" class="headerlink" title="经典GAN loss缺点："></a>经典GAN loss缺点：</h2><p><img src="/2020/08/15/26_GanLoss improve之lsGan WGan WGan-GP/1.png" alt="image|641x377,75%"> </p>
 <p>在经典GAN LOSS中Disciminator是一个Binery Classifier, 对于图中所示的两种分布，二分类判别器给出的两者loss是相同的，但是实际上<script type="math/tex">G_1</script>的损失应该要小一点(距离<script type="math/tex">P_{data}</script>近). </p>
 <blockquote>
 <p>二分类判别器给出的两者loss是相同的</p>
@@ -486,7 +481,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">53</span>
+                  <span class="site-state-item-count">60</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
@@ -499,7 +494,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">31</span>
+                  <span class="site-state-item-count">36</span>
                   <span class="site-state-item-name">tags</span>
                 </a>
               </div>
