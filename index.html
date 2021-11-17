@@ -259,7 +259,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://zhoef.com/2021/11/17/About the Register in Py/">
+    <link itemprop="mainEntityOfPage" href="http://zhoef.com/2021/11/17/lmdb数据读写/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="JoeyF">
@@ -278,7 +278,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2021/11/17/About the Register in Py/" itemprop="url">Python 中的动态注册</a></h1>
+                <a class="post-title-link" href="/2021/11/17/lmdb数据读写/" itemprop="url">使用 LMDB 数据类型来打包数据</a></h1>
         
 
         <div class="post-meta">
@@ -330,17 +330,140 @@
       
         
           
-          Python中的注册器模块
-注册器
-
-什么是装饰器
-
-
-问题：在使用BasicSR的时候遇到了动态加载模型的方法，这个是一个很使用的方式，因为在实验过程中，我们不可避免的去写很多模型类，每一次都需要修改build_model代码中的import **model as Network 这会给代码维护以
+          LMDB 数据打包参考1参考2
+写入：
+准备环境路径lmdb.open打开的是一个文件夹，在当前文件夹下面会创建两个.lmdb文件。1234dataroot_GT = "/youtu_action_data/denoise/sidd/lmdb/GT/"if not os.path.exists(da
           ...
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2021/11/17/About the Register in Py/#more" rel="contents">
+            <a class="btn" href="/2021/11/17/lmdb数据读写/#more" rel="contents">
+              Read more &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://zhoef.com/2021/11/17/Uformer/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="JoeyF">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="JoeyF's Home">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2021/11/17/Uformer/" itemprop="url">Uformer</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2021-11-17T21:49:22+08:00">
+                2021-11-17
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+          Uformer“””
+Uformer: A General U-Shaped Transformer for Image RestorationZhendong Wang, Xiaodong Cun, Jianmin Bao, Jianzhuang Liuhttps://arxiv.org/abs/
+          ...
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2021/11/17/Uformer/#more" rel="contents">
               Read more &raquo;
             </a>
           </div>
@@ -648,134 +771,6 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://zhoef.com/2021/11/17/lmdb数据读写/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="JoeyF">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="JoeyF's Home">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2021/11/17/lmdb数据读写/" itemprop="url">使用 LMDB 数据类型来打包数据</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2021-11-17T21:49:22+08:00">
-                2021-11-17
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-          LMDB 数据打包参考1参考2
-写入：
-准备环境路径lmdb.open打开的是一个文件夹，在当前文件夹下面会创建两个.lmdb文件。1234dataroot_GT = "/youtu_action_data/denoise/sidd/lmdb/GT/"if not os.path.exists(da
-          ...
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2021/11/17/lmdb数据读写/#more" rel="contents">
-              Read more &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://zhoef.com/2021/11/17/Transformer中位置编码/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -852,6 +847,138 @@
           <!--noindex-->
           <div class="post-button text-center">
             <a class="btn" href="/2021/11/17/Transformer中位置编码/#more" rel="contents">
+              Read more &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://zhoef.com/2021/11/17/About the Register in Py/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="JoeyF">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="JoeyF's Home">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2021/11/17/About the Register in Py/" itemprop="url">Python 中的动态注册</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2021-11-17T21:49:22+08:00">
+                2021-11-17
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+          Python中的注册器模块
+注册器
+
+什么是装饰器
+
+
+问题：在使用BasicSR的时候遇到了动态加载模型的方法，这个是一个很使用的方式，因为在实验过程中，我们不可避免的去写很多模型类，每一次都需要修改build_model代码中的import **model as Network 这会给代码维护以
+          ...
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2021/11/17/About the Register in Py/#more" rel="contents">
               Read more &raquo;
             </a>
           </div>
@@ -1037,7 +1164,7 @@ BVSR++
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://zhoef.com/2021/11/17/Uformer/">
+    <link itemprop="mainEntityOfPage" href="http://zhoef.com/2021/06/03/VIT transformer/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="JoeyF">
@@ -1056,134 +1183,7 @@ BVSR++
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2021/11/17/Uformer/" itemprop="url">Uformer</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2021-11-17T21:49:22+08:00">
-                2021-11-17
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-          Uformer“””
-Uformer: A General U-Shaped Transformer for Image RestorationZhendong Wang, Xiaodong Cun, Jianmin Bao, Jianzhuang Liuhttps://arxiv.org/abs/
-          ...
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2021/11/17/Uformer/#more" rel="contents">
-              Read more &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://zhoef.com/2021/06/03/关于Pytorch load模型显存不够问题/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="JoeyF">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="JoeyF's Home">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2021/06/03/关于Pytorch load模型显存不够问题/" itemprop="url">Pytorch 显存节约</a></h1>
+                <a class="post-title-link" href="/2021/06/03/VIT transformer/" itemprop="url">VIT Paper Reading</a></h1>
         
 
         <div class="post-meta">
@@ -1235,15 +1235,13 @@ Uformer: A General U-Shaped Transformer for Image RestorationZhendong Wang, Xiao
       
         
           
-          关于Pytorch 训练时显存ok，但是load checkpoints时显存out of memory问题这个问题主要是由于一下几点：
+          An Image is Worth 16x16 Words: Transformers for Image Recognition at Scale将transformer引入到了Image，代替了Conv，只是用transformer.之前的难点：
 
-在load时先将checkpoints load到了gpu上，再load到model的地址，这样中间就多了一次存储。
-
-模型在load 之前就使用cuda()放
+相较于words token, 图像的每一个p
           ...
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2021/06/03/关于Pytorch load模型显存不够问题/#more" rel="contents">
+            <a class="btn" href="/2021/06/03/VIT transformer/#more" rel="contents">
               Read more &raquo;
             </a>
           </div>
@@ -1421,7 +1419,7 @@ Uformer: A General U-Shaped Transformer for Image RestorationZhendong Wang, Xiao
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://zhoef.com/2021/06/03/SA-NET 论文分析-没什么用/">
+    <link itemprop="mainEntityOfPage" href="http://zhoef.com/2021/06/03/Self-superviced denoise 新思路/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="JoeyF">
@@ -1440,7 +1438,7 @@ Uformer: A General U-Shaped Transformer for Image RestorationZhendong Wang, Xiao
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2021/06/03/SA-NET 论文分析-没什么用/" itemprop="url">SA-NET</a></h1>
+                <a class="post-title-link" href="/2021/06/03/Self-superviced denoise 新思路/" itemprop="url">Self-Supervised Denoise Method</a></h1>
         
 
         <div class="post-meta">
@@ -1492,12 +1490,11 @@ Uformer: A General U-Shaped Transformer for Image RestorationZhendong Wang, Xiao
       
         
           
-          SA-NET: SHUFFLE ATTENTION FOR DEEP CONVOLUTIONAL NEURAL NETWORKS文章目的是减少网络的计算量。 
-1234567891011121314151617181920212223242526272829303132333435363738394
+          Self-Supervised Denoise Method:Introduction使用noise 和cln作为GT的图像训练对比较难获得，延长曝光时间多次拍摄得到的AVE cln img也不一定是很好的cln GT，这种拍摄困难，要求拍摄主体不移动(人像眨眼睛，颤抖等)，在某些情况下在实验环境可
           ...
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2021/06/03/SA-NET 论文分析-没什么用/#more" rel="contents">
+            <a class="btn" href="/2021/06/03/Self-superviced denoise 新思路/#more" rel="contents">
               Read more &raquo;
             </a>
           </div>

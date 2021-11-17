@@ -87,7 +87,7 @@
 <meta property="og:site_name" content="JoeyF&#39;s Home">
 <meta property="og:description" content="向GitHub上传递项目： 新建文件夹：使用git init得到.git 在文件夹中进行操作： git add .将所有的文件添加于暂存库中  git commit -m ‘comment’将项目添加进本地仓库中  git remote add origin https://github.com/guyibang/T…将本地项目于github上的项目进行关联  git pull origin ma">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2020-07-19T04:04:32.420Z">
+<meta property="og:updated_time" content="2021-11-17T10:25:24.670Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Git相关操作">
 <meta name="twitter:description" content="向GitHub上传递项目： 新建文件夹：使用git init得到.git 在文件夹中进行操作： git add .将所有的文件添加于暂存库中  git commit -m ‘comment’将项目添加进本地仓库中  git remote add origin https://github.com/guyibang/T…将本地项目于github上的项目进行关联  git pull origin ma">
@@ -384,6 +384,14 @@
 </ol>
 </li>
 </ol>
+<h2 id="2021-11-17-Update"><a href="#2021-11-17-Update" class="headerlink" title="2021.11.17 Update:"></a>2021.11.17 Update:</h2><p><strong>怎么切换用户?</strong></p>
+<ol>
+<li>git config —global —edit 将现在的用户删掉</li>
+<li>ssh-keygen -t rsa -b 4096 -C 584810382@qq.com 生成当前想使用的账号</li>
+<li>配置github上面ssh, 添加刚刚生成的key</li>
+<li>git config —global user.name “”</li>
+<li>git config —global user.email “”</li>
+</ol>
 
       
     </div>
@@ -567,7 +575,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#新建文件夹："><span class="nav-number">1.</span> <span class="nav-text">新建文件夹：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#在文件夹中进行操作："><span class="nav-number">2.</span> <span class="nav-text">在文件夹中进行操作：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#切换git中的分支："><span class="nav-number">3.</span> <span class="nav-text">切换git中的分支：</span></a></li></ol><li class="nav-item nav-level-1"><a class="nav-link" href="#问题1："><span class="nav-number"></span> <span class="nav-text">问题1：</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#使用另一个账户进行git提交时会出现权限问题。其原因是因为仅仅通过"><span class="nav-number">1.</span> <span class="nav-text">使用另一个账户进行git提交时会出现权限问题。其原因是因为仅仅通过</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#解决方法："><span class="nav-number">2.</span> <span class="nav-text">解决方法：</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#问题2："><span class="nav-number"></span> <span class="nav-text">问题2：</span></a></li></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#新建文件夹："><span class="nav-number">1.</span> <span class="nav-text">新建文件夹：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#在文件夹中进行操作："><span class="nav-number">2.</span> <span class="nav-text">在文件夹中进行操作：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#切换git中的分支："><span class="nav-number">3.</span> <span class="nav-text">切换git中的分支：</span></a></li></ol><li class="nav-item nav-level-1"><a class="nav-link" href="#问题1："><span class="nav-number"></span> <span class="nav-text">问题1：</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#使用另一个账户进行git提交时会出现权限问题。其原因是因为仅仅通过"><span class="nav-number">1.</span> <span class="nav-text">使用另一个账户进行git提交时会出现权限问题。其原因是因为仅仅通过</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#解决方法："><span class="nav-number">2.</span> <span class="nav-text">解决方法：</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#问题2："><span class="nav-number"></span> <span class="nav-text">问题2：</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#2021-11-17-Update"><span class="nav-number">1.</span> <span class="nav-text">2021.11.17 Update:</span></a></li></ol></li></div>
             
 
           </div>
